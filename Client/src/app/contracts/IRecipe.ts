@@ -5,7 +5,7 @@ export interface IRecipe {
     id: number;
     name: string;
     ownerId: number;
-    ingredients: IIngredient[];
+    ingredients: { amount:number, ingredient: IIngredient}[];
     steps: IStep[];
     estimatedTime: number;
     estimatedCalories: number;
