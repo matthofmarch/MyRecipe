@@ -1,0 +1,33 @@
+{
+    "Name":"ReceiptName",
+    "Owner": {
+        "Name":"OwnerName",
+        "Id":1
+    },
+    "ingredigents":[
+        {
+            "name":"Zucker",
+            "id":66,
+            "caloriesPerGram": 4
+        },
+        {
+            "name":"Fett",
+            "id":66,
+            "caloriesPerGram": 9
+        }
+    ],
+    "steps":[
+        {
+            "title":"mix",
+            "description": "Mix Fat with Sugar",
+            "estimatedTime": 1
+        },
+        {
+            "title": "caramellise sugar",
+            "description": "Sugar now caramellised",
+            "estimatedTime": 9
+        }
+    ],    
+    "estimatedTimeInMinutes":10,
+    "estimatedCalories":100
+}
