@@ -62,5 +62,27 @@ namespace MyRecipeBackend.Controllers
             return Unauthorized();
         }
 
+        [HttpPost]
+        [Route("register")]
+        public async Task<IActionResult> Register([FromBody] LoginModel loginModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser
+                {
+                    Email = loginModel.Username,
+                    SecurityStamp = new Guid().ToString(),
+                    UserName = loginModel.Username
+                };
+                var result = await _userManager.CreateAsync(user, loginModel.Password);
+
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+                return BadRequest(result.Errors);
+            }
+            return BadRequest();
+        }
     }
 }
