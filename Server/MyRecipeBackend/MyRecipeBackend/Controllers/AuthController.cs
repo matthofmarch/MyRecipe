@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using MyRecipeBackend.Data;
 using MyRecipeBackend.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace MyRecipeBackend.Controllers
 {
@@ -90,8 +87,7 @@ namespace MyRecipeBackend.Controllers
                 if (result.Succeeded)
                 {
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Action(nameof(ConfirmEmail), nameof(AuthController), new { userId = user.Id, code = code }, Request.Scheme);
+                    var callbackUrl = Url.Action("ConfirmeEmail","Auth", new { userId = user.Id, code }, Request.Scheme);
                     return Ok(callbackUrl);
                 }
                 return BadRequest(result.Errors);
@@ -100,8 +96,8 @@ namespace MyRecipeBackend.Controllers
         }
 
         [HttpGet]
-        [Route("confirmemail")]
-        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        [Route("confirmeemail")]
+        public async Task<IActionResult> ConfirmeEmail(string userId, string code)
         {
             var user = await _userManager.FindByIdAsync(userId);
             var result = await _userManager.ConfirmEmailAsync(user, code);
