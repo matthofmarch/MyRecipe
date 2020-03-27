@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace MyRecipeBackend.Controllers
 {
@@ -19,47 +20,57 @@ namespace MyRecipeBackend.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AuthController(UserManager<ApplicationUser> userManager)
+        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var user = await _userManager.FindByNameAsync(model.Username);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            if (ModelState.IsValid)
             {
-                var role = (await _userManager.GetRolesAsync(user)).SingleOrDefault();
-
-                var authClaims = new List<Claim>
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, false);
+                if (result.Succeeded)
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                };
+                    var user = await _userManager.FindByEmailAsync(model.Email);
+                    var claims = await _userManager.GetClaimsAsync(user);
 
-                if (role != null)
-                    authClaims.Add(new Claim(ClaimTypes.Role, role));
+                    var authClaims = new List<Claim>
+                    {
+                        new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    };
 
-                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YVBy0OLlMQG6VVVp1OH7Xzyr7gHuw1qvUC5dcGt3SBM="));
+                    authClaims.AddRange(claims);
 
-                var token = new JwtSecurityToken(
-                    issuer: "https://localhost:44316",
-                    audience: "https://localhost:44316",
-                    expires: DateTime.Now.AddHours(3),
-                    claims: authClaims,
-                    signingCredentials: new Microsoft.IdentityModel.Tokens.SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                );
+                    //TODO refactor key into file
+                    var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YVBy0OLlMQG6VVVp1OH7Xzyr7gHuw1qvUC5dcGt3SBM="));
 
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
-                });
+                    //TODO evtl refactor urls
+                    var token = new JwtSecurityToken(
+                        issuer: "https://localhost:5001",
+                        audience: "https://localhost:5001",
+                        expires: DateTime.Now.AddHours(3),
+                        claims: authClaims,
+                        signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                    );
+
+                    return Ok(new
+                    {
+                        token = new JwtSecurityTokenHandler().WriteToken(token),
+                        expiration = token.ValidTo
+                    });
+                }
+                else if (result.IsNotAllowed)
+                    return Unauthorized(new { Error = "Email needs to be confirmed" });
+                return Unauthorized();
             }
-            return Unauthorized();
+            return BadRequest();
         }
 
         [HttpPost]
@@ -70,19 +81,35 @@ namespace MyRecipeBackend.Controllers
             {
                 var user = new ApplicationUser
                 {
-                    Email = loginModel.Username,
+                    Email = loginModel.Email,
                     SecurityStamp = new Guid().ToString(),
-                    UserName = loginModel.Username
+                    UserName = loginModel.Email
                 };
                 var result = await _userManager.CreateAsync(user, loginModel.Password);
 
                 if (result.Succeeded)
                 {
-                    return Ok();
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    var callbackUrl = Url.Action(nameof(ConfirmEmail), nameof(AuthController), new { userId = user.Id, code = code }, Request.Scheme);
+                    return Ok(callbackUrl);
                 }
                 return BadRequest(result.Errors);
             }
             return BadRequest();
         }
+
+        [HttpGet]
+        [Route("confirmemail")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if (result.Succeeded)
+                return Ok();
+
+            return BadRequest(result.Errors);
+        }
+
     }
 }
