@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using MyRecipeBackend.Data;
 using MyRecipeBackend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using MyRecipeBackend.Services;
 
 namespace MyRecipeBackend.Controllers
 {
@@ -18,11 +20,13 @@ namespace MyRecipeBackend.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IEmailSender _emailSender;
 
-        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
 
         [HttpPost]
@@ -87,8 +91,10 @@ namespace MyRecipeBackend.Controllers
                 if (result.Succeeded)
                 {
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Action("ConfirmeEmail","Auth", new { userId = user.Id, code }, Request.Scheme);
-                    return Ok(callbackUrl);
+                    var callbackUrl = Url.Action("ConfirmEmail","Auth", new { userId = user.Id, code }, Request.Scheme);
+                    await _emailSender.SendEmailAsync(loginModel.Email, "Confirm your email",
+                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    return Ok();
                 }
                 return BadRequest(result.Errors);
             }
@@ -96,13 +102,13 @@ namespace MyRecipeBackend.Controllers
         }
 
         [HttpGet]
-        [Route("confirmeemail")]
-        public async Task<IActionResult> ConfirmeEmail(string userId, string code)
+        [Route("confirmemail")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
             var user = await _userManager.FindByIdAsync(userId);
             var result = await _userManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
-                return Ok();
+                return Ok("Successfully confirmed");
 
             return BadRequest(result.Errors);
         }
