@@ -5,10 +5,12 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using MyRecipeBackend.Data;
 using MyRecipeBackend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MyRecipeBackend.Services;
 
@@ -21,16 +23,21 @@ namespace MyRecipeBackend.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender)
+        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, IConfiguration config)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _configuration = config;
         }
 
         [HttpPost]
         [Route("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             if (ModelState.IsValid)
@@ -49,13 +56,11 @@ namespace MyRecipeBackend.Controllers
 
                     authClaims.AddRange(claims);
 
-                    //TODO refactor key into file
-                    var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YVBy0OLlMQG6VVVp1OH7Xzyr7gHuw1qvUC5dcGt3SBM="));
+                    var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 
-                    //TODO evtl refactor urls
                     var token = new JwtSecurityToken(
-                        issuer: "https://localhost:5001",
-                        audience: "https://localhost:5001",
+                        issuer: _configuration["Jwt:Issuer"],
+                        audience: _configuration["Jwt:Audience"],
                         expires: DateTime.Now.AddHours(3),
                         claims: authClaims,
                         signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
@@ -76,6 +81,8 @@ namespace MyRecipeBackend.Controllers
 
         [HttpPost]
         [Route("register")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] LoginModel loginModel)
         {
             if (ModelState.IsValid)
@@ -103,8 +110,12 @@ namespace MyRecipeBackend.Controllers
 
         [HttpGet]
         [Route("confirmemail")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
+            if (userId == null || code == null)
+                return BadRequest();
             var user = await _userManager.FindByIdAsync(userId);
             var result = await _userManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
@@ -113,5 +124,48 @@ namespace MyRecipeBackend.Controllers
             return BadRequest(result.Errors);
         }
 
+        [HttpGet]
+        [Route("resetPassword")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ResetPassword(string email)
+        {
+            if (email == null)
+                return Ok();
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                //TODO create url redirecting into spa to reset password
+                var callbackUrl = Url.Action("ResetPassword", "Auth", new { userId = user.Id, token }, Request.Scheme);
+
+                await _emailSender.SendEmailAsync(email, "Reset your account password",
+                    $"Please follow the link to reset your password:\n {HtmlEncoder.Default.Encode(callbackUrl)}");
+            }
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("resetPassword")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ResetPassword(string userId, string token, string newPassword)
+        {
+            if (userId == null || token == null || newPassword == null)
+                return BadRequest();
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+
+                return BadRequest(result.Errors);
+            }
+
+            return BadRequest();
+        }
     }
 }

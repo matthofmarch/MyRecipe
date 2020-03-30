@@ -58,9 +58,25 @@ namespace MyRecipeBackend
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    ValidAudience = "https://localhost:5001",
-                    ValidIssuer = "https://localhost:5001",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YVBy0OLlMQG6VVVp1OH7Xzyr7gHuw1qvUC5dcGt3SBM="))
+                    ValidAudience = Configuration["Jwt:Audience"],
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                };
+            });
+
+            services.AddSwaggerDocument(config =>
+            {
+                config.PostProcess = document =>
+                {
+                    document.Info.Version = "v1";
+                    document.Info.Title = "MyRecipe API";
+                    document.Info.Description = "A backend for MyRecipes";
+                    document.Info.Contact = new NSwag.OpenApiContact
+                    {
+                        Name = "MyRecipes Team",
+                        Email = "myRecipes.austria@gmail.com",
+                        Url = "https://htl-leonding.at"
+                    };
                 };
             });
 
@@ -88,6 +104,9 @@ namespace MyRecipeBackend
             {
                 endpoints.MapControllers();
             });
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+
         }
     }
 }
