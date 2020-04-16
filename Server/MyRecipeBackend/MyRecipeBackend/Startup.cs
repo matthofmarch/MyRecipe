@@ -105,12 +105,13 @@ namespace MyRecipeBackend
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseCors("AllowMyOrigin");
+
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
-            app.UseCors("AllowMyOrigin");
 
             app.UseOpenApi();
             app.UseSwaggerUi3();
