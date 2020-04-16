@@ -83,6 +83,11 @@ namespace MyRecipeBackend
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowMyOrigin", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -104,6 +109,9 @@ namespace MyRecipeBackend
             {
                 endpoints.MapControllers();
             });
+
+            app.UseCors("AllowMyOrigin");
+
             app.UseOpenApi();
             app.UseSwaggerUi3();
 

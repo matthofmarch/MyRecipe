@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using MyRecipeBackend.Data;
 using MyRecipeBackend.Models;
@@ -17,6 +18,7 @@ using MyRecipeBackend.Services;
 namespace MyRecipeBackend.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("AllowMyOrigin")]
     [ApiController]
     public class AuthController : ControllerBase
     {
