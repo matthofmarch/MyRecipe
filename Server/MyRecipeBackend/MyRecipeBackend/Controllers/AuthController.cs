@@ -11,6 +11,7 @@ using MyRecipeBackend.Data;
 using MyRecipeBackend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MyRecipeBackend.Services;
@@ -137,10 +138,7 @@ namespace MyRecipeBackend.Controllers
             if (user != null)
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-                //TODO create url redirecting into spa to reset password
-                var callbackUrl = Url.Action("ResetPassword", "Auth", new { userId = user.Id, token }, Request.Scheme);
-
+                var callbackUrl = $"{_configuration["SpaLinks:ResetPasswordBaseLink"]}?userId={user.Id}&token={token}";
                 await _emailSender.SendEmailAsync(email, "Reset your account password",
                     $"Please follow the link to reset your password:\n {HtmlEncoder.Default.Encode(callbackUrl)}");
             }
