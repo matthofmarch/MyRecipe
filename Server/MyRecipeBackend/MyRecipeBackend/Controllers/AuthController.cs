@@ -139,9 +139,9 @@ namespace MyRecipeBackend.Controllers
             if (user != null)
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = $"{_configuration["SpaLinks:ResetPasswordBaseLink"]}?userId={user.Id}&token={token}";
+                var callbackUrl = $"{_configuration["SpaLinks:ResetPasswordBaseLink"]}?userId={WebUtility.UrlEncode(user.Id)}&token={WebUtility.UrlEncode(token)}";
                 await _emailSender.SendEmailAsync(email, "Reset your account password",
-                    $"Please follow the link to reset your password: <a href='{WebUtility.UrlEncode(callbackUrl)}'>Click here</a>");
+                    $"Please follow the link to reset your password: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Click here</a>");
             }
             return Ok();
         }
