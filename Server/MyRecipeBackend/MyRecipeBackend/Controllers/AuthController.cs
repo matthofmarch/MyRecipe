@@ -151,14 +151,14 @@ namespace MyRecipeBackend.Controllers
         [Route("resetPassword")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ResetPassword(string userId, string token, string newPassword)
+        public async Task<IActionResult> ResetPassword(ResetPasswordConfirmModel model)
         {
-            if (userId == null || token == null || newPassword == null)
+            if (model.UserId == null || model.Token == null || model.NewPassword == null)
                 return BadRequest();
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(model.UserId);
             if (user != null)
             {
-                var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+                var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
                 if (result.Succeeded)
                 {
                     return Ok();
