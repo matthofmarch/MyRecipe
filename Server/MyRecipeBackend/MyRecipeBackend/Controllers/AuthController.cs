@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -140,7 +141,7 @@ namespace MyRecipeBackend.Controllers
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = $"{_configuration["SpaLinks:ResetPasswordBaseLink"]}?userId={user.Id}&token={token}";
                 await _emailSender.SendEmailAsync(email, "Reset your account password",
-                    $"Please follow the link to reset your password: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Click here</a>");
+                    $"Please follow the link to reset your password: <a href='{WebUtility.UrlEncode(callbackUrl)}'>Click here</a>");
             }
             return Ok();
         }
