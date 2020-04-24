@@ -15,6 +15,7 @@ using MyRecipeBackend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MyRecipeBackend.Services;
@@ -59,19 +60,21 @@ namespace MyRecipeBackend.Controllers
 
                     var authClaims = new List<Claim>
                     {
-                        new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                        new Claim(ClaimTypes.Name, user.Id),
+                        new Claim(ClaimTypes.Email, user.Email),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                     };
 
                     authClaims.AddRange(claims);
 
                     var token = GenerateToken(authClaims);
+                    var refreshToken = await GenerateRefreshToken(user);
 
                     return Ok(new
                     {
                         token,
                         expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:TokenValidMinutes"])),
-                        refreshToken = GenerateRefreshToken(user)
+                        refreshToken = refreshToken.Token
                     });
                 }
                 else if (result.IsNotAllowed)
@@ -169,23 +172,29 @@ namespace MyRecipeBackend.Controllers
 
         [HttpPost]
         [Route("refresh")]
-        public async Task<IActionResult> Refresh(string token, string refreshToken)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Refresh(RefreshModel model)
         {
-            var principal = GetPrincipalFromExpiredToken(token);
-            var user = await _userManager.GetUserAsync(principal);
-            if (user != null && ValidateRefreshToken(user, refreshToken))
+            if (ModelState.IsValid)
             {
-                var newToken = GenerateToken(principal.Claims);
-                var newRefreshToken = await GenerateRefreshToken(user);
-                user.RefreshTokens.Remove(user.RefreshTokens.Single(r => r.Token == refreshToken));
-                user.RefreshTokens.Add(newRefreshToken);
-
-                return Ok(new
+                var principal = GetPrincipalFromExpiredToken(model.Token);
+                var user = await _userManager.FindByIdAsync(principal.Identity.Name);
+                if (user != null && ValidateRefreshToken(user, model.RefreshToken))
                 {
-                    newToken,
-                    expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:TokenValidMinutes"])),
-                    refreshToken = newRefreshToken
-                });
+                    var newToken = GenerateToken(principal.Claims);
+                    var newRefreshToken = await GenerateRefreshToken(user);
+                    user.RefreshTokens.Remove(user.RefreshTokens.Single(r => r.Token == model.RefreshToken));
+                    user.RefreshTokens.Add(newRefreshToken);
+                    await _dbContext.SaveChangesAsync();
+
+                    return Ok(new
+                    {
+                        newToken,
+                        expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:TokenValidMinutes"])),
+                        refreshToken = newRefreshToken.Token
+                    });
+                }
             }
 
             return BadRequest();
@@ -254,6 +263,7 @@ namespace MyRecipeBackend.Controllers
 
         private bool ValidateRefreshToken(ApplicationUser user, string refreshToken)
         {
+            user = _dbContext.Users.Include(u => u.RefreshTokens).Single(u => u.Id == user.Id);
             if (user == null ||
                 !user.RefreshTokens.Exists(rt => rt.Token == refreshToken))
             {
