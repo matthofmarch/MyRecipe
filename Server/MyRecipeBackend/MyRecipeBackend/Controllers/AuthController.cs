@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -28,13 +30,15 @@ namespace MyRecipeBackend.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _dbContext;
 
-        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, IConfiguration config)
+        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, IConfiguration config, ApplicationDbContext dbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _configuration = config;
+            _dbContext = dbContext;
         }
 
         [HttpPost]
@@ -52,6 +56,7 @@ namespace MyRecipeBackend.Controllers
                     var user = await _userManager.FindByEmailAsync(model.Email);
                     var claims = await _userManager.GetClaimsAsync(user);
 
+
                     var authClaims = new List<Claim>
                     {
                         new Claim(JwtRegisteredClaimNames.Sub, user.Email),
@@ -60,20 +65,13 @@ namespace MyRecipeBackend.Controllers
 
                     authClaims.AddRange(claims);
 
-                    var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-
-                    var token = new JwtSecurityToken(
-                        issuer: _configuration["Jwt:Issuer"],
-                        audience: _configuration["Jwt:Audience"],
-                        expires: DateTime.Now.AddHours(3),
-                        claims: authClaims,
-                        signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                    );
+                    var token = GenerateToken(authClaims);
 
                     return Ok(new
                     {
-                        token = new JwtSecurityTokenHandler().WriteToken(token),
-                        expiration = token.ValidTo
+                        token,
+                        expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:TokenValidMinutes"])),
+                        refreshToken = GenerateRefreshToken(user)
                     });
                 }
                 else if (result.IsNotAllowed)
@@ -94,7 +92,7 @@ namespace MyRecipeBackend.Controllers
                 var user = new ApplicationUser
                 {
                     Email = loginModel.Email,
-                    SecurityStamp = new Guid().ToString(),
+                    SecurityStamp = Guid.NewGuid().ToString(),
                     UserName = loginModel.Email
                 };
                 var result = await _userManager.CreateAsync(user, loginModel.Password);
@@ -167,6 +165,109 @@ namespace MyRecipeBackend.Controllers
             }
 
             return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("refresh")]
+        public async Task<IActionResult> Refresh(string token, string refreshToken)
+        {
+            var principal = GetPrincipalFromExpiredToken(token);
+            var user = await _userManager.GetUserAsync(principal);
+            if (user != null && ValidateRefreshToken(user, refreshToken))
+            {
+                var newToken = GenerateToken(principal.Claims);
+                var newRefreshToken = await GenerateRefreshToken(user);
+                user.RefreshTokens.Remove(user.RefreshTokens.Single(r => r.Token == refreshToken));
+                user.RefreshTokens.Add(newRefreshToken);
+
+                return Ok(new
+                {
+                    newToken,
+                    expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:TokenValidMinutes"])),
+                    refreshToken = newRefreshToken
+                });
+            }
+
+            return BadRequest();
+        }
+
+
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
+
+        public async Task<RefreshToken> GenerateRefreshToken(ApplicationUser user)
+        {
+            RefreshToken refreshToken = new RefreshToken()
+            {
+                Token = GenerateRefreshToken(),
+                Expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:RefreshTokenValidMinutes"]))
+            };
+
+            user.RefreshTokens.Add(refreshToken);
+            await _dbContext.SaveChangesAsync();
+            return refreshToken;
+        }
+
+
+        private string GenerateToken(IEnumerable<Claim> claims)
+        {
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:TokenValidMinutes"])),
+                claims: claims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateIssuerSigningKey = true,
+                ValidAudience = _configuration["Jwt:Audience"],
+                ValidIssuer = _configuration["Jwt:Issuer"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])),
+                ValidateLifetime = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+
+            return principal;
+        }
+
+        private bool ValidateRefreshToken(ApplicationUser user, string refreshToken)
+        {
+            if (user == null ||
+                !user.RefreshTokens.Exists(rt => rt.Token == refreshToken))
+            {
+                return false;
+            }
+
+            var storedRefreshToken = user.RefreshTokens.Find(rt => rt.Token == refreshToken);
+
+            if (DateTime.UtcNow > storedRefreshToken.Expiration)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
