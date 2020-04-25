@@ -8,10 +8,10 @@ namespace MyRecipeBackend.Models
 {
     public class RefreshModel
     {
-        [Required]
+        [Required(ErrorMessage = "Token is required")]
         public string Token { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Refresh Token is required")]
         public string RefreshToken { get; set; }
     }
 }

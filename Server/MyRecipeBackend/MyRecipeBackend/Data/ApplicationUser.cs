@@ -9,11 +9,6 @@ namespace MyRecipeBackend.Data
 {
     public class ApplicationUser : IdentityUser
     {
-        public List<RefreshToken> RefreshTokens { get; set; }
 
-        public ApplicationUser()
-        {
-            RefreshTokens = new List<RefreshToken>();
-        }
     }
 }

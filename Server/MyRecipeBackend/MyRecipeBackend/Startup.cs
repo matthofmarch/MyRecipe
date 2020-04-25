@@ -40,8 +40,12 @@ namespace MyRecipeBackend
             services.AddControllers();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = true;
+                })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>(Configuration["Jwt:RefreshProvider"])
                 .AddDefaultTokenProviders();
 
             services.AddAuthentication(options =>

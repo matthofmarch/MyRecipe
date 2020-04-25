@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Net;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -14,7 +12,6 @@ using MyRecipeBackend.Data;
 using MyRecipeBackend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -67,14 +64,17 @@ namespace MyRecipeBackend.Controllers
 
                     authClaims.AddRange(claims);
 
-                    var token = GenerateToken(authClaims);
-                    var refreshToken = await GenerateRefreshToken(user);
+                    var token = GenerateJwtToken(authClaims);
+                    var refreshToken = await _userManager.GenerateUserTokenAsync(user,
+                        _configuration["Jwt:RefreshProvider"], "RefreshToken");
+                    await _userManager.SetAuthenticationTokenAsync(user, _configuration["Jwt:RefreshProvider"],
+                        "RefreshToken", refreshToken);
 
                     return Ok(new
                     {
                         token,
                         expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:TokenValidMinutes"])),
-                        refreshToken = refreshToken.Token
+                        refreshToken
                     });
                 }
                 else if (result.IsNotAllowed)
@@ -153,20 +153,20 @@ namespace MyRecipeBackend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ResetPassword(ResetPasswordConfirmModel model)
         {
-            if (model.UserId == null || model.Token == null || model.NewPassword == null)
-                return BadRequest();
-            var user = await _userManager.FindByIdAsync(model.UserId);
-            if (user != null)
+            if (ModelState.IsValid)
             {
-                var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
-                if (result.Succeeded)
+                var user = await _userManager.FindByIdAsync(model.UserId);
+                if (user != null)
                 {
-                    return Ok();
+                    var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return Ok();
+                    }
+
+                    return BadRequest(result.Errors);
                 }
-
-                return BadRequest(result.Errors);
             }
-
             return BadRequest();
         }
 
@@ -178,21 +178,33 @@ namespace MyRecipeBackend.Controllers
         {
             if (ModelState.IsValid)
             {
-                var principal = GetPrincipalFromExpiredToken(model.Token);
-                var user = await _userManager.FindByIdAsync(principal.Identity.Name);
-                if (user != null && ValidateRefreshToken(user, model.RefreshToken))
+                ClaimsPrincipal principal;
+
+                try
                 {
-                    var newToken = GenerateToken(principal.Claims);
-                    var newRefreshToken = await GenerateRefreshToken(user);
-                    user.RefreshTokens.Remove(user.RefreshTokens.Single(r => r.Token == model.RefreshToken));
-                    user.RefreshTokens.Add(newRefreshToken);
-                    await _dbContext.SaveChangesAsync();
+                    principal =  GetPrincipalFromExpiredToken(model.Token);
+                }
+                catch (SecurityTokenException e)
+                {
+                    return BadRequest(e.Message);
+                }
+                var user = await _userManager.FindByIdAsync(principal.Identity.Name);
+                var result = await _dbContext.UserTokens.SingleOrDefaultAsync(t => t.UserId == user.Id && t.Value == model.RefreshToken);
+                if (user != null && result != null)
+                {
+                    var newToken = GenerateJwtToken(principal.Claims);
+                    await _userManager.RemoveAuthenticationTokenAsync(user, _configuration["Jwt:RefreshProvider"],
+                        "RefreshToken");
+                    var newRefreshToken = await _userManager.GenerateUserTokenAsync(user,
+                        _configuration["Jwt:RefreshProvider"], "RefreshToken");
+                    await _userManager.SetAuthenticationTokenAsync(user, _configuration["Jwt:RefreshProvider"],
+                        "RefreshToken", newRefreshToken);
 
                     return Ok(new
                     {
                         newToken,
                         expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:TokenValidMinutes"])),
-                        refreshToken = newRefreshToken.Token
+                        refreshToken = newRefreshToken
                     });
                 }
             }
@@ -200,30 +212,7 @@ namespace MyRecipeBackend.Controllers
             return BadRequest();
         }
 
-
-        private string GenerateRefreshToken()
-        {
-            var randomNumber = new byte[32];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(randomNumber);
-            return Convert.ToBase64String(randomNumber);
-        }
-
-        public async Task<RefreshToken> GenerateRefreshToken(ApplicationUser user)
-        {
-            RefreshToken refreshToken = new RefreshToken()
-            {
-                Token = GenerateRefreshToken(),
-                Expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:RefreshTokenValidMinutes"]))
-            };
-
-            user.RefreshTokens.Add(refreshToken);
-            await _dbContext.SaveChangesAsync();
-            return refreshToken;
-        }
-
-
-        private string GenerateToken(IEnumerable<Claim> claims)
+        private string GenerateJwtToken(IEnumerable<Claim> claims)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 
@@ -252,32 +241,12 @@ namespace MyRecipeBackend.Controllers
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken securityToken;
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
             var jwtSecurityToken = securityToken as JwtSecurityToken;
             if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
                 throw new SecurityTokenException("Invalid token");
 
             return principal;
-        }
-
-        private bool ValidateRefreshToken(ApplicationUser user, string refreshToken)
-        {
-            user = _dbContext.Users.Include(u => u.RefreshTokens).Single(u => u.Id == user.Id);
-            if (user == null ||
-                !user.RefreshTokens.Exists(rt => rt.Token == refreshToken))
-            {
-                return false;
-            }
-
-            var storedRefreshToken = user.RefreshTokens.Find(rt => rt.Token == refreshToken);
-
-            if (DateTime.UtcNow > storedRefreshToken.Expiration)
-            {
-                return false;
-            }
-
-            return true;
         }
     }
 }
