@@ -202,7 +202,7 @@ namespace MyRecipeBackend.Controllers
 
                     return Ok(new
                     {
-                        newToken,
+                        token = newToken,
                         expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:TokenValidMinutes"])),
                         refreshToken = newRefreshToken
                     });
