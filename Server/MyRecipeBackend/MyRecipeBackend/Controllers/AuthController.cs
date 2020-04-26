@@ -20,7 +20,6 @@ using MyRecipeBackend.Services;
 namespace MyRecipeBackend.Controllers
 {
     [Route("api/[controller]")]
-    [EnableCors("AllowMyOrigin")]
     [ApiController]
     public class AuthController : ControllerBase
     {

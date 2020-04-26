@@ -90,7 +90,7 @@ namespace MyRecipeBackend
 
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowMyOrigin", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+                options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             });
 
         }
@@ -110,7 +110,7 @@ namespace MyRecipeBackend
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseCors("AllowMyOrigin");
+            app.UseCors();
 
 
             app.UseEndpoints(endpoints =>
