@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL
 {
-    interface IDatabaseValidatableObject : IValidatableObject
+    public interface IDatabaseValidatableObject : IValidatableObject
     {
     }
 }
