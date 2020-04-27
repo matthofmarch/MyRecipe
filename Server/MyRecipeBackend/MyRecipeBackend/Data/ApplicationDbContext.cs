@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using MyRecipeBackend.Entities;
 
 namespace MyRecipeBackend.Data
 {
@@ -18,6 +19,9 @@ namespace MyRecipeBackend.Data
         {
             base.OnModelCreating(builder);
         }
+
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<InviteCode> InviteCodes { get; set; }
 
     }
 }
