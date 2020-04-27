@@ -6,16 +6,16 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
+using Core.Contracts;
+using Core.Entities;
+using DAL.Data;
 using Microsoft.AspNetCore.Http;
-using MyRecipeBackend.Data;
 using MyRecipeBackend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using MyRecipeBackend.Services;
 
 namespace MyRecipeBackend.Controllers
 {
@@ -23,13 +23,17 @@ namespace MyRecipeBackend.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
-        private readonly ApplicationDbContext _dbContext;
 
-        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, IConfiguration config, ApplicationDbContext dbContext)
+        public AuthController(UserManager<ApplicationUser> userManager, 
+            SignInManager<ApplicationUser> signInManager, 
+            IEmailSender emailSender, 
+            IConfiguration config, 
+            ApplicationDbContext dbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -181,7 +185,7 @@ namespace MyRecipeBackend.Controllers
 
                 try
                 {
-                    principal =  GetPrincipalFromExpiredToken(model.Token);
+                    principal = GetPrincipalFromExpiredToken(model.Token);
                 }
                 catch (SecurityTokenException e)
                 {

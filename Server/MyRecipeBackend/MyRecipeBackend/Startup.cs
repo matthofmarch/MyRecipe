@@ -5,8 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity;
 using System.Text;
+using Core.Contracts;
+using Core.Entities;
+using DAL;
+using DAL.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using MyRecipeBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyRecipeBackend.Services;
@@ -38,7 +41,9 @@ namespace MyRecipeBackend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IUnitOfWork, UnitOfWork>(serviceProvider =>
+                new UnitOfWork());
+            services.AddDbContext<ApplicationDbContext>();
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                 {

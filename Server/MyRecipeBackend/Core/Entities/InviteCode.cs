@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyRecipeBackend.Entities
+namespace Core.Entities
 {
     public class InviteCode : EntityObject
     {

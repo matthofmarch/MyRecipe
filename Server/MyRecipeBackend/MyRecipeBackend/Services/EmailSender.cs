@@ -2,6 +2,7 @@
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System.Threading.Tasks;
+using Core.Contracts;
 
 namespace MyRecipeBackend.Services
 {
