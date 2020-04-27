@@ -20,9 +20,15 @@ namespace DAL.Repositories
             _dbSet = context.Set<TEntity>();
         }
 
-        protected DbContext Context => _context;
+        protected DbContext Context
+        {
+            get
+            {
+                return _context;
+            }
+        }
 
-        public virtual async Task<IEnumerable<TEntity>> Get(Expression<Func<TEntity, bool>> filter = null,
+    public virtual async Task<IEnumerable<TEntity>> Get(Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "")
         {

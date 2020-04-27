@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Core.Contracts;
 
 namespace Core.Entities
 {
-    public class EntityObject
+    public class EntityObject:IEntityObject
     {
         [Key]
         public Guid Id { get; set; }

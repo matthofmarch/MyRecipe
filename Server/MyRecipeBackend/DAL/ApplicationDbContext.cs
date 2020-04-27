@@ -43,8 +43,5 @@ namespace DAL.Data
             }
         }
 
-        public DbSet<Group> Groups { get; set; }
-        public DbSet<InviteCode> InviteCodes { get; set; }
-
     }
 }
