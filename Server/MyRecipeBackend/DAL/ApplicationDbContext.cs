@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Core.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using MyRecipeBackend.Entities;
 
-namespace MyRecipeBackend.Data
+namespace DAL.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

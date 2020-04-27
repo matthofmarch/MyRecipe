@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace MyRecipeBackend.Services
+namespace Core.Contracts
 {
     public interface IEmailSender
     {
