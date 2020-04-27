@@ -17,5 +17,10 @@ namespace MyRecipeBackend.Entities
 
         public List<InviteCode> InviteCodes { get; set; }
 
+        public Group()
+        {
+            Members = new List<ApplicationUser>();
+            InviteCodes = new List<InviteCode>();
+        }
     }
 }

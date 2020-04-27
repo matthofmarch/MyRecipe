@@ -14,5 +14,7 @@ namespace MyRecipeBackend.Entities
         public string Code { get; set; }
 
         public Group Group { get; set; }
+
+
     }
 }
