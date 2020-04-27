@@ -29,7 +29,6 @@ namespace MyRecipeBackend.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
-        private readonly ApplicationDbContext _dbContext;
 
         public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, IConfiguration config, ApplicationDbContext dbContext)
         {
@@ -37,7 +36,6 @@ namespace MyRecipeBackend.Controllers
             _signInManager = signInManager;
             _emailSender = emailSender;
             _configuration = config;
-            _dbContext = dbContext;
         }
 
         [HttpPost]
@@ -171,47 +169,47 @@ namespace MyRecipeBackend.Controllers
             return BadRequest();
         }
 
-        [HttpPost]
-        [Route("refresh")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Refresh(RefreshModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                ClaimsPrincipal principal;
+        //[HttpPost]
+        //[Route("refresh")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public async Task<IActionResult> Refresh(RefreshModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        ClaimsPrincipal principal;
 
-                try
-                {
-                    principal =  GetPrincipalFromExpiredToken(model.Token);
-                }
-                catch (SecurityTokenException e)
-                {
-                    return BadRequest(e.Message);
-                }
-                var user = await _userManager.FindByIdAsync(principal.Identity.Name);
-                var result = await _dbContext.UserTokens.SingleOrDefaultAsync(t => t.UserId == user.Id && t.Value == model.RefreshToken);
-                if (user != null && result != null)
-                {
-                    var newToken = GenerateJwtToken(principal.Claims);
-                    await _userManager.RemoveAuthenticationTokenAsync(user, _configuration["Jwt:RefreshProvider"],
-                        "RefreshToken");
-                    var newRefreshToken = await _userManager.GenerateUserTokenAsync(user,
-                        _configuration["Jwt:RefreshProvider"], "RefreshToken");
-                    await _userManager.SetAuthenticationTokenAsync(user, _configuration["Jwt:RefreshProvider"],
-                        "RefreshToken", newRefreshToken);
+        //        try
+        //        {
+        //            principal = GetPrincipalFromExpiredToken(model.Token);
+        //        }
+        //        catch (SecurityTokenException e)
+        //        {
+        //            return BadRequest(e.Message);
+        //        }
+        //        var user = await _userManager.FindByIdAsync(principal.Identity.Name);
+        //        var result = await _dbContext.UserTokens.SingleOrDefaultAsync(t => t.UserId == user.Id && t.Value == model.RefreshToken);
+        //        if (user != null && result != null)
+        //        {
+        //            var newToken = GenerateJwtToken(principal.Claims);
+        //            await _userManager.RemoveAuthenticationTokenAsync(user, _configuration["Jwt:RefreshProvider"],
+        //                "RefreshToken");
+        //            var newRefreshToken = await _userManager.GenerateUserTokenAsync(user,
+        //                _configuration["Jwt:RefreshProvider"], "RefreshToken");
+        //            await _userManager.SetAuthenticationTokenAsync(user, _configuration["Jwt:RefreshProvider"],
+        //                "RefreshToken", newRefreshToken);
 
-                    return Ok(new
-                    {
-                        token = newToken,
-                        expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:TokenValidMinutes"])),
-                        refreshToken = newRefreshToken
-                    });
-                }
-            }
+        //            return Ok(new
+        //            {
+        //                token = newToken,
+        //                expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:TokenValidMinutes"])),
+        //                refreshToken = newRefreshToken
+        //            });
+        //        }
+        //    }
 
-            return BadRequest();
-        }
+        //    return BadRequest();
+        //}
 
         private string GenerateJwtToken(IEnumerable<Claim> claims)
         {
