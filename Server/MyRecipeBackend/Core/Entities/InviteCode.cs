@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Core.Entities
 {
-    public class InviteCode : EntityObject
+    public partial class InviteCode : EntityObject
     {
         [Required]
         public DateTime CreationDate { get; set; }

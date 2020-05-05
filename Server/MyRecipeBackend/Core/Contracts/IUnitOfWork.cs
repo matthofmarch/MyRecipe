@@ -7,6 +7,8 @@ namespace Core.Contracts
 {
     public interface IUnitOfWork : IAsyncDisposable
     {
+        IGroupRepository Groups { get; }
+        IInviteCodeRepository InviteCodes { get; }
 
         Task<int> SaveChangesAsync();
         Task DeleteDatabaseAsync();

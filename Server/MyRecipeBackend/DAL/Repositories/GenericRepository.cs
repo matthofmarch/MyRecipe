@@ -5,30 +5,22 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Core.Contracts;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DAL.Repositories
 {
     public class GenericRepository<TEntity> where TEntity : class, IEntityObject
     {
-        private readonly DbContext _context;
         private readonly DbSet<TEntity> _dbSet;
 
         public GenericRepository(DbContext context)
         {
-            _context = context;
+            Context = context;
             _dbSet = context.Set<TEntity>();
         }
 
-        protected DbContext Context
-        {
-            get
-            {
-                return _context;
-            }
-        }
+        protected DbContext Context { get; }
 
-    public virtual async Task<IEnumerable<TEntity>> Get(Expression<Func<TEntity, bool>> filter = null,
+        public virtual async Task<IEnumerable<TEntity>> Get(Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "")
         {

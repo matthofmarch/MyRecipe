@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyRecipeBackend.Services;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 
 namespace MyRecipeBackend
 {
@@ -88,6 +90,17 @@ namespace MyRecipeBackend
                         Url = "https://htl-leonding.at"
                     };
                 };
+
+                config.AddSecurity("Bearer", new OpenApiSecurityScheme()
+                {
+                    Description = "Standard Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Name = "Authorization",
+                    Type = OpenApiSecuritySchemeType.ApiKey
+                });
+
+                config.OperationProcessors.Add(new OperationSecurityScopeProcessor("Bearer"));
+
             });
 
             services.AddTransient<IEmailSender, EmailSender>();

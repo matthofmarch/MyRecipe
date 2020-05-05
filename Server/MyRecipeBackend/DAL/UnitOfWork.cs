@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Contracts;
 using DAL.Data;
+using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace DAL
 {
@@ -15,9 +17,6 @@ namespace DAL
         private readonly ApplicationDbContext _dbContext;
         private bool _disposed;
 
-        /// <summary>
-        /// ConnectionString kommt aus den appsettings.json
-        /// </summary>
         public UnitOfWork() : this(new ApplicationDbContext())
         {
         }
@@ -25,9 +24,12 @@ namespace DAL
         public UnitOfWork(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
+            Groups = new GroupRepository(_dbContext);
+            InviteCodes = new InviteCodeRepository(_dbContext);
         }
 
-
+        public IGroupRepository Groups { get; set; }
+        public IInviteCodeRepository InviteCodes { get; set; }
 
         public async Task<int> SaveChangesAsync()
         {
