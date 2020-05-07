@@ -26,10 +26,12 @@ namespace DAL
             _dbContext = dbContext;
             Groups = new GroupRepository(_dbContext);
             InviteCodes = new InviteCodeRepository(_dbContext);
+            Users = new UserRepository(_dbContext);
         }
 
         public IGroupRepository Groups { get; set; }
         public IInviteCodeRepository InviteCodes { get; set; }
+        public IUserRepository Users { get; set; }
 
         public async Task<int> SaveChangesAsync()
         {

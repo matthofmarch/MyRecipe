@@ -9,6 +9,7 @@ namespace Core.Contracts
     {
         IGroupRepository Groups { get; }
         IInviteCodeRepository InviteCodes { get; }
+        IUserRepository Users { get; }
 
         Task<int> SaveChangesAsync();
         Task DeleteDatabaseAsync();

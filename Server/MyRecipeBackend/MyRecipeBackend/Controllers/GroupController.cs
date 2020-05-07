@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -8,7 +7,6 @@ using Core.Contracts;
 using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyRecipeBackend.Models;
 
@@ -19,12 +17,10 @@ namespace MyRecipeBackend.Controllers
     [ApiController]
     public class GroupController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUnitOfWork _uow;
 
-        public GroupController(UserManager<ApplicationUser> userManager, IUnitOfWork uow)
+        public GroupController(IUnitOfWork uow)
         {
-            _userManager = userManager;
             _uow = uow;
         }
 
@@ -37,13 +33,12 @@ namespace MyRecipeBackend.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
                 return BadRequest("Token corrupted");
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _uow.Users.GetUserByIdAsync(userId);
             if (user == null)
                 return BadRequest("User not found");
 
             var group = new Group() { Name = name };
-            group.Members.Add(user);
-            await _uow.Groups.AddAsync(group);
+            user.Group = group;
 
             try
             {
@@ -66,7 +61,7 @@ namespace MyRecipeBackend.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
                 return BadRequest("Token corrupted");
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _uow.Users.GetUserByIdAsync(userId);
             if (user == null)
                 return BadRequest("User not found");
 
@@ -91,7 +86,7 @@ namespace MyRecipeBackend.Controllers
                 return BadRequest(ex.Message);
             }
 
-            return Ok(inviteCode);
+            return Ok(new InviteCodeDto(inviteCode));
         }
 
         [HttpGet]
@@ -103,7 +98,7 @@ namespace MyRecipeBackend.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
                 return BadRequest("Token corrupted");
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _uow.Users.GetUserByIdAsync(userId);
             if (user == null)
                 return BadRequest("User not found");
 
@@ -135,7 +130,7 @@ namespace MyRecipeBackend.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
                 return BadRequest("Token corrupted");
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _uow.Users.GetUserByIdAsync(userId);
             if (user == null)
                 return BadRequest("User not found");
 
