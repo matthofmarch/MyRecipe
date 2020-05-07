@@ -60,8 +60,9 @@ namespace MyRecipeBackend.Controllers
 
                     var authClaims = new List<Claim>
                     {
-                        new Claim(ClaimTypes.Name, user.Id),
+                        new Claim(ClaimTypes.NameIdentifier, user.Id),
                         new Claim(ClaimTypes.Email, user.Email),
+                        new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                     };
 

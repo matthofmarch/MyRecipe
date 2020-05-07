@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Core.Contracts;
 using Core.Entities;
@@ -32,7 +34,10 @@ namespace MyRecipeBackend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GroupDto>> CreateGroup(string name)
         {
-            var user = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                return BadRequest("Token corrupted");
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 return BadRequest("User not found");
 
@@ -58,7 +63,10 @@ namespace MyRecipeBackend.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<InviteCode>> CreateInviteCode()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                return BadRequest("Token corrupted");
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 return BadRequest("User not found");
 
@@ -92,7 +100,10 @@ namespace MyRecipeBackend.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> AcceptInvite(string inviteCode)
         {
-            var user = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                return BadRequest("Token corrupted");
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 return BadRequest("User not found");
 
@@ -121,7 +132,10 @@ namespace MyRecipeBackend.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<GroupDto>> GetGroup()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+                return BadRequest("Token corrupted");
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 return BadRequest("User not found");
 
