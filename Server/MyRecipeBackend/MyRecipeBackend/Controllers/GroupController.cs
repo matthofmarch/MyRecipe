@@ -125,6 +125,7 @@ namespace MyRecipeBackend.Controllers
         [Route("getGroupForUser")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult<GroupDto>> GetGroup()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -135,6 +136,8 @@ namespace MyRecipeBackend.Controllers
                 return BadRequest("User not found");
 
             var group = await _uow.Groups.GetGroupForUserIncludeAllAsync(user.Id);
+            if (group == null)
+                return NoContent();
 
             return new GroupDto(group);
         }
