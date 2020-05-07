@@ -9,11 +9,11 @@ namespace MyRecipeBackend.Models
 {
     public class UserDto
     {
-        public string Username { get; set; }
+        public string Email { get; set; }
 
         public UserDto(ApplicationUser user)
         {
-            Username = user.Email;
+            Email = user.Email;
         }
     }
 }
