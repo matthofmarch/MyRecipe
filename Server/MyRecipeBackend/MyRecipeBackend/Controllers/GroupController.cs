@@ -28,7 +28,7 @@ namespace MyRecipeBackend.Controllers
         [Route("create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<GroupDto>> CreateGroup(string name)
+        public async Task<ActionResult<GroupDto>> CreateGroup([FromBody]string name)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -136,7 +136,6 @@ namespace MyRecipeBackend.Controllers
 
             var group = await _uow.Groups.GetGroupForUserIncludeAllAsync(user.Id);
 
-            //TODO Member Dto
             return new GroupDto(group);
         }
 
