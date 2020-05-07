@@ -28,7 +28,7 @@ namespace MyRecipeBackend.Controllers
         [Route("create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<GroupDto>> CreateGroup([FromBody]string name)
+        public async Task<ActionResult<GroupDto>> CreateGroup(string name)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
