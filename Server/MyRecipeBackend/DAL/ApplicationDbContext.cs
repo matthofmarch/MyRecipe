@@ -15,6 +15,10 @@ namespace DAL.Data
     {
         public DbSet<Group> Groups { get; set; }
         public DbSet<InviteCode> InviteCodes { get; set; }
+        public DbSet<BaseRecipe> BaseRecipes { get; set; }
+        public DbSet<UserRecipe> UserRecipes { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<RecipeImage> RecipeImages { get; set; }
 
         public ApplicationDbContext()
         {

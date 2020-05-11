@@ -70,7 +70,7 @@ namespace MyRecipeBackend.Controllers
                 return BadRequest("User not in Group");
 
             var inviteCode = new InviteCode
-            {
+            {   //TODO generate as often until unique
                 Code = GenerateInviteCode(),
                 CreationDate = DateTime.Now
             };
