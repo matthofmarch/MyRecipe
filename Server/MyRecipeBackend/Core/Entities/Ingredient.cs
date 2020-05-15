@@ -10,11 +10,14 @@ namespace Core.Entities
         public string Name { get; set; }
 
         [Required]
-        public List<IngredientType> Types { get; set; }
+        public List<IngredientTag> Tags { get; set; }
+
+
 
         public Ingredient()
         {
-            Types = new List<IngredientType>();
+            Tags = new List<IngredientTag>();
+
         }
     }
 }
