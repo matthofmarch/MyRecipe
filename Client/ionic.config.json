@@ -1,7 +1,0 @@
-{
-  "name": "Dinly",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular"
-}
