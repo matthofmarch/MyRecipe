@@ -11,12 +11,12 @@ namespace Core.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public int CookingTimeInMin { get; set; }
-        public List<Ingredient> Ingredients { get; set; }
+        public ICollection<RecipeIngredientRelation> Ingredients { get; set; }
         public RecipeImage Image { get; set; }
 
         public BaseRecipe()
         {
-            Ingredients = new List<Ingredient>();
+            Ingredients = new List<RecipeIngredientRelation>();
         }
     }
 }

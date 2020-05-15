@@ -11,6 +11,6 @@ namespace MyRecipeBackend.Controllers
     [ApiController]
     public class RecipeController : ControllerBase
     {
-
+        
     }
 }

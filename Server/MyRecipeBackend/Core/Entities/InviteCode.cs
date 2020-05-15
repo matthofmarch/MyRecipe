@@ -15,6 +15,5 @@ namespace Core.Entities
 
         public Group Group { get; set; }
 
-
     }
 }

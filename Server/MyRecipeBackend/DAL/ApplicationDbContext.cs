@@ -8,6 +8,7 @@ using Core.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Runtime.CompilerServices;
 
 namespace DAL.Data
 {
@@ -18,7 +19,10 @@ namespace DAL.Data
         public DbSet<BaseRecipe> BaseRecipes { get; set; }
         public DbSet<UserRecipe> UserRecipes { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<Tag> NutritionTags { get; set; }
+
         public DbSet<RecipeImage> RecipeImages { get; set; }
+
 
         public ApplicationDbContext()
         {
@@ -31,6 +35,34 @@ namespace DAL.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<RecipeIngredientRelation>()
+                .HasKey(rel => new { rel.RecipeId, rel.IngredientId });
+
+            builder.Entity<RecipeIngredientRelation>()
+                .HasOne(rel => rel.Recipe)
+                .WithMany(rel => rel.Ingredients) // Property from recipe
+                .HasForeignKey(rel => rel.RecipeId);
+
+            builder.Entity<RecipeIngredientRelation>()
+                .HasOne(rel => rel.Ingredient)
+                .WithMany(rel => rel.Recipes) // Property from ingredient
+                .HasForeignKey(rel => rel.IngredientId);
+
+            builder.Entity<IngredientTagRelation>()
+                .HasKey(rel => new { rel.IngredientId, rel.TagId });
+
+            builder.Entity<IngredientTagRelation>()
+                .HasOne(rel => rel.Ingredient)
+                .WithMany(rel => rel.Tags) // Property from ingredient
+                .HasForeignKey(rel => rel.IngredientId);
+
+            builder.Entity<IngredientTagRelation>()
+                .HasOne(rel => rel.Tag)
+                .WithMany(rel => rel.Ingredients) // Property from Tag
+                .HasForeignKey(rel => rel.TagId);
+
+
+
             base.OnModelCreating(builder);
         }
 

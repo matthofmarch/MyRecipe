@@ -9,14 +9,16 @@ namespace Core.Entities
         [Required]
         public string Name { get; set; }
 
-        [Required]
-        public List<IngredientTag> Tags { get; set; }
+        public ICollection<RecipeIngredientRelation> Recipes { get; set; }
+
+        public ICollection<IngredientTagRelation> Tags { get; set; }
 
 
 
         public Ingredient()
         {
-            Tags = new List<IngredientTag>();
+            Tags = new List<IngredientTagRelation>();
+            Recipes = new List<RecipeIngredientRelation>();
 
         }
     }
