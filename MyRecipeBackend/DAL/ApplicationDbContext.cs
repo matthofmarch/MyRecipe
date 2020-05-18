@@ -48,18 +48,18 @@ namespace DAL.Data
                 .WithMany(rel => rel.Recipes) // Property from ingredient
                 .HasForeignKey(rel => rel.IngredientId);
 
-            builder.Entity<IngredientTagRelation>()
-                .HasKey(rel => new { rel.IngredientId, rel.TagId });
+            builder.Entity<IngredientTagRelation>(e =>
+            {
+                e.HasKey(rel => new { rel.IngredientId, rel.TagId });
+                e.HasOne(rel => rel.Ingredient)
+                    .WithMany(rel => rel.Tags) // Property from ingredient
+                    .HasForeignKey(rel => rel.IngredientId);
 
-            builder.Entity<IngredientTagRelation>()
-                .HasOne(rel => rel.Ingredient)
-                .WithMany(rel => rel.Tags) // Property from ingredient
-                .HasForeignKey(rel => rel.IngredientId);
-
-            builder.Entity<IngredientTagRelation>()
-                .HasOne(rel => rel.Tag)
-                .WithMany(rel => rel.Ingredients) // Property from Tag
-                .HasForeignKey(rel => rel.TagId);
+                e.HasOne(rel => rel.Tag)
+                    .WithMany(rel => rel.Ingredients) // Property from Tag
+                    .HasForeignKey(rel => rel.TagId);
+            });
+                
 
 
 

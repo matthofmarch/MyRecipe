@@ -10,6 +10,10 @@ namespace Core.Contracts
         IGroupRepository Groups { get; }
         IInviteCodeRepository InviteCodes { get; }
         IUserRepository Users { get; }
+        IBaseRecipeRepository BaseRecipes { get; }
+        IUserRecipeRepository UserRecipes { get; }
+
+        IIngredientRepository Ingredients { get; }
 
         Task<int> SaveChangesAsync();
         Task DeleteDatabaseAsync();

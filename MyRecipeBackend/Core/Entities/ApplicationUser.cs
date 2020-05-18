@@ -8,5 +8,7 @@ namespace Core.Entities
         public Group Group { get; set; }
 
         public List<UserRecipe> Recipes { get; set; }
+
+
     }
 }
