@@ -57,5 +57,13 @@ namespace DAL.Repositories
 
             return await query.Skip(page * pageSize).Take(pageSize).ToArrayAsync();
         }
+
+        public async Task RemoveIngredients(Guid recipeId)
+        {
+            var relations = await _dbContext.RecipeIngredientRelations
+                .Where(ri => ri.RecipeId == recipeId)
+                .ToArrayAsync();
+            _dbContext.RecipeIngredientRelations.RemoveRange(relations);
+        }
     }
 }

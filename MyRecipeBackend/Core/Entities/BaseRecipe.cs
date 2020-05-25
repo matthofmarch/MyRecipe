@@ -22,6 +22,7 @@ namespace Core.Entities
 
         public void SetIngredients(ICollection<Ingredient> ingredients)
         {
+            //TODO 
             Ingredients = ingredients.Select(i =>
                 new RecipeIngredientRelation
                 {

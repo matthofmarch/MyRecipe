@@ -48,7 +48,7 @@ namespace MyRecipeBackend.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateRecipe(Guid id, UserRecipeModel userRecipeModel)
+        public async Task<ActionResult> UpdateRecipe([FromRoute]Guid id, UserRecipeModel userRecipeModel)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -68,23 +68,22 @@ namespace MyRecipeBackend.Controllers
             dbUserRecipe.CookingTimeInMin = userRecipeModel.CookingTimeInMin;
             dbUserRecipe.Description = userRecipeModel.Description;
             dbUserRecipe.Name = userRecipeModel.Name;
-            dbUserRecipe.Image.Image = userRecipeModel.Image;
-            var ingredients = await _uow.Ingredients.GetListByIdentifiersAsync(userRecipeModel.Ingredients);
-            dbUserRecipe.SetIngredients(ingredients);
-                /*ingredients.Select(i => new RecipeIngredientRelation
+            if (userRecipeModel.Image != null)
             {
-                Ingredient = i,
-                Recipe = dbUserRecipe
-            }).ToArray();*/
+                dbUserRecipe.Image.Image = userRecipeModel.Image;
+            }
 
-            try
-            {
-                await _uow.SaveChangesAsync();
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var ingredients = await _uow.Ingredients
+                .GetListByIdentifiersAsync(userRecipeModel.Ingredients);
+
+
+            await _uow.UserRecipes.RemoveIngredients(dbUserRecipe.Id);
+            try { await _uow.SaveChangesAsync(); }
+            catch (ValidationException ex) { return BadRequest(ex.Message); }
+
+            dbUserRecipe.SetIngredients(ingredients);
+            try { await _uow.SaveChangesAsync(); }
+            catch (ValidationException ex) { return BadRequest(ex.Message); }
 
             return NoContent();
         }

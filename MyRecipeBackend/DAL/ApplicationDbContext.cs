@@ -20,7 +20,7 @@ namespace DAL.Data
         public DbSet<BaseRecipe> BaseRecipes { get; set; }
         public DbSet<UserRecipe> UserRecipes { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
-        public DbSet<Tag> NutritionTags { get; set; }
+        public DbSet<RecipeIngredientRelation> RecipeIngredientRelations { get; set; }
 
         public DbSet<RecipeImage> RecipeImages { get; set; }
 
