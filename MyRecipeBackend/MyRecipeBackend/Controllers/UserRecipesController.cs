@@ -57,7 +57,35 @@ namespace MyRecipeBackend.Controllers
             if (user == null)
                 return BadRequest("User not found");
 
-            throw new NotImplementedException();
+            if (id != userRecipeModel.Id)
+                return BadRequest("Ids do not match");
+
+            var dbUserRecipe = await _uow.UserRecipes.GetByIdAsync(user, id);
+            if (dbUserRecipe == null)
+                return NotFound();
+
+            dbUserRecipe.AddToGroupPool = userRecipeModel.AddToGroupPool;
+            dbUserRecipe.CookingTimeInMin = userRecipeModel.CookingTimeInMin;
+            dbUserRecipe.Description = userRecipeModel.Description;
+            dbUserRecipe.Name = userRecipeModel.Name;
+            dbUserRecipe.Image.Image = userRecipeModel.Image;
+            var ingredients = await _uow.Ingredients.GetListByIdentifiersAsync(userRecipeModel.Ingredients);
+            dbUserRecipe.Ingredients = ingredients.Select(i => new RecipeIngredientRelation
+            {
+                Ingredient = i,
+                Recipe = dbUserRecipe
+            }).ToArray();
+
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return NoContent();
         }
 
         [HttpGet]
