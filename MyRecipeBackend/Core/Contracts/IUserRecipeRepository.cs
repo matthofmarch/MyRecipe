@@ -9,6 +9,6 @@ namespace Core.Contracts
         Task AddAsync(UserRecipe userRecipe);
         Task<UserRecipe[]> GetPagedRecipesAsync(ApplicationUser user, string filter, int page, int pageSize, bool loadImage);
         Task<UserRecipe> GetByIdAsync(ApplicationUser user, Guid id);
-        void Delete(UserRecipe userRecipe);
+        void Delete(UserRecipe userRecipe); 
     }
 }
