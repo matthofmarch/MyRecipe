@@ -21,6 +21,8 @@ namespace MyRecipeBackend.Models
             AddToGroupPool = r.AddToGroupPool;
         }
 
+        public UserRecipeModel(){}
+
 
         public Guid Id { get; set; }
         [Required]

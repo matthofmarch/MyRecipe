@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Core.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -35,6 +36,8 @@ namespace DAL.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
+
             builder.Entity<RecipeIngredientRelation>()
                 .HasKey(rel => new { rel.RecipeId, rel.IngredientId });
 
@@ -59,11 +62,19 @@ namespace DAL.Data
                     .WithMany(rel => rel.Ingredients) // Property from Tag
                     .HasForeignKey(rel => rel.TagId);
             });
-                
 
+            SeedDatabase(builder);
+        }
 
+        private void SeedDatabase(ModelBuilder builder)
+        {
+            builder.Entity<Ingredient>().HasData(new List<Ingredient>
+            {
+                new Ingredient {Id = new Guid("00000000-0000-0000-0000-000000000001"), Name = "Salad"},
+                new Ingredient {Id = new Guid("00000000-0000-0000-0000-000000000002"), Name = "Potato"},
+                new Ingredient {Id = new Guid("00000000-0000-0000-0000-000000000003"), Name = "Rice"}
+            });
 
-            base.OnModelCreating(builder);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

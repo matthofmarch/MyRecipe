@@ -7,7 +7,7 @@ namespace Core.Contracts
     {
         Task<Ingredient> GetByIdentifierAsync(string identifier);
 
-        Task<Ingredient[]> GetListByIdentifiersAsync(string[] indentifiers);
+        Task<Ingredient[]> GetListByIdentifiersAsync(string[] identifiers);
 
     }
 }

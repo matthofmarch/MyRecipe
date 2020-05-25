@@ -18,14 +18,20 @@ namespace DAL.Repositories
             _dbContext = dbContext;
         }
 
+        public async Task<Ingredient> AddAsync(Ingredient ingredient)
+        {
+            var inserted = await _dbContext.Ingredients.AddAsync(ingredient);
+            return inserted.Entity;
+        }
+
         public Task<Ingredient> GetByIdentifierAsync(string identifier)
         {
             return _dbContext.Ingredients.SingleAsync(i => i.Name == identifier);
         }
 
-        public Task<Ingredient[]> GetListByIdentifiersAsync(string[] indentifiers)
+        public async Task<Ingredient[]> GetListByIdentifiersAsync(string[] identifiers)
         {
-            return Task.WhenAll(indentifiers.Select(i => GetByIdentifierAsync(i)));
+            return await _dbContext.Ingredients.Where(x => identifiers.Contains(x.Name)).ToArrayAsync();
         } 
     }
 }
