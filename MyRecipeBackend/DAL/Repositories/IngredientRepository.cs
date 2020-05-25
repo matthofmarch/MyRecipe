@@ -32,6 +32,6 @@ namespace DAL.Repositories
         public async Task<Ingredient[]> GetListByIdentifiersAsync(string[] identifiers)
         {
             return await _dbContext.Ingredients.Where(x => identifiers.Contains(x.Name)).ToArrayAsync();
-        } 
+        }
     }
 }

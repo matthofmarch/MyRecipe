@@ -55,11 +55,7 @@ namespace MyRecipeBackend.Models
                 Image = new RecipeImage { Image = Image },
                 ApplicationUser = user
             };
-            userRecipe.Ingredients = ingredients.Select(i => new RecipeIngredientRelation
-            {
-                Ingredient = i,
-                Recipe = userRecipe
-            }).ToArray();
+            userRecipe.SetIngredients(ingredients);
 
             return userRecipe;
         }

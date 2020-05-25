@@ -36,7 +36,8 @@ namespace DAL.Repositories
 
         public async Task<UserRecipe[]> GetPagedRecipesAsync(ApplicationUser user, string filter, int page, int pageSize, bool loadImage)
         {
-            var query = _dbContext.UserRecipes.Where(r => r.ApplicationUser.Id == user.Id);
+            var query = _dbContext.UserRecipes
+                .Where(r => r.ApplicationUser.Id == user.Id);
 
             if (loadImage)
             {
@@ -49,6 +50,10 @@ namespace DAL.Repositories
             }
 
             query = query.OrderBy(r => r.Name);
+            
+            query = query.Include(r => r.Ingredients)
+                .ThenInclude(ri => ri.Ingredient);
+
 
             return await query.Skip(page * pageSize).Take(pageSize).ToArrayAsync();
         }

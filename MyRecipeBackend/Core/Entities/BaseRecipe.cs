@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reflection.Metadata;
 
 namespace Core.Entities
@@ -17,6 +18,16 @@ namespace Core.Entities
         public BaseRecipe()
         {
             Ingredients = new List<RecipeIngredientRelation>();
+        }
+
+        public void SetIngredients(ICollection<Ingredient> ingredients)
+        {
+            Ingredients = ingredients.Select(i =>
+                new RecipeIngredientRelation
+                {
+                    Ingredient = i,
+                    Recipe = this
+                }).ToArray();
         }
     }
 }

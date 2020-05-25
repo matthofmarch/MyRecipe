@@ -70,11 +70,12 @@ namespace MyRecipeBackend.Controllers
             dbUserRecipe.Name = userRecipeModel.Name;
             dbUserRecipe.Image.Image = userRecipeModel.Image;
             var ingredients = await _uow.Ingredients.GetListByIdentifiersAsync(userRecipeModel.Ingredients);
-            dbUserRecipe.Ingredients = ingredients.Select(i => new RecipeIngredientRelation
+            dbUserRecipe.SetIngredients(ingredients);
+                /*ingredients.Select(i => new RecipeIngredientRelation
             {
                 Ingredient = i,
                 Recipe = dbUserRecipe
-            }).ToArray();
+            }).ToArray();*/
 
             try
             {
@@ -104,7 +105,13 @@ namespace MyRecipeBackend.Controllers
 
             UserRecipe[] recipes = await _uow.UserRecipes.GetPagedRecipesAsync(user, filter, page, pageSize, loadImage);
 
-            return recipes.Select(r => new UserRecipeModel(r)).ToArray();
+            return recipes.Select(r =>
+            {
+                var recipeModel = new UserRecipeModel(r);
+                recipeModel.Ingredients = r.Ingredients
+                    .Select(i => i.Ingredient.Name).ToArray();
+                return recipeModel;
+            }).ToArray();
         }
 
         [HttpDelete("{id}")]
