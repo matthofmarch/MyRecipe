@@ -26,7 +26,7 @@ namespace MyRecipeBackend.Controllers
         }
 
         
-        [HttpPost("create")]
+        [HttpPost("")]
         public async Task<ActionResult> CreateRecipe(UserRecipeModel userRecipeModel)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -47,7 +47,7 @@ namespace MyRecipeBackend.Controllers
             return Ok();
         }
 
-        [HttpPut("update/{id}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult> UpdateRecipe(Guid id, UserRecipeModel userRecipeModel)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -90,7 +90,7 @@ namespace MyRecipeBackend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<UserRecipeModel[]>> GetRecipes(
+        public async Task<ActionResult<UserRecipeModel[]>> GetPaged(
             string filter,
             int page = 0,
             int pageSize = 20,
