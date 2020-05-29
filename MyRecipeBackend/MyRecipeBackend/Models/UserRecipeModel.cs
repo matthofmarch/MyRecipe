@@ -31,7 +31,7 @@ namespace MyRecipeBackend.Models
         public int CookingTimeInMin { get; set; }
         public string[] Ingredients { get; set; }
 
-        public byte[] Image { get; set; }
+        public Uri Image { get; set; }
 
         public bool AddToGroupPool { get; set; }
 
