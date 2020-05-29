@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +12,7 @@ using DAL;
 using DAL.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using MyRecipeBackend.Services;
 using NSwag;
@@ -122,10 +124,15 @@ namespace MyRecipeBackend
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "RecipeImages")),
+                RequestPath = "/RecipeImages"
+            });
 
             app.UseRouting();
             app.UseCors();
-
 
             app.UseAuthentication();
             app.UseAuthorization();
