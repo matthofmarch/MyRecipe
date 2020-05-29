@@ -127,8 +127,8 @@ namespace MyRecipeBackend
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), "RecipeImages")),
-                RequestPath = "/RecipeImages"
+                    Path.Combine(Directory.GetCurrentDirectory(), Configuration["StaticFiles:ImageBasePath"])),
+                RequestPath = "/" + Configuration["StaticFiles:ImageBasePath"]
             });
 
             app.UseRouting();

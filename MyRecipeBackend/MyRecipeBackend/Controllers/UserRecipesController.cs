@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,6 +10,8 @@ using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.Extensions.Configuration;
 using MyRecipeBackend.Models;
 
 namespace MyRecipeBackend.Controllers
@@ -20,9 +23,12 @@ namespace MyRecipeBackend.Controllers
     {
 
         private readonly IUnitOfWork _uow;
-        public UserRecipesController(IUnitOfWork uow)
+        private readonly IConfiguration _configuration;
+
+        public UserRecipesController(IUnitOfWork uow, IConfiguration config)
         {
             _uow = uow;
+            _configuration = config;
         }
 
         
@@ -137,6 +143,27 @@ namespace MyRecipeBackend.Controllers
             return NoContent();
         }
 
+
+        [HttpPost("uploadImage")]
+        public async Task<ActionResult> UploadImage([FromForm]IFormFile image)
+        {
+            if (image == null)
+                return BadRequest("Image is required");
+            if (image.Length <= 0)
+                return BadRequest("Image length is 0");
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(),
+                _configuration["StaticFiles:ImageBasePath"],
+                DateTime.Now.ToString("yy-MM-dd"), 
+                Guid.NewGuid().ToString(), 
+                Path.GetExtension(image.FileName));
+
+            await using var fileStream = new FileStream(path, FileMode.Create);
+            await image.CopyToAsync(fileStream);
+        
+
+            return Ok(new {url = path});
+        }
 
     }
 }
