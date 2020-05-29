@@ -152,17 +152,19 @@ namespace MyRecipeBackend.Controllers
             if (image.Length <= 0)
                 return BadRequest("Image length is 0");
 
-            var path = Path.Combine(Directory.GetCurrentDirectory(),
-                _configuration["StaticFiles:ImageBasePath"],
-                DateTime.Now.ToString("yy-MM-dd"), 
-                Guid.NewGuid().ToString(), 
+            var filename = string.Join('_',
+                DateTime.Now.ToString("yy-MM-dd"),
+                Guid.NewGuid().ToString(),
                 Path.GetExtension(image.FileName));
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(),
+                _configuration["StaticFiles:ImageBasePath"],filename);
 
             await using var fileStream = new FileStream(path, FileMode.Create);
             await image.CopyToAsync(fileStream);
         
 
-            return Ok(new {url = path});
+            return Ok(new {url = $"{this.Request.Scheme}://{this.Request.Host}/{_configuration["StaticFiles:ImageBasePath"]}/{filename}"});
         }
 
     }
