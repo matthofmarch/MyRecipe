@@ -338,3 +338,9 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+
+
+
+#RecipeImages do not belong to git, folder should still continue existing
+/MyRecipeBackend/MyRecipeBackend/RecipeImages/*
