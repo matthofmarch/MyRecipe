@@ -6,9 +6,11 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Core.Contracts;
+using Core.Contracts.Services;
 using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -24,21 +26,20 @@ namespace MyRecipeBackend.Controllers
 
         private readonly IUnitOfWork _uow;
         private readonly IConfiguration _configuration;
+        private readonly IUserService _userService;
 
-        public UserRecipesController(IUnitOfWork uow, IConfiguration config)
+        public UserRecipesController(IUnitOfWork uow, IConfiguration config, IUserService userService)
         {
             _uow = uow;
             _configuration = config;
+            _userService = userService;
         }
 
         
-        [HttpPost("")]
+        [HttpPost("create")]
         public async Task<ActionResult> CreateRecipe(UserRecipeModel userRecipeModel)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
-                return BadRequest("Token corrupted");
-            var user = await _uow.Users.GetUserByIdAsync(userId);
+            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
             if (user == null)
                 return BadRequest("User not found");
 
@@ -53,30 +54,25 @@ namespace MyRecipeBackend.Controllers
             return Ok();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("update/{id}")]
         public async Task<ActionResult> UpdateRecipe([FromRoute]Guid id, UserRecipeModel userRecipeModel)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
-                return BadRequest("Token corrupted");
-            var user = await _uow.Users.GetUserByIdAsync(userId);
-            if (user == null)
-                return BadRequest("User not found");
+            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+            if (user == null) return BadRequest("User not found");
 
-            if (id != userRecipeModel.Id)
-                return BadRequest("Ids do not match");
+            if (id != userRecipeModel.Id) return BadRequest("Ids do not match");
 
             var dbUserRecipe = await _uow.UserRecipes.GetByIdAsync(user, id);
-            if (dbUserRecipe == null)
-                return NotFound();
+            if (dbUserRecipe == null) return NotFound();
 
             dbUserRecipe.AddToGroupPool = userRecipeModel.AddToGroupPool;
             dbUserRecipe.CookingTimeInMin = userRecipeModel.CookingTimeInMin;
             dbUserRecipe.Description = userRecipeModel.Description;
             dbUserRecipe.Name = userRecipeModel.Name;
+
             if (userRecipeModel.Image != null)
             {
-                dbUserRecipe.Image.Image = userRecipeModel.Image;
+                dbUserRecipe.Image.ImageUri = userRecipeModel.Image;
             }
 
             var ingredients = await _uow.Ingredients
@@ -94,17 +90,15 @@ namespace MyRecipeBackend.Controllers
             return NoContent();
         }
 
-        [HttpGet]
+        [HttpGet("paged")]
         public async Task<ActionResult<UserRecipeModel[]>> GetPaged(
             string filter,
             int page = 0,
             int pageSize = 20,
             bool loadImage = true
-        ){
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
-                return BadRequest("Token corrupted");
-            var user = await _uow.Users.GetUserByIdAsync(userId);
+        )
+        {
+            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
             if (user == null)
                 return BadRequest("User not found");
 
@@ -122,10 +116,7 @@ namespace MyRecipeBackend.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteRecipe(Guid id)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
-                return BadRequest("Token corrupted");
-            var user = await _uow.Users.GetUserByIdAsync(userId);
+            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
             if (user == null)
                 return BadRequest("User not found");
 
@@ -145,7 +136,7 @@ namespace MyRecipeBackend.Controllers
 
 
         [HttpPost("uploadImage")]
-        public async Task<ActionResult> UploadImage([FromForm]IFormFile image)
+        public async Task<ActionResult> UploadImage(IFormFile image)
         {
             if (image == null)
                 return BadRequest("Image is required");

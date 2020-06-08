@@ -4,14 +4,16 @@ using DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200608132343_AddedUserIdToUserRecipe")]
+    partial class AddedUserIdToUserRecipe
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -421,10 +423,13 @@ namespace DAL.Migrations
                     b.Property<bool>("AddToGroupPool")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserId")
+                    b.Property<Guid>("ApplicationUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ApplicationUserId1")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ApplicationUserId1");
 
                     b.HasDiscriminator().HasValue("UserRecipe");
                 });
@@ -533,9 +538,9 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("Core.Entities.UserRecipe", b =>
                 {
-                    b.HasOne("Core.Entities.ApplicationUser", "User")
+                    b.HasOne("Core.Entities.ApplicationUser", "ApplicationUser")
                         .WithMany("Recipes")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ApplicationUserId1");
                 });
 #pragma warning restore 612, 618
         }

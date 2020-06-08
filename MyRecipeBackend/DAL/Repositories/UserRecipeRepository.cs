@@ -31,13 +31,13 @@ namespace DAL.Repositories
         public Task<UserRecipe> GetByIdAsync(ApplicationUser user, Guid id)
         {
             return _dbContext.UserRecipes
-                .SingleOrDefaultAsync(r => r.ApplicationUser.Id == user.Id && r.Id == id);
+                .SingleOrDefaultAsync(r => r.User.Id == user.Id && r.Id == id);
         }
 
         public async Task<UserRecipe[]> GetPagedRecipesAsync(ApplicationUser user, string filter, int page, int pageSize, bool loadImage)
         {
             var query = _dbContext.UserRecipes
-                .Where(r => r.ApplicationUser.Id == user.Id);
+                .Where(r => r.User.Id == user.Id);
 
             if (loadImage)
             {

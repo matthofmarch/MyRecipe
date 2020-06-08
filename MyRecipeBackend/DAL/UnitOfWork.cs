@@ -17,16 +17,15 @@ namespace DAL
         private readonly ApplicationDbContext _dbContext;
         private bool _disposed;
 
-        public UnitOfWork() : this(new ApplicationDbContext())
-        {
-        }
+        //public UnitOfWork() : this(new ApplicationDbContext())
+        //{
+        //}
 
         public UnitOfWork(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
             Groups = new GroupRepository(_dbContext);
             InviteCodes = new InviteCodeRepository(_dbContext);
-            Users = new UserRepository(_dbContext);
             BaseRecipes = new BaseRecipeRepository(_dbContext);
             UserRecipes = new UserRecipeRepository(_dbContext);
             Ingredients = new IngredientRepository(_dbContext);
@@ -34,7 +33,6 @@ namespace DAL
 
         public IGroupRepository Groups { get; set; }
         public IInviteCodeRepository InviteCodes { get; set; }
-        public IUserRepository Users { get; set; }
         public IBaseRecipeRepository BaseRecipes { get; set; }
         public IUserRecipeRepository UserRecipes { get; set; }
         public IIngredientRepository Ingredients { get; set; }

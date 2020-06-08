@@ -94,27 +94,25 @@ namespace MyRecipeBackend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] LoginModel loginModel)
         {
-            if (ModelState.IsValid)
-            {
-                var user = new ApplicationUser
-                {
-                    Email = loginModel.Email,
-                    SecurityStamp = Guid.NewGuid().ToString(),
-                    UserName = loginModel.Email
-                };
-                var result = await _userManager.CreateAsync(user, loginModel.Password);
+            if (!ModelState.IsValid) return BadRequest();
 
-                if (result.Succeeded)
-                {
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Action("ConfirmEmail","Auth", new { userId = user.Id, code }, Request.Scheme);
-                    await _emailSender.SendEmailAsync(loginModel.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-                    return Ok();
-                }
-                return BadRequest(result.Errors);
+            var user = new ApplicationUser
+            {
+                Email = loginModel.Email,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = loginModel.Email
+            };
+            var result = await _userManager.CreateAsync(user, loginModel.Password);
+
+            if (result.Succeeded)
+            {
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var callbackUrl = Url.Action("ConfirmEmail","Auth", new { userId = user.Id, code }, Request.Scheme);
+                await _emailSender.SendEmailAsync(loginModel.Email, "Confirm your email",
+                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                return Ok();
             }
-            return BadRequest();
+            return BadRequest(result.Errors);
         }
 
         [HttpGet]
@@ -138,17 +136,15 @@ namespace MyRecipeBackend.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> ResetPassword(string email)
         {
-            if (email == null)
-                return Ok();
+            if (email == null) return BadRequest("Email not set");
             var user = await _userManager.FindByEmailAsync(email);
-            if (user != null)
-            {
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = $"{_configuration["SpaLinks:ResetPasswordBaseLink"]}?userId={WebUtility.UrlEncode(user.Id)}&token={WebUtility.UrlEncode(token)}";
-                await _emailSender.SendEmailAsync(email, "Reset your account password",
-                    $"Please follow the link to reset your password: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Click here</a>");
-            }
-            return Ok();
+            if (user == null) return BadRequest("User not found");
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl = $"{_configuration["SpaLinks:ResetPasswordBaseLink"]}?userId={WebUtility.UrlEncode(user.Id)}&token={WebUtility.UrlEncode(token)}";
+            await _emailSender.SendEmailAsync(email, "Reset your account password",
+                $"Please follow the link to reset your password: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Click here</a>");
+            return Ok("Email sent");
         }
 
         [HttpPost]

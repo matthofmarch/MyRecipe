@@ -1,8 +1,12 @@
-﻿namespace Core.Entities
+﻿using System;
+
+namespace Core.Entities
 {
     public class UserRecipe : BaseRecipe
     {
-        public ApplicationUser ApplicationUser { get; set; }
+        //Required to tell EF Core that Recipe has a relation with User, prevents unwanted Re-Inserting
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
         public bool AddToGroupPool { get; set; }
     }
 }

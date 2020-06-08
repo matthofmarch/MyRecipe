@@ -24,11 +24,6 @@ namespace DAL.Data
 
         public DbSet<RecipeImage> RecipeImages { get; set; }
 
-
-        public ApplicationDbContext()
-        {
-            
-        }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
@@ -38,22 +33,23 @@ namespace DAL.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<RecipeIngredientRelation>()
-                .HasKey(rel => new { rel.RecipeId, rel.IngredientId });
+            builder.Entity<RecipeIngredientRelation>(e =>
+            {
+                e.HasKey(rel => new {rel.RecipeId, rel.IngredientId});
 
-            builder.Entity<RecipeIngredientRelation>()
-                .HasOne(rel => rel.Recipe)
-                .WithMany(rel => rel.Ingredients) // Property from recipe
-                .HasForeignKey(rel => rel.RecipeId);
+                e.HasOne(rel => rel.Recipe)
+                    .WithMany(rel => rel.Ingredients) // Property from recipe
+                    .HasForeignKey(rel => rel.RecipeId);
 
-            builder.Entity<RecipeIngredientRelation>()
-                .HasOne(rel => rel.Ingredient)
-                .WithMany(rel => rel.Recipes) // Property from ingredient
-                .HasForeignKey(rel => rel.IngredientId);
+                e.HasOne(rel => rel.Ingredient)
+                    .WithMany(rel => rel.Recipes) // Property from ingredient
+                    .HasForeignKey(rel => rel.IngredientId);
+            });
 
             builder.Entity<IngredientTagRelation>(e =>
             {
                 e.HasKey(rel => new { rel.IngredientId, rel.TagId });
+
                 e.HasOne(rel => rel.Ingredient)
                     .WithMany(rel => rel.Tags) // Property from ingredient
                     .HasForeignKey(rel => rel.IngredientId);
@@ -77,20 +73,20 @@ namespace DAL.Data
 
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                var builder = new ConfigurationBuilder()
-                    .SetBasePath(Environment.CurrentDirectory)
-                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-                var configuration = builder.Build();
-                Debug.Write(configuration.ToString());
-                string connectionString = configuration["ConnectionStrings:DefaultConnection"];
-                optionsBuilder.UseSqlServer(connectionString);
-                //optionsBuilder.UseLoggerFactory(GetLoggerFactory());
-            }
-        }
+        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        // {
+        //     if (!optionsBuilder.IsConfigured)
+        //     {
+        //         var builder = new ConfigurationBuilder()
+        //             .SetBasePath(Environment.CurrentDirectory)
+        //             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+        //         var configuration = builder.Build();
+        //         Debug.Write(configuration.ToString());
+        //         //string connectionString = configuration["ConnectionStrings:DefaultConnection"];
+        //         //optionsBuilder.UseSqlServer(connectionString);
+        //         //optionsBuilder.UseLoggerFactory(GetLoggerFactory());
+        //     }
+        // }
 
     }
 }

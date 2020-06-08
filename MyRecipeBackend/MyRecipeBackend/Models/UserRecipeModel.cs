@@ -17,7 +17,7 @@ namespace MyRecipeBackend.Models
             Name = r.Name;
             Description = r.Description;
             CookingTimeInMin = r.CookingTimeInMin;
-            Image = r.Image.Image;
+            Image = r.Image.ImageUri;
             AddToGroupPool = r.AddToGroupPool;
         }
 
@@ -47,13 +47,12 @@ namespace MyRecipeBackend.Models
 
             var userRecipe = new UserRecipe
             {
-
                 Name = Name,
                 Description = Description,
                 CookingTimeInMin = CookingTimeInMin,
                 AddToGroupPool = AddToGroupPool,
-                Image = new RecipeImage { Image = Image },
-                ApplicationUser = user
+                Image = new RecipeImage { ImageUri = Image },
+                User = user
             };
             userRecipe.SetIngredients(ingredients);
 

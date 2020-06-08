@@ -6,6 +6,6 @@ namespace Core.Entities
 {
     public class RecipeImage : EntityObject
     {
-        public Uri Image { get; set; }
+        public Uri ImageUri { get; set; }
     }
 }

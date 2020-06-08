@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity;
 using System.Text;
 using Core.Contracts;
+using Core.Contracts.Services;
 using Core.Entities;
 using DAL;
 using DAL.Data;
@@ -44,18 +45,21 @@ namespace MyRecipeBackend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddScoped<IUnitOfWork, UnitOfWork>(serviceProvider =>
-                new UnitOfWork());
-            services.AddDbContext<ApplicationDbContext>();
+            services.AddDbContext<ApplicationDbContext>(ctxOptions => ctxOptions
+                .UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                 {
                     options.SignIn.RequireConfirmedAccount = true;
+                    options.User.RequireUniqueEmail = true;
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>(Configuration["Jwt:RefreshProvider"])
                 .AddDefaultTokenProviders();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserService, ApplicationUserService>();
+
 
             services.AddAuthentication(options =>
             {
@@ -113,6 +117,7 @@ namespace MyRecipeBackend
                 options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             });
 
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -9,7 +9,6 @@ namespace Core.Contracts
     {
         IGroupRepository Groups { get; }
         IInviteCodeRepository InviteCodes { get; }
-        IUserRepository Users { get; }
         IBaseRecipeRepository BaseRecipes { get; }
         IUserRecipeRepository UserRecipes { get; }
 

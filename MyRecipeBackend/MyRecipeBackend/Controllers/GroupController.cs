@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Core.Contracts;
+using Core.Contracts.Services;
 using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,22 +19,20 @@ namespace MyRecipeBackend.Controllers
     public class GroupController : ControllerBase
     {
         private readonly IUnitOfWork _uow;
+        private readonly IUserService _userService;
 
-        public GroupController(IUnitOfWork uow)
+        public GroupController(IUnitOfWork uow, IUserService userService)
         {
             _uow = uow;
+            _userService = userService;
         }
 
-        [HttpPost]
-        [Route("create")]
+        [HttpPost("create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GroupDto>> CreateGroup(string name)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
-                return BadRequest("Token corrupted");
-            var user = await _uow.Users.GetUserByIdAsync(userId);
+            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
             if (user == null)
                 return BadRequest("User not found");
 
@@ -52,22 +51,16 @@ namespace MyRecipeBackend.Controllers
             return CreatedAtAction(nameof(GetGroup), new GroupDto(group));
         }
 
-        [HttpGet]
-        [Route("createInviteCode")]
+        [HttpGet("createInviteCode")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<InviteCode>> CreateInviteCode()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
-                return BadRequest("Token corrupted");
-            var user = await _uow.Users.GetUserByIdAsync(userId);
-            if (user == null)
-                return BadRequest("User not found");
+            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+            if (user == null) return BadRequest("User not found");
 
             var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
-            if (group == null)
-                return BadRequest("User not in Group");
+            if (group == null) return BadRequest("User not in Group");
 
             var inviteCode = new InviteCode
             {   //TODO generate as often until unique
@@ -89,24 +82,20 @@ namespace MyRecipeBackend.Controllers
             return Ok(new InviteCodeDto(inviteCode));
         }
 
-        [HttpGet]
-        [Route("acceptInviteCode")]
+        [HttpGet("acceptInviteCode")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> AcceptInvite(string inviteCode)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
-                return BadRequest("Token corrupted");
-            var user = await _uow.Users.GetUserByIdAsync(userId);
-            if (user == null)
-                return BadRequest("User not found");
+            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+            if (user == null) return BadRequest("User not found");
 
             var group = await _uow.Groups.GetGroupForInviteCodeAsync(inviteCode.ToUpper());
-            if (group == null)
-                return BadRequest("Invite Code does not belong to group");
+            if (group == null) return BadRequest("Invite Code does not belong to group");
 
-            group.Members.Add(user);
+            // TODO Review
+            user.Group = group;
+            // group.Members.Add(user);
             await _uow.InviteCodes.Delete(inviteCode.ToUpper());
 
             try
@@ -121,28 +110,22 @@ namespace MyRecipeBackend.Controllers
             return Ok();
         }
 
-        [HttpGet]
-        [Route("getGroupForUser")]
+        [HttpGet("getGroupForUser")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult<GroupDto>> GetGroup()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
-                return BadRequest("Token corrupted");
-            var user = await _uow.Users.GetUserByIdAsync(userId);
-            if (user == null)
-                return BadRequest("User not found");
+            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+            if (user == null) return BadRequest("User not found");
 
             var group = await _uow.Groups.GetGroupForUserIncludeAllAsync(user.Id);
-            if (group == null)
-                return NoContent();
+            if (group == null) return NoContent();
 
             return new GroupDto(group);
         }
 
-        private string GenerateInviteCode(int length = 6)
+        private static string GenerateInviteCode(int length = 6)
         {
             var rnd = new Random();
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
