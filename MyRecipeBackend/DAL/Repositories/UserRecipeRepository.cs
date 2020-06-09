@@ -34,15 +34,10 @@ namespace DAL.Repositories
                 .SingleOrDefaultAsync(r => r.User.Id == user.Id && r.Id == id);
         }
 
-        public async Task<UserRecipe[]> GetPagedRecipesAsync(ApplicationUser user, string filter, int page, int pageSize, bool loadImage)
+        public async Task<UserRecipe[]> GetPagedRecipesAsync(ApplicationUser user, string filter, int page, int pageSize)
         {
             var query = _dbContext.UserRecipes
                 .Where(r => r.User.Id == user.Id);
-
-            if (loadImage)
-            {
-                query = query.Include(r => r.Image);
-            }
 
             if(filter != null)
             {

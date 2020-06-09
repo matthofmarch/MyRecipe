@@ -89,15 +89,14 @@ namespace MyRecipeBackend.Controllers
         public async Task<ActionResult<UserRecipeModel[]>> GetPaged(
             string filter,
             int page = 0,
-            int pageSize = 20,
-            bool loadImage = true
+            int pageSize = 20
         )
         {
             var user = await _userService.GetUserByClaimsPrincipalAsync(User);
             if (user == null)
                 return BadRequest("User not found");
 
-            UserRecipe[] recipes = await _uow.UserRecipes.GetPagedRecipesAsync(user, filter, page, pageSize, loadImage);
+            UserRecipe[] recipes = await _uow.UserRecipes.GetPagedRecipesAsync(user, filter, page, pageSize);
 
             return recipes.Select(r => new UserRecipeModel(r)).ToArray();
         }

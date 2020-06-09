@@ -129,10 +129,13 @@ namespace MyRecipeBackend
             }
 
             app.UseHttpsRedirection();
+            var staticFileDirectory =
+                Path.Combine(Directory.GetCurrentDirectory(), Configuration["StaticFiles:ImageBasePath"]);
+            if (!Directory.Exists(staticFileDirectory))
+                Directory.CreateDirectory(staticFileDirectory);
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), Configuration["StaticFiles:ImageBasePath"])),
+                FileProvider = new PhysicalFileProvider(staticFileDirectory),
                 RequestPath = "/" + Configuration["StaticFiles:ImageBasePath"]
             });
 

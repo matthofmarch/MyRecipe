@@ -170,6 +170,12 @@ namespace MyRecipeBackend.Controllers
             return BadRequest();
         }
 
+        //[HttpGet("resetEmail")]
+        //public async Task<ActionResult> ResetEmail()
+        //{
+        //    _userManager.Email
+        //}
+
         [HttpPost]
         [Route("refresh")]
         [ProducesResponseType(StatusCodes.Status200OK)]
