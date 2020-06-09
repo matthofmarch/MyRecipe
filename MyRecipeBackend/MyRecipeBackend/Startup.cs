@@ -37,16 +37,19 @@ namespace MyRecipeBackend
                 builder.AddUserSecrets<Startup>();
             }
 
+            Environment = env;
             Configuration = builder.Build();
         }
 
+        public IHostEnvironment Environment { get; }
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(ctxOptions => ctxOptions
-                .UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+                .UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"])
+                .EnableSensitiveDataLogging(Environment.IsDevelopment()));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                 {
