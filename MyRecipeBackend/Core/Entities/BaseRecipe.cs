@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -13,7 +14,7 @@ namespace Core.Entities
         public string Description { get; set; }
         public int CookingTimeInMin { get; set; }
         public ICollection<RecipeIngredientRelation> Ingredients { get; set; }
-        public RecipeImage Image { get; set; }
+        public Uri Image { get; set; }
 
         public BaseRecipe()
         {

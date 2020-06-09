@@ -69,15 +69,10 @@ namespace MyRecipeBackend.Controllers
             dbUserRecipe.CookingTimeInMin = userRecipeModel.CookingTimeInMin;
             dbUserRecipe.Description = userRecipeModel.Description;
             dbUserRecipe.Name = userRecipeModel.Name;
-
-            if (userRecipeModel.Image != null)
-            {
-                dbUserRecipe.Image.ImageUri = userRecipeModel.Image;
-            }
+            dbUserRecipe.Image = userRecipeModel.Image;
 
             var ingredients = await _uow.Ingredients
                 .GetListByIdentifiersAsync(userRecipeModel.Ingredients);
-
 
             await _uow.UserRecipes.RemoveIngredients(dbUserRecipe.Id);
             try { await _uow.SaveChangesAsync(); }
@@ -104,13 +99,7 @@ namespace MyRecipeBackend.Controllers
 
             UserRecipe[] recipes = await _uow.UserRecipes.GetPagedRecipesAsync(user, filter, page, pageSize, loadImage);
 
-            return recipes.Select(r =>
-            {
-                var recipeModel = new UserRecipeModel(r);
-                recipeModel.Ingredients = r.Ingredients
-                    .Select(i => i.Ingredient.Name).ToArray();
-                return recipeModel;
-            }).ToArray();
+            return recipes.Select(r => new UserRecipeModel(r)).ToArray();
         }
 
         [HttpDelete("{id}")]
@@ -155,7 +144,7 @@ namespace MyRecipeBackend.Controllers
             await image.CopyToAsync(fileStream);
         
 
-            return Ok(new {url = $"{this.Request.Scheme}://{this.Request.Host}/{_configuration["StaticFiles:ImageBasePath"]}/{filename}"});
+            return Ok(new {uri = $"{this.Request.Scheme}://{this.Request.Host}/{_configuration["StaticFiles:ImageBasePath"]}/{filename}"});
         }
 
     }
