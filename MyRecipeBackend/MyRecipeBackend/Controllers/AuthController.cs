@@ -16,6 +16,7 @@ using MyRecipeBackend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -136,21 +137,19 @@ namespace MyRecipeBackend.Controllers
             return BadRequest(result.Errors);
         }
 
-        // TODO We should definitely take down this method after temporary use
-        [HttpGet]
-        [Route("resetPasswordDirectly")]
+        [HttpPost("changePassword")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> ResetPasswordDirectly(string newPassword)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword)
         {
-            //TODO check password requirements and exit early
             var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return BadRequest("User not found");
 
-            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var res = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
-            // TODO add logging
+            var res = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
             if (res.Succeeded) return Ok();
-            return BadRequest("Reset did not work");
+            return BadRequest("Reset failed");
         }
 
         [HttpGet]
@@ -195,15 +194,14 @@ namespace MyRecipeBackend.Controllers
         }
 
         [HttpGet]
-        [Route("resetEmail")]
-        //[Authorize] // TODO Eventually just get the current email via parameter
+        [Route("changeEmail")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> ResetEmail(string oldEmail, string newEmail)
+        public async Task<IActionResult> ChangeEmail(string newEmail)
         {
-            if (oldEmail == null) return BadRequest("Old Email not defined");
             if (newEmail == null) return BadRequest("New Email not provided");
-            var user = await _userManager.FindByEmailAsync(oldEmail);
-            if (user == null) return BadRequest("Could not find User with stated email");
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return BadRequest("Could not find User");
 
             var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
             var callbackUrl =
@@ -211,16 +209,16 @@ namespace MyRecipeBackend.Controllers
                 $"?userId={WebUtility.UrlEncode(user.Id)}" +
                 $"&token={WebUtility.UrlEncode(token)}" +
                 $"&newEmail={WebUtility.UrlEncode(newEmail)}";
-            await _emailSender.SendEmailAsync(user.Email, "Reset your account email",
-                $"Please follow the link to reset your email address: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Click here</a>");
+            await _emailSender.SendEmailAsync(newEmail, "Change your account email",
+                $"Please follow the link to confirm your email change: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Click here</a>");
             return Ok("Email sent");
         }
 
         [HttpPost]
-        [Route("resetEmail")]
+        [Route("changeEmail")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ResetEmail(ResetEmailConfirmModel model)
+        public async Task<IActionResult> ChangeEmail(ResetEmailConfirmModel model)
         {
             if (ModelState.IsValid)
             {
@@ -240,12 +238,6 @@ namespace MyRecipeBackend.Controllers
 
             return BadRequest();
         }
-
-        //[HttpGet("resetEmail")]
-        //public async Task<ActionResult> ResetEmail()
-        //{
-        //    _userManager.Email
-        //}
 
         [HttpPost]
         [Route("refresh")]
