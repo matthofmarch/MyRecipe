@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Resources;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using Core.Contracts;
 using Core.Entities;
 using DAL.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using MyRecipeBackend.Models;
 using Microsoft.AspNetCore.Identity;
@@ -29,10 +31,10 @@ namespace MyRecipeBackend.Controllers
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
 
-        public AuthController(UserManager<ApplicationUser> userManager, 
-            SignInManager<ApplicationUser> signInManager, 
-            IEmailSender emailSender, 
-            IConfiguration config, 
+        public AuthController(UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            IEmailSender emailSender,
+            IConfiguration config,
             ApplicationDbContext dbContext)
         {
             _userManager = userManager;
@@ -82,9 +84,11 @@ namespace MyRecipeBackend.Controllers
                     });
                 }
                 else if (result.IsNotAllowed)
-                    return Unauthorized(new { Error = "Email needs to be confirmed" });
+                    return Unauthorized(new {Error = "Email needs to be confirmed"});
+
                 return Unauthorized();
             }
+
             return BadRequest();
         }
 
@@ -107,11 +111,12 @@ namespace MyRecipeBackend.Controllers
             if (result.Succeeded)
             {
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var callbackUrl = Url.Action("ConfirmEmail","Auth", new { userId = user.Id, code }, Request.Scheme);
+                var callbackUrl = Url.Action("ConfirmEmail", "Auth", new {userId = user.Id, code}, Request.Scheme);
                 await _emailSender.SendEmailAsync(loginModel.Email, "Confirm your email",
                     $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
                 return Ok();
             }
+
             return BadRequest(result.Errors);
         }
 
@@ -141,7 +146,8 @@ namespace MyRecipeBackend.Controllers
             if (user == null) return BadRequest("User not found");
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var callbackUrl = $"{_configuration["SpaLinks:ResetPasswordBaseLink"]}?userId={WebUtility.UrlEncode(user.Id)}&token={WebUtility.UrlEncode(token)}";
+            var callbackUrl =
+                $"{_configuration["SpaLinks:ResetPasswordBaseLink"]}?userId={WebUtility.UrlEncode(user.Id)}&token={WebUtility.UrlEncode(token)}";
             await _emailSender.SendEmailAsync(email, "Reset your account password",
                 $"Please follow the link to reset your password: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Click here</a>");
             return Ok("Email sent");
@@ -167,6 +173,55 @@ namespace MyRecipeBackend.Controllers
                     return BadRequest(result.Errors);
                 }
             }
+
+            return BadRequest();
+        }
+
+
+        [HttpGet]
+        [Route("resetEmail")]
+        //[Authorize] // TODO Eventually just get the current email via parameter
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ResetEmail(string oldEmail, string newEmail)
+        {
+            if (oldEmail == null) return BadRequest("Old Email not defined");
+            if (newEmail == null) return BadRequest("New Email not provided");
+            var user = await _userManager.FindByEmailAsync(oldEmail);
+            if (user == null) return BadRequest("Could not find User with stated email");
+
+            var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
+            var callbackUrl =
+                $"{_configuration["SpaLinks:ResetEmailBaseLink"]}" +
+                $"?userId={WebUtility.UrlEncode(user.Id)}" +
+                $"&token={WebUtility.UrlEncode(token)}" +
+                $"&newEmail={WebUtility.UrlEncode(newEmail)}";
+            await _emailSender.SendEmailAsync(user.Email, "Reset your account email",
+                $"Please follow the link to reset your email address: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Click here</a>");
+            return Ok("Email sent");
+        }
+
+        [HttpPost]
+        [Route("resetEmail")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ResetEmail(ResetEmailConfirmModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                model.NewEmail = WebUtility.UrlDecode(model.NewEmail);
+                model.Token = WebUtility.UrlDecode(model.Token);
+                var user = await _userManager.FindByIdAsync(model.UserId);
+                if (user == null) return BadRequest("Could not find User");
+
+                var result = await _userManager.ChangeEmailAsync(user, model.NewEmail, model.Token);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+
+                return BadRequest(result.Errors);
+            }
+
             return BadRequest();
         }
 
@@ -194,8 +249,11 @@ namespace MyRecipeBackend.Controllers
                 {
                     return BadRequest(e.Message);
                 }
+
                 var user = await _userManager.FindByIdAsync(principal.Identity.Name);
-                var result = await _dbContext.UserTokens.SingleOrDefaultAsync(t => t.UserId == user.Id && t.Value == model.RefreshToken);
+                var result =
+                    await _dbContext.UserTokens.SingleOrDefaultAsync(t =>
+                        t.UserId == user.Id && t.Value == model.RefreshToken);
                 if (user != null && result != null)
                 {
                     var newToken = GenerateJwtToken(principal.Claims);
@@ -249,7 +307,8 @@ namespace MyRecipeBackend.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
             var jwtSecurityToken = securityToken as JwtSecurityToken;
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+                StringComparison.InvariantCultureIgnoreCase))
                 throw new SecurityTokenException("Invalid token");
 
             return principal;
