@@ -136,6 +136,23 @@ namespace MyRecipeBackend.Controllers
             return BadRequest(result.Errors);
         }
 
+        // TODO We should definitely take down this method after temporary use
+        [HttpGet]
+        [Route("resetPasswordDirectly")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ResetPasswordDirectly(string newPassword)
+        {
+            //TODO check password requirements and exit early
+            var user = await _userManager.GetUserAsync(User);
+
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var res = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
+            // TODO add logging
+            if (res.Succeeded) return Ok();
+            return BadRequest("Reset did not work");
+        }
+
         [HttpGet]
         [Route("resetPassword")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -176,7 +193,6 @@ namespace MyRecipeBackend.Controllers
 
             return BadRequest();
         }
-
 
         [HttpGet]
         [Route("resetEmail")]
