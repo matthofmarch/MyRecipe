@@ -222,8 +222,6 @@ namespace MyRecipeBackend.Controllers
         {
             if (ModelState.IsValid)
             {
-                model.NewEmail = WebUtility.UrlDecode(model.NewEmail);
-                model.Token = WebUtility.UrlDecode(model.Token);
                 var user = await _userManager.FindByIdAsync(model.UserId);
                 if (user == null) return BadRequest("Could not find User");
 
