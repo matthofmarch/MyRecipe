@@ -141,7 +141,7 @@ namespace MyRecipeBackend.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword)
+        public async Task<IActionResult> ChangePassword([FromBody]string currentPassword, [FromBody]string newPassword)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
