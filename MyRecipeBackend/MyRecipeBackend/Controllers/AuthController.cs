@@ -141,13 +141,13 @@ namespace MyRecipeBackend.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ChangePassword([FromBody]string currentPassword, [FromBody]string newPassword)
+        public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return BadRequest("User not found");
 
-            var res = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            var res = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
             if (res.Succeeded) return Ok();
             return BadRequest("Reset failed");
         }
