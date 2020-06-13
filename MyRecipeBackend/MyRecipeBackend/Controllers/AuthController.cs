@@ -226,12 +226,14 @@ namespace MyRecipeBackend.Controllers
                 if (user == null) return BadRequest("Could not find User");
 
                 var result = await _userManager.ChangeEmailAsync(user, model.NewEmail, model.Token);
-                if (result.Succeeded)
+                var resultUserNameChange = await _userManager.SetUserNameAsync(user, model.NewEmail);
+
+                if (result.Succeeded && resultUserNameChange.Succeeded)
                 {
                     return Ok();
                 }
 
-                return BadRequest(result.Errors);
+                return BadRequest(result.Succeeded ? resultUserNameChange.Errors : result.Errors);
             }
 
             return BadRequest();
