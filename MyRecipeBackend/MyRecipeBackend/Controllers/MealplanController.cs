@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Core.Contracts;
 using Core.Contracts.Services;
-using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +27,10 @@ namespace MyRecipeBackend.Controllers
         }
 
 
-        [HttpPost("getRecommended")]
+        [HttpPost("requestRecommendation")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserRecipeModel>> GetRecommendedMeal(RecommendedMealInputModel input)
         {
             var user = await _userService.GetUserByClaimsPrincipalAsync(User);
