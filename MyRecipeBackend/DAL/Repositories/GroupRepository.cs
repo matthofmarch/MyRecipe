@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Contracts;
 using Core.Entities;
-using DAL.Data;
+using DAL;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories

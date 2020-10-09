@@ -10,7 +10,6 @@ using Core.Contracts;
 using Core.Contracts.Services;
 using Core.Entities;
 using DAL;
-using DAL.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -59,7 +58,7 @@ namespace MyRecipeBackend
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>(Configuration["Jwt:RefreshProvider"])
                 .AddDefaultTokenProviders();
-
+            
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserService, ApplicationUserService>();
 
@@ -98,6 +97,7 @@ namespace MyRecipeBackend
                         Email = "myRecipes.austria@gmail.com",
                         Url = "https://htl-leonding.at"
                     };
+                    
                 };
 
                 config.AddSecurity("Bearer", new OpenApiSecurityScheme()

@@ -9,7 +9,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Core.Contracts;
 using Core.Entities;
-using DAL.Data;
+using DAL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using MyRecipeBackend.Models;
@@ -45,6 +45,11 @@ namespace MyRecipeBackend.Controllers
             _dbContext = dbContext;
         }
 
+        /// <summary>
+        /// Login endpoint for a user, Default users: test1@test.test and test2@test.test, Pw: Pass123$
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]

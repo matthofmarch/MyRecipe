@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Core.Contracts;
-using DAL.Data;
+using DAL;
 
 namespace DAL.Repositories
 {
