@@ -22,22 +22,10 @@ namespace MyRecipeBackend
 {
     public class Startup
     {
-        public Startup(IWebHostEnvironment env)
+        public Startup(IConfiguration configuration, IHostEnvironment environment)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json",
-                    optional: false,
-                    reloadOnChange: true)
-                .AddEnvironmentVariables();
-
-            if (env.IsDevelopment())
-            {
-                builder.AddUserSecrets<Startup>();
-            }
-
-            Environment = env;
-            Configuration = builder.Build();
+            Configuration = configuration;
+            Environment = environment;
         }
 
         public IHostEnvironment Environment { get; }
@@ -61,7 +49,6 @@ namespace MyRecipeBackend
             
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserService, ApplicationUserService>();
-
 
             services.AddAuthentication(options =>
             {
@@ -130,8 +117,10 @@ namespace MyRecipeBackend
             {
                 app.UseDeveloperExceptionPage();
             }
+            if(env.IsStaging() || env.IsProduction()){
+                app.UseHttpsRedirection(); 
+            }
 
-            app.UseHttpsRedirection();
             var staticFileDirectory =
                 Path.Combine(Directory.GetCurrentDirectory(), Configuration["StaticFiles:ImageBasePath"]);
             if (!Directory.Exists(staticFileDirectory))
