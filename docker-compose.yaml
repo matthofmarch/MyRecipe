@@ -7,7 +7,7 @@ services:
         environment:
             - ASPNETCORE_ENVIRONMENT=Staging
             - StaticFiles:ImageBasePath=RecipeImages
-            - ConnectionStrings:DefaultConnection=Server=db;Database=master;User=sa;Password=Pass123$Pass;
+            - ConnectionStrings:DefaultConnection=Data Source=db;Initial Catalog=MyRecipe;User=sa;Password=Al26Dnas!123;
             - Jwt:Key=YVBy0OLlMQG6VVVp1OH7Xzyr7gHuw1qvUC5dcGt3SBM=
             - Jwt:Issuer=http://185.239.238.179
             - Jwt:Audience=http://185.239.238.179
@@ -21,5 +21,5 @@ services:
     db:
         image: "mcr.microsoft.com/mssql/server"
         environment:
-            SA_PASSWORD: "Pass123$Pass"
-            ACCEPT_EULA: "Y"
+            - SA_PASSWORD=Al26Dnas!123
+            - ACCEPT_EULA=Y
