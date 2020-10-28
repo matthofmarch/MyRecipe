@@ -7,13 +7,12 @@ using Core.Contracts.Repositories;
 namespace Core.Contracts
 {
     public interface IUnitOfWork : IAsyncDisposable
-    { 
+    {
         IMealRepository Meals { get; }
         IGroupRepository Groups { get; }
         IInviteCodeRepository InviteCodes { get; }
         IBaseRecipeRepository BaseRecipes { get; }
         IUserRecipeRepository UserRecipes { get; }
-
         IIngredientRepository Ingredients { get; }
 
         Task<int> SaveChangesAsync();

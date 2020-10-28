@@ -5,12 +5,13 @@ using Core.Contracts;
 using Core.Contracts.Services;
 using Core.Entities;
 using Core.Model;
-using Core.Model.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using MyRecipeBackend.Models;
+using MyRecipeBackend.Models.Mealplan;
 
 namespace MyRecipeBackend.Controllers
 {
@@ -19,26 +20,29 @@ namespace MyRecipeBackend.Controllers
     [ApiController]
     public class MealplanController : ControllerBase
     {
-
         private readonly IUnitOfWork _uow;
         private readonly IUserService _userService;
+        private readonly ILogger _logger;
 
-        public MealplanController(IUnitOfWork uow, IUserService userService)
+        public MealplanController(IUnitOfWork uow, IUserService userService, ILogger<MealplanController> logger)
         {
             _uow = uow;
             _userService = userService;
+            _logger = logger;
         }
 
 
-        [HttpGet("requestRecommendation")]
+        [HttpPost("requestRecommendation")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserRecipeModel>> GetRecommendedMeal(RecommendedMealInputModel input)
         {
             var user = await _userService.GetUserByClaimsPrincipalAsync(User);
-            if (user == null) 
+            if (user == null)
+            {
                 return BadRequest("User not found");
+            }
 
             var nextRecipe = await _uow.Groups.GetNextRecipeRecommendationForGroupAsync(user.Id, input.PrevMealIds);
             if (nextRecipe == null)
@@ -50,17 +54,19 @@ namespace MyRecipeBackend.Controllers
         [HttpPost("proposeAndVoteMeal")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> ProposeAndVoteMeal(Guid recipeId, DateTime day)
+        public async Task<ActionResult> ProposeAndVoteMeal(ProposeInputModel model)
         {
             var user = await _userService.GetUserByClaimsPrincipalAsync(User);
             var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
             if (user is null || group is null)
+            {
                 return BadRequest("User not found");
+            }
 
             var meal = new Meal
             {
-                DateTime = day,
-                RecipeId = recipeId,
+                DateTime = model.Day,
+                RecipeId = model.RecipeId,
                 Initiator = user,
                 Group = group
             };
@@ -71,8 +77,9 @@ namespace MyRecipeBackend.Controllers
             {
                 await _uow.SaveChangesAsync();
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError("Proposing meal did not work: " + e.Message);
                 return BadRequest("Could not propose Meal");
             }
 
@@ -85,6 +92,7 @@ namespace MyRecipeBackend.Controllers
         public async Task<ActionResult> VoteMeal(Guid mealId, VoteEnum vote)
         {
             var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+
             var voteModel = new VoteMealModel(user, vote, mealId);
             await _uow.Meals.VoteMealAsync(voteModel);
 
@@ -92,44 +100,31 @@ namespace MyRecipeBackend.Controllers
             {
                 await _uow.SaveChangesAsync();
             }
-            catch
+            catch(Exception e)
             {
+                _logger.LogError($"Voting meal did not work {e.Message}");
                 return BadRequest();
             }
 
             return Ok();
         }
 
-        [HttpGet("getProposedMeals")]
+        [HttpGet("getMeals")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<MealDtoList>> GetProposedMeals()
+        public async Task<ActionResult<MealDto[]>> GetProposedMeals(bool? accepted)
         {
             var user = await _userService.GetUserByClaimsPrincipalAsync(User);
             var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
             if (user is null || group is null)
+            {
                 return BadRequest();
-            Meal[] meals = await _uow.Meals.GetMealsWithRecipeAndInitiatorAsync(group.Id,false);
+            }
 
-            var proposedMealList= new MealDtoList(
-                meals.Select(m => new MealDto(m.Initiator.NormalizedUserName, m.Id, m.Recipe.Image)).ToArray());
+            Meal[] meals = await _uow.Meals.GetMealsWithRecipeAndInitiatorAsync(group.Id, accepted);
 
-            return Ok(proposedMealList);
-        }
-
-        [HttpGet("getAcceptedMeals")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<MealDtoList>> GetAcceptedMeals()
-        {
-            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
-            var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
-            if (user is null || group is null)
-                return BadRequest();
-            Meal[] meals = await _uow.Meals.GetMealsWithRecipeAndInitiatorAsync(group.Id, true);
-
-            var proposedMealList = new MealDtoList(
-                meals.Select(m => new MealDto(m.Initiator.NormalizedUserName, m.Id, m.Recipe.Image)).ToArray());
+            var proposedMealList =
+                meals.Select(m => new MealDto(m.Initiator.NormalizedUserName, m.Id, m.Recipe.Image)).ToArray();
 
             return Ok(proposedMealList);
         }
