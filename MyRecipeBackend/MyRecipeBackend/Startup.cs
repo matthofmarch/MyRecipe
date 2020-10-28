@@ -112,15 +112,16 @@ namespace MyRecipeBackend
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env/*, IUnitOfWork uow*/)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,  ApplicationDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }else if (env.IsStaging())
+            }
+            else if (env.IsStaging())
             {
-                //uow.DeleteDatabaseAsync().Wait();
-                //uow.MigrateDatabaseAsync().Wait();
+                dbContext.Database.EnsureDeleted();
+                dbContext.Database.Migrate();
             }
             else if(env.IsProduction()){
                 app.UseHttpsRedirection(); 
