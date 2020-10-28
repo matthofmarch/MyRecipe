@@ -21,7 +21,8 @@ namespace DAL
         public DbSet<RecipeIngredientRelation> RecipeIngredientRelations { get; set; }
 
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
+            : base(options)
         {
             
         }

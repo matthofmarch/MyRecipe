@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Core.Entities;
 
-namespace Core.Model.Response
+namespace Core.Model
 {
     public class MealDto
     {
