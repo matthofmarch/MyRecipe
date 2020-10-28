@@ -9,11 +9,7 @@ namespace Core.Entities
     {
         [Required]
         public string Descriptor { get; set; }
-
-        
         public ICollection<IngredientTagRelation> Ingredients { get; set; }
-
-
         public Tag()
         {
             Ingredients = new List<IngredientTagRelation>();

@@ -15,7 +15,7 @@ namespace DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.4")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -93,14 +93,14 @@ namespace DAL.Migrations
                         {
                             Id = "testUser1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "103aead2-e5fb-4c1d-8d02-1a967d971c6b",
+                            ConcurrencyStamp = "243dd3f3-0c33-46ab-a84f-71ea87911597",
                             Email = "test1@test.test",
                             EmailConfirmed = true,
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
                             LockoutEnabled = false,
                             NormalizedEmail = "test1@test.test",
                             NormalizedUserName = "test1@test.test",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJOEJ9W6c1IVlaJD2Ow2/uDKTNUmdDxY902qvXBYhcVlTNDYAxRjPvQwpt+vEbRQ+Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEE5tjBzl6eRuPIkKfcJmbKEv7RJVZzcZLHtHK7i6/PucArXLL2JOUMKEa+INOt1qtA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -110,14 +110,14 @@ namespace DAL.Migrations
                         {
                             Id = "testUser2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "19c8ef95-ed0a-4431-9a8d-08452e777c63",
+                            ConcurrencyStamp = "a82e5785-50f2-4d66-8ac1-5ded395242f1",
                             Email = "test2@test.test",
                             EmailConfirmed = true,
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
                             LockoutEnabled = false,
                             NormalizedEmail = "test2@test.test",
                             NormalizedUserName = "test2@test.test",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFQ1KTPLo6+gKz28m+XPbnJXgI+gZaninbuvkH7XR4ZM6sOh4+JYAJILTl6NvThbww==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGz7tMK8YSxj7E8VTUQjd2jqp6gMzhmZpQbYvEB/LSkatLcHgqk4vYMlQDxLxc5gSw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -303,6 +303,92 @@ namespace DAL.Migrations
                     b.HasIndex("GroupId");
 
                     b.ToTable("InviteCodes");
+                });
+
+            modelBuilder.Entity("Core.Entities.Meal", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Accepted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("InitiatorId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("RecipeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("InitiatorId");
+
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("Meals");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            Accepted = false,
+                            DateTime = new DateTime(2020, 10, 23, 10, 50, 9, 866, DateTimeKind.Local).AddTicks(465),
+                            GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            InitiatorId = "testUser1",
+                            RecipeId = new Guid("00000000-0000-0000-0000-000000000001")
+                        });
+                });
+
+            modelBuilder.Entity("Core.Entities.MealVote", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("MealId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Vote")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MealId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MealVotes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            MealId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            UserId = "testUser2",
+                            Vote = 1
+                        });
                 });
 
             modelBuilder.Entity("Core.Entities.RecipeIngredientRelation", b =>
@@ -516,6 +602,7 @@ namespace DAL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasIndex("UserId");
@@ -590,6 +677,38 @@ namespace DAL.Migrations
                         .HasForeignKey("GroupId");
                 });
 
+            modelBuilder.Entity("Core.Entities.Meal", b =>
+                {
+                    b.HasOne("Core.Entities.Group", "Group")
+                        .WithMany("Meals")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.ApplicationUser", "Initiator")
+                        .WithMany()
+                        .HasForeignKey("InitiatorId");
+
+                    b.HasOne("Core.Entities.UserRecipe", "Recipe")
+                        .WithMany("Meals")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Core.Entities.MealVote", b =>
+                {
+                    b.HasOne("Core.Entities.Meal", "Meal")
+                        .WithMany("Votes")
+                        .HasForeignKey("MealId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("Core.Entities.RecipeIngredientRelation", b =>
                 {
                     b.HasOne("Core.Entities.Ingredient", "Ingredient")
@@ -660,7 +779,9 @@ namespace DAL.Migrations
                 {
                     b.HasOne("Core.Entities.ApplicationUser", "User")
                         .WithMany("Recipes")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

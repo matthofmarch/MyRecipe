@@ -1,23 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.FileProviders;
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Core.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Identity;
 
 namespace DAL
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-
+        public DbSet<Meal> Meals { get; set; }
+        public DbSet<MealVote> MealVotes { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<InviteCode> InviteCodes { get; set; }
         public DbSet<BaseRecipe> BaseRecipes { get; set; }
@@ -28,12 +23,13 @@ namespace DAL
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
+            
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
+            
             builder.Entity<RecipeIngredientRelation>(e =>
             {
                 e.HasKey(rel => new {rel.RecipeId, rel.IngredientId});
@@ -202,6 +198,30 @@ namespace DAL
                 }
             };
             builder.Entity<RecipeIngredientRelation>().HasData(recipeIngredientRelation);
+
+            var meals = new[] {
+                new Meal
+                {
+                    InitiatorId = users[0].Id,
+                    RecipeId = userRecipes[0].Id,
+                    DateTime = DateTime.Now,
+                    GroupId = groups[0].Id,
+                    Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                }
+            };
+            builder.Entity<Meal>().HasData(meals);
+
+            var mealVotes = new[]
+            {
+                new MealVote()
+                {
+                    Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                    MealId = meals[0].Id,
+                    UserId = users[1].Id,
+                    Vote = VoteEnum.Approved
+                }
+            };
+            builder.Entity<MealVote>().HasData(mealVotes);
         }
     }
 }

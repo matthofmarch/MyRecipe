@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Contracts;
+using Core.Contracts.Repositories;
 using DAL;
 using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +18,6 @@ namespace DAL
         private readonly ApplicationDbContext _dbContext;
         private bool _disposed;
 
-        //public UnitOfWork() : this(new ApplicationDbContext())
-        //{
-        //}
-
         public UnitOfWork(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -29,13 +26,16 @@ namespace DAL
             BaseRecipes = new BaseRecipeRepository(_dbContext);
             UserRecipes = new UserRecipeRepository(_dbContext);
             Ingredients = new IngredientRepository(_dbContext);
+            Meals = new MealRepository(_dbContext);
         }
 
-        public IGroupRepository Groups { get; set; }
-        public IInviteCodeRepository InviteCodes { get; set; }
-        public IBaseRecipeRepository BaseRecipes { get; set; }
-        public IUserRecipeRepository UserRecipes { get; set; }
-        public IIngredientRepository Ingredients { get; set; }
+        public IMealRepository Meals { get; }
+
+        public IGroupRepository Groups { get; }
+        public IInviteCodeRepository InviteCodes { get; }
+        public IBaseRecipeRepository BaseRecipes { get; }
+        public IUserRecipeRepository UserRecipes { get; }
+        public IIngredientRepository Ingredients { get; }
 
 
         public async Task<int> SaveChangesAsync()

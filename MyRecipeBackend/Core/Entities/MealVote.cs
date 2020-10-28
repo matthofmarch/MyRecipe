@@ -2,19 +2,27 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 
 namespace Core.Entities
 {
-    public class UserRecipe : BaseRecipe
+    public class MealVote:EntityObject
     {
-        [Required]
         public string UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; }
 
+        public VoteEnum Vote { get; set; }
+
         [Required]
-        public bool AddToGroupPool { get; set; }
-        
-        public List<Meal> Meals { get; set; }
+        public Guid MealId { get; set; }
+        [ForeignKey(nameof(MealId))]      
+        public Meal Meal { get; set; }
+    }
+
+    public enum VoteEnum
+    {
+        Rejected,
+        Approved
     }
 }

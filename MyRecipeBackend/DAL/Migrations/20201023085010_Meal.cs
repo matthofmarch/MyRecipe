@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DAL.Migrations
 {
-    public partial class Seeding : Migration
+    public partial class Meal : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -265,7 +265,42 @@ namespace DAL.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Meals",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    RecipeId = table.Column<Guid>(nullable: false),
+                    DateTime = table.Column<DateTime>(nullable: false),
+                    InitiatorId = table.Column<string>(nullable: true),
+                    GroupId = table.Column<Guid>(nullable: false),
+                    Accepted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Meals", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Meals_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Meals_AspNetUsers_InitiatorId",
+                        column: x => x.InitiatorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Meals_BaseRecipes_RecipeId",
+                        column: x => x.RecipeId,
+                        principalTable: "BaseRecipes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -290,6 +325,33 @@ namespace DAL.Migrations
                         principalTable: "BaseRecipes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MealVotes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    UserId = table.Column<string>(nullable: true),
+                    Vote = table.Column<int>(nullable: false),
+                    MealId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MealVotes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MealVotes_Meals_MealId",
+                        column: x => x.MealId,
+                        principalTable: "Meals",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MealVotes_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
@@ -317,12 +379,12 @@ namespace DAL.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GroupId", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "testUser1", 0, "103aead2-e5fb-4c1d-8d02-1a967d971c6b", "test1@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, null, "test1@test.test", "test1@test.test", "AQAAAAEAACcQAAAAEJOEJ9W6c1IVlaJD2Ow2/uDKTNUmdDxY902qvXBYhcVlTNDYAxRjPvQwpt+vEbRQ+Q==", null, false, "", false, "test1@test.test" });
+                values: new object[] { "testUser1", 0, "243dd3f3-0c33-46ab-a84f-71ea87911597", "test1@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, null, "test1@test.test", "test1@test.test", "AQAAAAEAACcQAAAAEE5tjBzl6eRuPIkKfcJmbKEv7RJVZzcZLHtHK7i6/PucArXLL2JOUMKEa+INOt1qtA==", null, false, "", false, "test1@test.test" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GroupId", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "testUser2", 0, "19c8ef95-ed0a-4431-9a8d-08452e777c63", "test2@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, null, "test2@test.test", "test2@test.test", "AQAAAAEAACcQAAAAEFQ1KTPLo6+gKz28m+XPbnJXgI+gZaninbuvkH7XR4ZM6sOh4+JYAJILTl6NvThbww==", null, false, "", false, "test2@test.test" });
+                values: new object[] { "testUser2", 0, "a82e5785-50f2-4d66-8ac1-5ded395242f1", "test2@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, null, "test2@test.test", "test2@test.test", "AQAAAAEAACcQAAAAEGz7tMK8YSxj7E8VTUQjd2jqp6gMzhmZpQbYvEB/LSkatLcHgqk4vYMlQDxLxc5gSw==", null, false, "", false, "test2@test.test" });
 
             migrationBuilder.InsertData(
                 table: "BaseRecipes",
@@ -334,6 +396,11 @@ namespace DAL.Migrations
                     { new Guid("00000000-0000-0000-0000-000000000003"), 10, "Fast", "UserRecipe", null, "Ham and Eggs", true, "testUser2" },
                     { new Guid("00000000-0000-0000-0000-000000000004"), 3, "Healthy", "UserRecipe", null, "Yogurt", true, "testUser2" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Meals",
+                columns: new[] { "Id", "Accepted", "DateTime", "GroupId", "InitiatorId", "RecipeId" },
+                values: new object[] { new Guid("00000000-0000-0000-0000-000000000001"), false, new DateTime(2020, 10, 23, 10, 50, 9, 866, DateTimeKind.Local).AddTicks(465), new Guid("00000000-0000-0000-0000-000000000001"), "testUser1", new Guid("00000000-0000-0000-0000-000000000001") });
 
             migrationBuilder.InsertData(
                 table: "RecipeIngredientRelations",
@@ -348,6 +415,11 @@ namespace DAL.Migrations
                     { new Guid("00000000-0000-0000-0000-000000000004"), new Guid("00000000-0000-0000-0000-000000000004") },
                     { new Guid("00000000-0000-0000-0000-000000000004"), new Guid("00000000-0000-0000-0000-000000000010") }
                 });
+
+            migrationBuilder.InsertData(
+                table: "MealVotes",
+                columns: new[] { "Id", "MealId", "UserId", "Vote" },
+                values: new object[] { new Guid("00000000-0000-0000-0000-000000000001"), new Guid("00000000-0000-0000-0000-000000000001"), "testUser2", 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -409,6 +481,31 @@ namespace DAL.Migrations
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Meals_GroupId",
+                table: "Meals",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Meals_InitiatorId",
+                table: "Meals",
+                column: "InitiatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Meals_RecipeId",
+                table: "Meals",
+                column: "RecipeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MealVotes_MealId",
+                table: "MealVotes",
+                column: "MealId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MealVotes_UserId",
+                table: "MealVotes",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RecipeIngredientRelations_IngredientId",
                 table: "RecipeIngredientRelations",
                 column: "IngredientId");
@@ -438,6 +535,9 @@ namespace DAL.Migrations
                 name: "InviteCodes");
 
             migrationBuilder.DropTable(
+                name: "MealVotes");
+
+            migrationBuilder.DropTable(
                 name: "RecipeIngredientRelations");
 
             migrationBuilder.DropTable(
@@ -445,6 +545,9 @@ namespace DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tag");
+
+            migrationBuilder.DropTable(
+                name: "Meals");
 
             migrationBuilder.DropTable(
                 name: "Ingredients");

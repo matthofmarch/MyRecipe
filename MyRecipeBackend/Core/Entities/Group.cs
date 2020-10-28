@@ -11,12 +11,15 @@ namespace Core.Entities
 
         public List<ApplicationUser> Members { get; set; }
 
+        public List<Meal> Meals { get; set; }
+
         public List<InviteCode> InviteCodes { get; set; }
 
         public Group()
         {
             Members = new List<ApplicationUser>();
             InviteCodes = new List<InviteCode>();
+            Meals = new List<Meal>();
         }
     }
 }
