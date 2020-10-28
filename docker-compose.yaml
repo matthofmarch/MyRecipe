@@ -6,13 +6,14 @@ services:
             - "8000:80"
         environment:
             - ASPNETCORE_ENVIRONMENT=Staging
+            - StaticFiles:ImageBasePath=RecipeImages
             - ConnectionStrings:DefaultConnection=Server=db;Database=master;User=sa;Password=Pass123$Pass;
             - Jwt:Key=YVBy0OLlMQG6VVVp1OH7Xzyr7gHuw1qvUC5dcGt3SBM=
             - Jwt:Issuer=http://185.239.238.179
             - Jwt:Audience=http://185.239.238.179
             - Jwt:RefreshProvider=RefTokenProvider
-            - SpaLinks:ResetPasswordBaseLink=http://localhost:8100/confirmreset
-            - SpaLinks:ResetEmailBaseLink=http://localhost:8100/confirmemailchange
+            - SpaLinks:ResetPasswordBaseLink=http://185.239.238.179/confirmreset
+            - SpaLinks:ResetEmailBaseLink=http://185.239.238.179/confirmemailchange
             - SendGridUser=MyRecipe
             - SendGridKey=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
         depends_on:
