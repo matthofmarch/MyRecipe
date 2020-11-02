@@ -124,7 +124,7 @@ namespace MyRecipeBackend.Controllers
             Meal[] meals = await _uow.Meals.GetMealsWithRecipeAndInitiatorAsync(group.Id, accepted);
 
             var proposedMealList =
-                meals.Select(m => new MealDto(m.Initiator.NormalizedUserName, m.Id, m.Recipe.Image)).ToArray();
+                meals.Select(m => new MealDto(m)).ToArray();
 
             return Ok(proposedMealList);
         }

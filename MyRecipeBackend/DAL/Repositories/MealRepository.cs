@@ -75,6 +75,8 @@ namespace DAL.Repositories
             var query = _dbContext.Meals
                 .Include(m => m.Initiator)
                 .Include(m => m.Recipe)
+                .ThenInclude(r => r.Ingredients)
+                .ThenInclude(r => r.Ingredient)
                 .Where(m => m.GroupId == groupId);
 
             if (isAccepted != null)
