@@ -11,12 +11,14 @@ namespace Core.Model
     {
         public MealDto(Meal meal)
         {
+            MealId = meal.Id;
             InitiatorName = meal.Initiator.NormalizedUserName;
             Recipe = new UserRecipeModel(meal.Recipe);
             Date = meal.DateTime.ToString("R");
             Accepted = meal.Accepted;
         }
 
+        public Guid MealId { get; set; }
         public string InitiatorName { get; set; }
         public UserRecipeModel Recipe { get; set; }
         public string Date { get; set; }

@@ -89,11 +89,11 @@ namespace MyRecipeBackend.Controllers
         [HttpPost("voteMeal")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> VoteMeal(Guid mealId, VoteEnum vote)
+        public async Task<ActionResult> VoteMeal(VoteInputModel input)
         {
             var user = await _userService.GetUserByClaimsPrincipalAsync(User);
 
-            var voteModel = new VoteMealModel(user, vote, mealId);
+            var voteModel = new VoteMealModel(user, input.VoteEnum, input.MealId);
             await _uow.Meals.VoteMealAsync(voteModel);
 
             try

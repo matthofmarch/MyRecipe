@@ -22,7 +22,7 @@ namespace Core.Entities
 
     public enum VoteEnum
     {
-        Rejected,
-        Approved
+        Rejected = 0,
+        Approved = 1
     }
 }
