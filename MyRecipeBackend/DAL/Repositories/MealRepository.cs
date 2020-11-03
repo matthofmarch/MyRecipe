@@ -77,6 +77,8 @@ namespace DAL.Repositories
                 .Include(m => m.Recipe)
                 .ThenInclude(r => r.Ingredients)
                 .ThenInclude(r => r.Ingredient)
+                .Include(m => m.Votes)
+                .ThenInclude(v => v.User)
                 .Where(m => m.GroupId == groupId);
 
             if (isAccepted != null)
@@ -87,6 +89,19 @@ namespace DAL.Repositories
             query = query.OrderBy(m => m.DateTime);
 
             return await query.ToArrayAsync();
+        }
+
+        public async Task<Meal> GetMealByIdAsync(Guid groupId, Guid id)
+        {
+            return await _dbContext.Meals
+                .Include(m => m.Initiator)
+                .Include(m => m.Recipe)
+                .ThenInclude(r => r.Ingredients)
+                .ThenInclude(r => r.Ingredient)
+                .Include(m => m.Votes)
+                .ThenInclude(v => v.User)
+                .Where(m => m.GroupId == groupId && m.Id == id)
+                .SingleOrDefaultAsync();
         }
     }
 }

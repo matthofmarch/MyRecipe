@@ -128,5 +128,26 @@ namespace MyRecipeBackend.Controllers
 
             return Ok(proposedMealList);
         }
+
+        [HttpGet("getMeals/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<MealDto>> GetMealById(Guid id)
+        {
+            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+            var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
+            if (user is null || group is null)
+            {
+                return BadRequest();
+            }
+
+            var meal = await _uow.Meals.GetMealByIdAsync(group.Id, id);
+
+            if (meal == null)
+                return NotFound($"Meal with id {id} does not exist");
+
+            return new MealDto(meal);
+        }
     }
 }

@@ -13,5 +13,6 @@ namespace Core.Contracts.Repositories
         Task VoteMealAsync(VoteMealModel voteModel);
 
         Task<Meal[]> GetMealsWithRecipeAndInitiatorAsync(Guid groupId, bool? isAccepted);
+        Task<Meal> GetMealByIdAsync(Guid groupId, Guid id);
     }
 }
