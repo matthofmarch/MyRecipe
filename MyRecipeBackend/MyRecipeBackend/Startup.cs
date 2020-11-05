@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity;
 using System.Text;
-using System.Threading.Tasks;
 using Core.Contracts;
 using Core.Contracts.Services;
 using Core.Entities;
@@ -35,11 +35,21 @@ namespace MyRecipeBackend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(ctxOptions => ctxOptions
-                .UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"])
-                .EnableSensitiveDataLogging(Environment.IsDevelopment()));
+            services.AddDbContext<ApplicationDbContext>(ctxOptions =>
+            {
+                ctxOptions.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"],
+                        sqlServerOptionsAction: sqlOptions =>
+                        {
+                            sqlOptions.EnableRetryOnFailure(
+                                maxRetryCount: 10,
+                                maxRetryDelay: TimeSpan.FromSeconds(5),
+                                errorNumbersToAdd: null);
+                        })
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+                    .EnableSensitiveDataLogging(Environment.IsDevelopment());
+            });
+
+        services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                 {
                     options.SignIn.RequireConfirmedAccount = true;
                     options.User.RequireUniqueEmail = true;
