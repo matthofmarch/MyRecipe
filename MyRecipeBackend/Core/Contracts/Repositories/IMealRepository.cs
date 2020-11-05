@@ -14,5 +14,6 @@ namespace Core.Contracts.Repositories
 
         Task<Meal[]> GetMealsWithRecipeAndInitiatorAsync(Guid groupId, bool? isAccepted);
         Task<Meal> GetMealByIdAsync(Guid groupId, Guid id);
+        Task<bool> UserHasAlreadyVotedAsync(MealVote mealVote);
     }
 }

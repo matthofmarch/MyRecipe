@@ -19,7 +19,21 @@ namespace Core.Validations
 
             if (exists)
             {
-                return new ValidationResult("InviteCode already exists", new List<string> {"Code"});
+                return new ValidationResult("InviteCode already exists", new List<string> {nameof(inviteCode.Code)});
+            }
+            return ValidationResult.Success;
+        }
+
+        public static async Task<ValidationResult> CheckIfUserAlreadyVotedAsync(MealVote mealVote, IUnitOfWork unitOfWork)
+        {
+            if(mealVote == null)
+                throw new ArgumentNullException();
+
+            var hasVoted = await unitOfWork.Meals.UserHasAlreadyVotedAsync(mealVote);
+
+            if (hasVoted)
+            {
+                return new ValidationResult("User has already voted for this meal", new []{nameof(mealVote.User)});
             }
             return ValidationResult.Success;
         }

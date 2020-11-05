@@ -103,5 +103,10 @@ namespace DAL.Repositories
                 .Where(m => m.GroupId == groupId && m.Id == id)
                 .SingleOrDefaultAsync();
         }
+
+        public Task<bool> UserHasAlreadyVotedAsync(MealVote mealVote)
+        {
+            return _dbContext.MealVotes.AnyAsync(m => m.UserId == mealVote.User.Id && m.MealId == mealVote.Meal.Id);
+        }
     }
 }

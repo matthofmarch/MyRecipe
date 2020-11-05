@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Contracts;
@@ -99,6 +100,10 @@ namespace MyRecipeBackend.Controllers
             try
             {
                 await _uow.SaveChangesAsync();
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch(Exception e)
             {
