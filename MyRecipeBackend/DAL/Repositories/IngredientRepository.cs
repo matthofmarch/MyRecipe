@@ -6,32 +6,31 @@ using System.Threading.Tasks;
 using Core.Contracts;
 using Core.Entities;
 using DAL;
+using Devices.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    class IngredientRepository : IIngredientRepository
+    class IngredientRepository :BaseRepository<Ingredient>, IIngredientRepository
     {
-        private readonly ApplicationDbContext _dbContext;
-        public IngredientRepository(ApplicationDbContext dbContext)
+        public IngredientRepository(ApplicationDbContext dbContext):base(dbContext)
         {
-            _dbContext = dbContext;
         }
 
-        public async Task<Ingredient> AddAsync(Ingredient ingredient)
-        {
-            var inserted = await _dbContext.Ingredients.AddAsync(ingredient);
-            return inserted.Entity;
-        }
-
-        public Task<Ingredient> GetByIdentifierAsync(string identifier)
+        public Task<Ingredient> GetByNameAsync(string identifier)
         {
             return _dbContext.Ingredients.SingleAsync(i => i.Name == identifier);
         }
 
-        public async Task<Ingredient[]> GetListByIdentifiersAsync(string[] identifiers)
+        public async Task<Ingredient[]> GetListByNamesAsync(string[] identifiers)
         {
             return await _dbContext.Ingredients.Where(x => identifiers.Contains(x.Name)).ToArrayAsync();
+        }
+
+        public async Task<Ingredient[]> GetListByIdsAsync(Guid[] ids)
+        {
+            return await _dbContext.Ingredients
+                .Where(i => ids.Contains(i.Id)).ToArrayAsync();
         }
     }
 }

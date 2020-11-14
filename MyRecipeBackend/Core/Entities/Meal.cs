@@ -15,7 +15,7 @@ namespace Core.Entities
         [Required]
         public Guid RecipeId { get; set; }
         [ForeignKey(nameof(RecipeId))]
-        public UserRecipe Recipe { get; set; }
+        public Recipe Recipe { get; set; }
 
         public DateTime DateTime { get; set; }
 

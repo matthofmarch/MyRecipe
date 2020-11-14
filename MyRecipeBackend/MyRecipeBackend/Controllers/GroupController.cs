@@ -4,10 +4,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Core.Contracts;
-using Core.Contracts.Services;
 using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyRecipeBackend.Models;
 
@@ -19,12 +19,12 @@ namespace MyRecipeBackend.Controllers
     public class GroupController : ControllerBase
     {
         private readonly IUnitOfWork _uow;
-        private readonly IUserService _userService;
+        private readonly UserManager<ApplicationUser> _userManger;
 
-        public GroupController(IUnitOfWork uow, IUserService userService)
+        public GroupController(IUnitOfWork uow, UserManager<ApplicationUser> userManger)
         {
             _uow = uow;
-            _userService = userService;
+            _userManger = userManger;
         }
 
         [HttpPost("create")]
@@ -32,7 +32,7 @@ namespace MyRecipeBackend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GroupDto>> CreateGroup(string name)
         {
-            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+            var user = await _userManger.GetUserAsync(User);
             if (user == null)
                 return BadRequest("User not found");
 
@@ -56,7 +56,7 @@ namespace MyRecipeBackend.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<InviteCode>> CreateInviteCode()
         {
-            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+            var user = await _userManger.GetUserAsync(User);
             if (user == null) return BadRequest("User not found");
 
             var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
@@ -87,7 +87,7 @@ namespace MyRecipeBackend.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> AcceptInvite(string inviteCode)
         {
-            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+            var user = await _userManger.GetUserAsync(User);
             if (user == null) return BadRequest("User not found");
 
             var group = await _uow.Groups.GetGroupForInviteCodeAsync(inviteCode.ToUpper());
@@ -116,7 +116,7 @@ namespace MyRecipeBackend.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult<GroupDto>> GetGroup()
         {
-            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+            var user = await _userManger.GetUserAsync(User);
             if (user == null) return BadRequest("User not found");
 
             var group = await _uow.Groups.GetGroupForUserIncludeAllAsync(user.Id);

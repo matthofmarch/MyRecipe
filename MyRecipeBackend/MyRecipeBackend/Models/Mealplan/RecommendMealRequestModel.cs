@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyRecipeBackend.Models
 {
-    public class RecommendedMealInputModel
+    public class RecommendMealRequestModel
     {
         [Required]
         public Guid[] PrevMealIds { get; set; }

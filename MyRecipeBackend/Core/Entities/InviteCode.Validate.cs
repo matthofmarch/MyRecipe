@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Core.Contracts;
 using Core.Validations;
-using DAL;
 
 namespace Core.Entities
 {
