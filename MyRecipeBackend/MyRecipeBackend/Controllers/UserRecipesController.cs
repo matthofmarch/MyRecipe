@@ -6,7 +6,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Core.Contracts;
-using Core.Contracts.Services;
 using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -26,20 +25,20 @@ namespace MyRecipeBackend.Controllers
 
         private readonly IUnitOfWork _uow;
         private readonly IConfiguration _configuration;
-        private readonly IUserService _userService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserRecipesController(IUnitOfWork uow, IConfiguration config, IUserService userService)
+        public UserRecipesController(IUnitOfWork uow, IConfiguration config, UserManager<ApplicationUser> userManager)
         {
             _uow = uow;
             _configuration = config;
-            _userService = userService;
+            _userManager = userManager;
         }
 
         
         [HttpPost("create")]
         public async Task<ActionResult> CreateRecipe(UserRecipeModel userRecipeModel)
         {
-            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return BadRequest("User not found");
 
@@ -57,7 +56,7 @@ namespace MyRecipeBackend.Controllers
         [HttpPut("update/{id}")]
         public async Task<ActionResult> UpdateRecipe([FromRoute]Guid id, UserRecipeModel userRecipeModel)
         {
-            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null) return BadRequest("User not found");
 
             if (id != userRecipeModel.Id) return BadRequest("Ids do not match");
@@ -92,7 +91,7 @@ namespace MyRecipeBackend.Controllers
             int pageSize = 20
         )
         {
-            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return BadRequest("User not found");
 
@@ -104,7 +103,7 @@ namespace MyRecipeBackend.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteRecipe(Guid id)
         {
-            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return BadRequest("User not found");
 

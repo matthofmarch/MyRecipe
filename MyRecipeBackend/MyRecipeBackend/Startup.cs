@@ -8,13 +8,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity;
 using System.Text;
 using Core.Contracts;
-using Core.Contracts.Services;
 using Core.Entities;
 using DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using MyRecipeBackend.Config;
 using MyRecipeBackend.Services;
 using NSwag;
 using NSwag.Generation.Processors.Security;
@@ -35,21 +35,15 @@ namespace MyRecipeBackend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(ctxOptions =>
+            services.AddDbContext<ApplicationDbContext>(builder =>
             {
-                ctxOptions.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"],
-                        sqlServerOptionsAction: sqlOptions =>
-                        {
-                            sqlOptions.EnableRetryOnFailure(
-                                maxRetryCount: 10,
-                                maxRetryDelay: TimeSpan.FromSeconds(5),
-                                errorNumbersToAdd: null);
-                        })
-
+                builder.UseSqlServer(
+                        Configuration.GetConnectionString("DefaultConnection"),
+                        sqlOptions => { sqlOptions.EnableRetryOnFailure(10, TimeSpan.FromSeconds(5), null); })
                     .EnableSensitiveDataLogging(Environment.IsDevelopment());
             });
 
-        services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                 {
                     options.SignIn.RequireConfirmedAccount = true;
                     options.User.RequireUniqueEmail = true;
@@ -57,30 +51,35 @@ namespace MyRecipeBackend
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>(Configuration["Jwt:RefreshProvider"])
                 .AddDefaultTokenProviders();
-            
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IUserService, ApplicationUserService>();
+
+            var jwtSection = Configuration.GetSection("Jwt");
+            services.Configure<JwtConfiguration>(jwtSection);
+            var jwtConfiguration = jwtSection.Get<JwtConfiguration>();
+            var key = Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]);
 
             services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.SaveToken = true;
-                options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidAudience = Configuration["Jwt:Audience"],
-                    ValidIssuer = Configuration["Jwt:Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
-                };
-            });
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.SaveToken = true;
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = jwtConfiguration.Issuer,
+                        ValidateAudience = true,
+                        ValidAudience = jwtConfiguration.Audience,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
 
             services.AddSwaggerDocument(config =>
             {
@@ -95,7 +94,6 @@ namespace MyRecipeBackend
                         Email = "myRecipes.austria@gmail.com",
                         Url = "https://htl-leonding.at"
                     };
-                    
                 };
 
                 config.AddSecurity("Bearer", new OpenApiSecurityScheme()
@@ -107,22 +105,22 @@ namespace MyRecipeBackend
                 });
 
                 config.OperationProcessors.Add(new OperationSecurityScopeProcessor("Bearer"));
-
             });
 
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
 
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-            });
+            services.AddCors(options => 
+                options.AddDefaultPolicy(builder => 
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+
+            services.Configure<SpaLinks>(Configuration.GetSection("SpaLinks"));
 
             services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,  ApplicationDbContext dbContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -133,14 +131,15 @@ namespace MyRecipeBackend
                 dbContext.Database.EnsureDeleted();
                 dbContext.Database.Migrate();
             }
-            else if(env.IsProduction()){
-                app.UseHttpsRedirection(); 
+            else if (env.IsProduction())
+            {
+                app.UseHttpsRedirection();
             }
 
-            var staticFileDirectory =
-                Path.Combine(Directory.GetCurrentDirectory(), Configuration["StaticFiles:ImageBasePath"]);
+            var staticFileDirectory = Path.Combine(Directory.GetCurrentDirectory(), Configuration["StaticFiles:ImageBasePath"]);
             if (!Directory.Exists(staticFileDirectory))
                 Directory.CreateDirectory(staticFileDirectory);
+
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(staticFileDirectory),
@@ -153,10 +152,7 @@ namespace MyRecipeBackend
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             app.UseOpenApi();
             app.UseSwaggerUi3();

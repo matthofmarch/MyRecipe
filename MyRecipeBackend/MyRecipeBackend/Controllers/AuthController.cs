@@ -18,7 +18,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using MyRecipeBackend.Config;
 
 namespace MyRecipeBackend.Controllers
 {
@@ -30,18 +32,22 @@ namespace MyRecipeBackend.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
-        private readonly IConfiguration _configuration;
+        private readonly SpaLinks _spaLinks;
+        private readonly JwtConfiguration _jwtConfiguration;
 
-        public AuthController(UserManager<ApplicationUser> userManager,
+        public AuthController(
+            UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            IConfiguration config,
+            IOptions<JwtConfiguration> jwtConfiguration,
+            IOptions<SpaLinks> spaLinks,
             ApplicationDbContext dbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
-            _configuration = config;
+            _spaLinks = spaLinks.Value;
+            _jwtConfiguration = jwtConfiguration.Value;
             _dbContext = dbContext;
         }
 
@@ -57,46 +63,46 @@ namespace MyRecipeBackend.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, false);
+            if (result.Succeeded)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, false);
-                if (result.Succeeded)
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                var claims = await _userManager.GetClaimsAsync(user);
+
+
+                var authClaims = new List<Claim>
                 {
-                    var user = await _userManager.FindByEmailAsync(model.Email);
-                    var claims = await _userManager.GetClaimsAsync(user);
+                    new Claim(ClaimTypes.Name, user.Id),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                };
 
+                authClaims.AddRange(claims);
 
-                    var authClaims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, user.Id),
-                        new Claim(ClaimTypes.NameIdentifier, user.Id),
-                        new Claim(ClaimTypes.Email, user.Email),
-                        new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                    };
+                var token = GenerateJwtToken(authClaims);
+                var refreshToken = await _userManager.GenerateUserTokenAsync(
+                    user, _jwtConfiguration.RefreshProvider, "RefreshToken");
 
-                    authClaims.AddRange(claims);
+                await _userManager.SetAuthenticationTokenAsync(user, _jwtConfiguration.RefreshProvider,
+                    "RefreshToken", refreshToken);
 
-                    var token = GenerateJwtToken(authClaims);
-                    var refreshToken = await _userManager.GenerateUserTokenAsync(user,
-                        _configuration["Jwt:RefreshProvider"], "RefreshToken");
-                    await _userManager.SetAuthenticationTokenAsync(user, _configuration["Jwt:RefreshProvider"],
-                        "RefreshToken", refreshToken);
-
-                    return Ok(new
-                    {
-                        token,
-                        expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:TokenValidMinutes"])),
-                        refreshToken
-                    });
-                }
-                else if (result.IsNotAllowed)
-                    return Unauthorized(new {Error = "Email needs to be confirmed"});
-
-                return Unauthorized();
+                return Ok(new
+                {
+                    token,
+                    expiration = DateTime.Now.AddMinutes(_jwtConfiguration.TokenValidMinues),
+                    refreshToken
+                });
             }
+            else if (result.IsNotAllowed)
+                return Unauthorized(new {Error = "Email needs to be confirmed"});
 
-            return BadRequest();
+            return Unauthorized();
+
         }
 
         [HttpPost]
@@ -169,7 +175,7 @@ namespace MyRecipeBackend.Controllers
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var callbackUrl =
-                $"{_configuration["SpaLinks:ResetPasswordBaseLink"]}?userId={WebUtility.UrlEncode(user.Id)}&token={WebUtility.UrlEncode(token)}";
+                $"{_spaLinks.ResetPasswordBaseLink}?userId={WebUtility.UrlEncode(user.Id)}&token={WebUtility.UrlEncode(token)}";
             await _emailSender.SendEmailAsync(email, "Reset your account password",
                 $"Please follow the link to reset your password: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Click here</a>");
             return Ok("Email sent");
@@ -211,7 +217,7 @@ namespace MyRecipeBackend.Controllers
 
             var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
             var callbackUrl =
-                $"{_configuration["SpaLinks:ResetEmailBaseLink"]}" +
+                $"{_spaLinks.ResetEmailBaseLink}" +
                 $"?userId={WebUtility.UrlEncode(user.Id)}" +
                 $"&token={WebUtility.UrlEncode(token)}" +
                 $"&newEmail={WebUtility.UrlEncode(newEmail)}";
@@ -265,23 +271,23 @@ namespace MyRecipeBackend.Controllers
                 }
 
                 var user = await _userManager.FindByIdAsync(principal.Identity.Name);
-                var result =
-                    await _dbContext.UserTokens.SingleOrDefaultAsync(t =>
+                var result = await _dbContext.UserTokens.SingleOrDefaultAsync(t =>
                         t.UserId == user.Id && t.Value == model.RefreshToken);
+
                 if (user != null && result != null)
                 {
                     var newToken = GenerateJwtToken(principal.Claims);
-                    await _userManager.RemoveAuthenticationTokenAsync(user, _configuration["Jwt:RefreshProvider"],
+                    await _userManager.RemoveAuthenticationTokenAsync(user, _jwtConfiguration.RefreshProvider,
                         "RefreshToken");
                     var newRefreshToken = await _userManager.GenerateUserTokenAsync(user,
-                        _configuration["Jwt:RefreshProvider"], "RefreshToken");
-                    await _userManager.SetAuthenticationTokenAsync(user, _configuration["Jwt:RefreshProvider"],
+                        _jwtConfiguration.RefreshProvider, "RefreshToken");
+                    await _userManager.SetAuthenticationTokenAsync(user, _jwtConfiguration.RefreshProvider,
                         "RefreshToken", newRefreshToken);
 
                     return Ok(new
                     {
                         token = newToken,
-                        expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:TokenValidMinutes"])),
+                        expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_jwtConfiguration.TokenValidMinues)),
                         refreshToken = newRefreshToken
                     });
                 }
@@ -292,12 +298,12 @@ namespace MyRecipeBackend.Controllers
 
         private string GenerateJwtToken(IEnumerable<Claim> claims)
         {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.Key));
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:TokenValidMinutes"])),
+                _jwtConfiguration.Issuer,
+                _jwtConfiguration.Audience,
+                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_jwtConfiguration.TokenValidMinues)),
                 claims: claims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );
@@ -312,9 +318,9 @@ namespace MyRecipeBackend.Controllers
                 ValidateIssuer = true,
                 ValidateAudience = true,
                 ValidateIssuerSigningKey = true,
-                ValidAudience = _configuration["Jwt:Audience"],
-                ValidIssuer = _configuration["Jwt:Issuer"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])),
+                ValidAudience = _jwtConfiguration.Audience,
+                ValidIssuer = _jwtConfiguration.Issuer,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.Key)),
                 ValidateLifetime = false
             };
 
