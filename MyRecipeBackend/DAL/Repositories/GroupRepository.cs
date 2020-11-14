@@ -51,7 +51,7 @@ namespace DAL.Repositories
                 .SingleOrDefaultAsync();
         }
 
-        public async Task<UserRecipe> GetNextRecipeRecommendationForGroupAsync(string userId, Guid[] prevRecipeIds)
+        public async Task<Recipe> GetNextRecipeRecommendationForGroupAsync(string userId, Guid[] prevRecipeIds)
         {
             IEnumerable<string> userGroup = await _dbContext.Users
                 .Where(u => u.Id == userId)
@@ -59,7 +59,7 @@ namespace DAL.Repositories
                 .Select(u => u.Id)
                 .ToArrayAsync();
             
-            var query = _dbContext.UserRecipes
+            var query = _dbContext.Recipes
                 .Where(r => userGroup.Contains(r.UserId) && !prevRecipeIds.Contains(r.Id))
                 .Where(r => r.AddToGroupPool);
             var length = await query.CountAsync();

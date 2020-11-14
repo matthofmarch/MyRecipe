@@ -11,28 +11,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    class UserRecipeRepository :BaseRepository<UserRecipe>, IUserRecipeRepository
+    class RecipeRepository :BaseRepository<Recipe>, IRecipeRepository
     {
-        private readonly ApplicationDbContext _dbContext;
-        public UserRecipeRepository(ApplicationDbContext dbContext):base(dbContext)
+        public RecipeRepository(ApplicationDbContext dbContext):base(dbContext)
         {
-            _dbContext = dbContext;
         }
 
-        public void Delete(UserRecipe userRecipe)
+        public void Delete(Recipe recipe)
         {
-            _dbContext.UserRecipes.Remove(userRecipe);
+            _dbContext.Recipes.Remove(recipe);
         }
 
-        public Task<UserRecipe> GetByIdAsync(ApplicationUser user, Guid id)
+        public Task<Recipe> GetByIdAsync(ApplicationUser user, Guid id)
         {
-            return _dbContext.UserRecipes
+            return _dbContext.Recipes
                 .SingleOrDefaultAsync(r => r.User.Id == user.Id && r.Id == id);
         }
 
-        public async Task<UserRecipe[]> GetPagedRecipesAsync(ApplicationUser user, string filter, int page, int pageSize)
+        public async Task<Recipe[]> GetPagedRecipesAsync(ApplicationUser user, string filter, int page, int pageSize)
         {
-            var query = _dbContext.UserRecipes
+            var query = _dbContext.Recipes
                 .Where(r => r.User.Id == user.Id);
                 
 
@@ -51,10 +49,10 @@ namespace DAL.Repositories
 
         public async Task RemoveIngredients(Guid recipeId)
         {
-            var relations = await _dbContext.UserRecipes
+            var relations = await _dbContext.Recipes
                 .Where(r => r.Id == recipeId)
                 .ToArrayAsync();
-            _dbContext.UserRecipes.RemoveRange(relations);
+            _dbContext.Recipes.RemoveRange(relations);
         }
     }
 }

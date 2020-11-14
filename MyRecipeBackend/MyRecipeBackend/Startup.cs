@@ -1,18 +1,18 @@
 using System;
 using System.IO;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Identity;
 using System.Text;
 using Core.Contracts;
 using Core.Entities;
 using DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using MyRecipeBackend.Config;
 using MyRecipeBackend.Services;
@@ -37,10 +37,9 @@ namespace MyRecipeBackend
         {
             services.AddDbContext<ApplicationDbContext>(builder => builder
                 .UseSqlServer(
-                        Configuration.GetConnectionString("DefaultConnection"),
-                        sqlOptions => { sqlOptions.EnableRetryOnFailure(10, TimeSpan.FromSeconds(5), null); })
-                    .EnableSensitiveDataLogging(Environment.IsDevelopment())
-                //.UseInternalServiceProvider(services.BuildServiceProvider())
+                    Configuration.GetConnectionString("DefaultConnection"),
+                    sqlOptions => { sqlOptions.EnableRetryOnFailure(10, TimeSpan.FromSeconds(5), null); })
+                .EnableSensitiveDataLogging(Environment.IsDevelopment())
             );
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -68,7 +67,7 @@ namespace MyRecipeBackend
                 {
                     options.SaveToken = true;
                     options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new TokenValidationParameters()
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
                         ValidIssuer = jwtConfiguration.Issuer,
@@ -88,7 +87,7 @@ namespace MyRecipeBackend
                     document.Info.Version = "v1";
                     document.Info.Title = "MyRecipe API";
                     document.Info.Description = "A backend for MyRecipes";
-                    document.Info.Contact = new NSwag.OpenApiContact
+                    document.Info.Contact = new OpenApiContact
                     {
                         Name = "MyRecipes Team",
                         Email = "myRecipes.austria@gmail.com",
@@ -96,7 +95,7 @@ namespace MyRecipeBackend
                     };
                 };
 
-                config.AddSecurity("Bearer", new OpenApiSecurityScheme()
+                config.AddSecurity("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "Standard Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
                     In = OpenApiSecurityApiKeyLocation.Header,
@@ -110,8 +109,8 @@ namespace MyRecipeBackend
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
 
-            services.AddCors(options => 
-                options.AddDefaultPolicy(builder => 
+            services.AddCors(options =>
+                options.AddDefaultPolicy(builder =>
                     builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
             services.Configure<SpaLinks>(Configuration.GetSection("SpaLinks"));
@@ -136,7 +135,8 @@ namespace MyRecipeBackend
                 app.UseHttpsRedirection();
             }
 
-            var staticFileDirectory = Path.Combine(Directory.GetCurrentDirectory(), Configuration["StaticFiles:ImageBasePath"]);
+            var staticFileDirectory =
+                Path.Combine(Directory.GetCurrentDirectory(), Configuration["StaticFiles:ImageBasePath"]);
             if (!Directory.Exists(staticFileDirectory))
                 Directory.CreateDirectory(staticFileDirectory);
 

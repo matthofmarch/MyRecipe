@@ -17,7 +17,7 @@ namespace DAL
         public DbSet<MealVote> MealVotes { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<InviteCode> InviteCodes { get; set; }
-        public DbSet<UserRecipe> UserRecipes { get; set; }
+        public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
 
 
@@ -29,15 +29,6 @@ namespace DAL
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            builder.Entity<Ingredient>(i =>
-            {
-                i.HasMany(i => i.UserRecipes);
-                i.HasMany(i => i.Tags);
-            });
-
-            builder.Entity<UserRecipe>().HasMany(r => r.Ingredients);
-            builder.Entity<Tag>().HasMany(t => t.Ingredients);
 
             var hostEnvironment = this.GetService<IHostEnvironment>();
             if (hostEnvironment.IsDevelopment() || hostEnvironment.IsStaging())
@@ -60,7 +51,7 @@ namespace DAL
                     Id = "testUser1",
                     Email = "test1@test.test",
                     SecurityStamp = String.Empty,
-                    Recipes = new List<UserRecipe>(),
+                    Recipes = new List<Recipe>(),
                     EmailConfirmed = true,
                     GroupId=seedGroupId
                 },
@@ -69,7 +60,7 @@ namespace DAL
                     Id = "testUser2",
                     Email = "test2@test.test",
                     SecurityStamp = String.Empty,
-                    Recipes = new List<UserRecipe>(),
+                    Recipes = new List<Recipe>(),
                     EmailConfirmed = true,
                     GroupId = seedGroupId
                 }
@@ -106,9 +97,9 @@ namespace DAL
             };
             builder.Entity<Ingredient>().HasData(ingredients);
 
-            var userRecipes = new[]
+            var recipes = new[]
             {
-                new UserRecipe
+                new Recipe
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000001"),
                     CookingTimeInMin = 20,
@@ -117,7 +108,7 @@ namespace DAL
                     UserId = users[0].Id,
                     AddToGroupPool = true,
                 },
-                new UserRecipe
+                new Recipe
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000002"),
                     CookingTimeInMin = 30,
@@ -126,7 +117,7 @@ namespace DAL
                     UserId = users[0].Id,
                     AddToGroupPool = true,
                 },
-                new UserRecipe
+                new Recipe
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000003"),
                     CookingTimeInMin = 10,
@@ -135,7 +126,7 @@ namespace DAL
                     UserId = users[1].Id,
                     AddToGroupPool = true,
                 },
-                new UserRecipe
+                new Recipe
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000004"),
                     CookingTimeInMin = 3,
@@ -145,71 +136,71 @@ namespace DAL
                     AddToGroupPool = true,
                 }
             };
-            builder.Entity<UserRecipe>().HasData(userRecipes);
+            builder.Entity<Recipe>().HasData(recipes);
 
-            //var recipeIngredientRelation = new[]
-            //{
-            //    new RecipeIngredientRelation//rice for pot of rice
-            //    {
-            //        IngredientId = ingredients[2].Id,
-            //        RecipeId = userRecipes[0].Id
-            //    },
-            //    new RecipeIngredientRelation//steak for steak
-            //    {
-            //        IngredientId = ingredients[5].Id,
-            //        RecipeId = userRecipes[1].Id
-            //    },
-            //    new RecipeIngredientRelation //Potato for steak
-            //    {
-            //        IngredientId = ingredients[1].Id,
-            //        RecipeId = userRecipes[1].Id
-            //    },
-            //    new RecipeIngredientRelation //ham&eggs
-            //    {
-            //        IngredientId = ingredients[6].Id,
-            //        RecipeId = userRecipes[2].Id
-            //    },
-            //    new RecipeIngredientRelation
-            //    {
-            //        IngredientId = ingredients[7].Id,
-            //        RecipeId = userRecipes[2].Id
-            //    },
-            //    new RecipeIngredientRelation //yogurt
-            //    {
-            //        IngredientId = ingredients[3].Id,
-            //        RecipeId = userRecipes[3].Id
-            //    },
-            //    new RecipeIngredientRelation
-            //    {
-            //        IngredientId = ingredients[9].Id,
-            //        RecipeId = userRecipes[3].Id
-            //    }
-            //};
-            //builder.Entity<RecipeIngredientRelation>().HasData(recipeIngredientRelation);
-            //TODO readd
-            //var meals = new[] {
-            //    new Meal
-            //    {
-            //        InitiatorId = users[0].Id,
-            //        RecipeId = userRecipes[0].Id,
-            //        DateTime = DateTime.Now,
-            //        GroupId = groups[0].Id,
-            //        Id = new Guid("00000000-0000-0000-0000-000000000001"),
-            //    }
-            //};
-            //builder.Entity<Meal>().HasData(meals);
+            var joinIngredientUserRecipe = new[]
+            {
+                new//rice for pot of rice
+                {
+                    IngredientsId = ingredients[2].Id,
+                    RecipesId = recipes[0].Id
+                },
+                new//steak for steak
+                {
+                    IngredientsId = ingredients[5].Id,
+                    RecipesId = recipes[1].Id
+                },
+                new //Potato for steak
+                {
+                    IngredientsId = ingredients[1].Id,
+                    RecipesId = recipes[1].Id
+                },
+                new //ham&eggs
+                {
+                    IngredientsId = ingredients[6].Id,
+                    RecipesId = recipes[2].Id
+                },
+                new
+                {
+                    IngredientsId = ingredients[7].Id,
+                    RecipesId = recipes[2].Id
+                },
+                new //yogurt
+                {
+                    IngredientsId = ingredients[3].Id,
+                    RecipesId = recipes[3].Id
+                },
+                new
+                {
+                    IngredientsId = ingredients[9].Id,
+                    RecipesId = recipes[3].Id
+                }
+            };
+            builder.Entity("IngredientRecipe").HasData(joinIngredientUserRecipe);
+            
+            var meals = new[] {
+                new Meal
+                {
+                    InitiatorId = users[0].Id,
+                    RecipeId = recipes[0].Id,
+                    DateTime = DateTime.Now,
+                    GroupId = groups[0].Id,
+                    Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                }
+            };
+            builder.Entity<Meal>().HasData(meals);
 
-            //var mealVotes = new[]
-            //{
-            //    new MealVote()
-            //    {
-            //        Id = new Guid("00000000-0000-0000-0000-000000000001"),
-            //        MealId = meals[0].Id,
-            //        UserId = users[1].Id,
-            //        Vote = VoteEnum.Approved
-            //    }
-            //};
-            //builder.Entity<MealVote>().HasData(mealVotes);
+            var mealVotes = new[]
+            {
+                new MealVote()
+                {
+                    Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                    MealId = meals[0].Id,
+                    UserId = users[1].Id,
+                    Vote = VoteEnum.Approved
+                }
+            };
+            builder.Entity<MealVote>().HasData(mealVotes);
         }
     }
 }

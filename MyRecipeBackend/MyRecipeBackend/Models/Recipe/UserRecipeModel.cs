@@ -11,7 +11,12 @@ namespace MyRecipeBackend.Models
     public class UserRecipeModel
     {
 
-        public UserRecipeModel(UserRecipe r)
+        public UserRecipeModel()
+        {
+
+        }
+
+        public UserRecipeModel(Recipe r)
         {
             Id = r.Id;
             Name = r.Name;
@@ -32,9 +37,9 @@ namespace MyRecipeBackend.Models
         public Uri Image { get; set; }
         public bool AddToGroupPool { get; set; }
 
-        public async Task<UserRecipe> ToUserRecipe(IUnitOfWork uow, ApplicationUser user)
+        public async Task<Recipe> ToUserRecipe(IUnitOfWork uow, ApplicationUser user)
         {
-            var userRecipe = new UserRecipe
+            var userRecipe = new Recipe
             {
                 Name = Name,
                 Description = Description,

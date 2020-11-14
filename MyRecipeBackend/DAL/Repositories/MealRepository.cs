@@ -34,7 +34,7 @@ namespace DAL.Repositories
                 Initiator = mealModel.Initiator,
                 Group = mealModel.Group,
                 DateTime = mealModel.DateTime,
-                Recipe = await _dbContext.UserRecipes.FindAsync(mealModel.RecipeId),
+                Recipe = await _dbContext.Recipes.FindAsync(mealModel.RecipeId),
                 Votes = new List<MealVote>()
                 {
                     new MealVote

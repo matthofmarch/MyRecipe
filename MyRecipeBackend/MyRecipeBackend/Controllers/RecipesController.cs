@@ -21,19 +21,19 @@ namespace MyRecipeBackend.Controllers
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
-    public class UserRecipesController : ControllerBase
+    public class RecipesController : ControllerBase
     {
 
         private readonly IUnitOfWork _uow;
         private readonly IConfiguration _configuration;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<UserRecipesController> _log;
+        private readonly ILogger<RecipesController> _log;
 
-        public UserRecipesController(
+        public RecipesController(
             IUnitOfWork uow, 
             IConfiguration config, 
             UserManager<ApplicationUser> userManager,
-            ILogger<UserRecipesController> log)
+            ILogger<RecipesController> log)
         {
             _uow = uow;
             _configuration = config;
@@ -49,11 +49,11 @@ namespace MyRecipeBackend.Controllers
             if (user == null)
                 return BadRequest("User not found");
 
-            UserRecipe userRecipe;
-            try { userRecipe = await userRecipeModel.ToUserRecipe(_uow, user); }
+            Recipe recipe;
+            try { recipe = await userRecipeModel.ToUserRecipe(_uow, user); }
             catch(Exception e) { return BadRequest(e.Message); }
 
-            await _uow.UserRecipes.AddAsync(userRecipe);
+            await _uow.Recipes.AddAsync(recipe);
             try { await _uow.SaveChangesAsync(); }
             catch(ValidationException e){ return BadRequest(e.Message); }
 
@@ -68,7 +68,7 @@ namespace MyRecipeBackend.Controllers
 
             if (id != userRecipeModel.Id) return BadRequest("Ids do not match");
 
-            var dbUserRecipe = await _uow.UserRecipes.GetByIdAsync(user, id);
+            var dbUserRecipe = await _uow.Recipes.GetByIdAsync(user, id);
             if (dbUserRecipe == null) return NotFound();
 
             dbUserRecipe.AddToGroupPool = userRecipeModel.AddToGroupPool;
@@ -78,7 +78,7 @@ namespace MyRecipeBackend.Controllers
             dbUserRecipe.Image = userRecipeModel.Image;
 
             //TODO check if this works properly (can i use it without removing first)
-            await _uow.UserRecipes.RemoveIngredients(dbUserRecipe.Id);
+            await _uow.Recipes.RemoveIngredients(dbUserRecipe.Id);
             dbUserRecipe.Ingredients = await _uow.Ingredients.GetListByIdsAsync(
                     userRecipeModel.IngredientIds);
 
@@ -107,7 +107,7 @@ namespace MyRecipeBackend.Controllers
             if (user == null)
                 return BadRequest("User not found");
 
-            UserRecipe[] recipes = await _uow.UserRecipes.GetPagedRecipesAsync(user, filter, page, pageSize);
+            Recipe[] recipes = await _uow.Recipes.GetPagedRecipesAsync(user, filter, page, pageSize);
 
             return recipes.Select(r => new UserRecipeModel(r)).ToArray();
         }
@@ -119,13 +119,13 @@ namespace MyRecipeBackend.Controllers
             if (user == null)
                 return BadRequest("User not found");
 
-            UserRecipe userRecipe = await _uow.UserRecipes.GetByIdAsync(user, id);
-            if(userRecipe == null)
+            Recipe recipe = await _uow.Recipes.GetByIdAsync(user, id);
+            if(recipe == null)
             {
                 return NotFound();
             }
 
-            _uow.UserRecipes.Delete(userRecipe);
+            _uow.Recipes.Delete(recipe);
 
             try { await _uow.SaveChangesAsync(); }
             catch(Exception e) { return BadRequest(e.Message); }

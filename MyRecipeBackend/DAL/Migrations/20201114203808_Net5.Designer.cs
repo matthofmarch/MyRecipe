@@ -10,16 +10,16 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201114173011_IngredientsManyToManyNew")]
-    partial class IngredientsManyToManyNew
+    [Migration("20201114203808_Net5")]
+    partial class Net5
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.10")
+                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.0");
 
             modelBuilder.Entity("Core.Entities.ApplicationUser", b =>
                 {
@@ -34,8 +34,8 @@ namespace DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -50,12 +50,12 @@ namespace DAL.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -73,19 +73,19 @@ namespace DAL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
 
                     b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
+                        .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex")
+                        .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
@@ -95,14 +95,14 @@ namespace DAL.Migrations
                         {
                             Id = "testUser1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "bdc725b4-5b56-47f3-88c2-00715888188a",
+                            ConcurrencyStamp = "b63d3a48-8287-4e66-ba82-c8f3606b8ad1",
                             Email = "test1@test.test",
                             EmailConfirmed = true,
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
                             LockoutEnabled = false,
                             NormalizedEmail = "test1@test.test",
                             NormalizedUserName = "test1@test.test",
-                            PasswordHash = "AQAAAAEAACcQAAAAECjcxbmCVtX5zmSuJmMLIiM7s+6cLS73ABsylLi4WW/mcI7FlTL8X5O72X82yjjlhg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBQlJfi/kmwVIj+vyiEiG4OOh4DX1vJuiBt0TDreJ4kUClefqtl+nTQPBoNG5HjQMw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -112,14 +112,14 @@ namespace DAL.Migrations
                         {
                             Id = "testUser2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "facb52e1-37e4-4d32-8546-1cca7ebc33c4",
+                            ConcurrencyStamp = "48a2a383-60c3-47d9-9c79-55c5adb1f557",
                             Email = "test2@test.test",
                             EmailConfirmed = true,
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
                             LockoutEnabled = false,
                             NormalizedEmail = "test2@test.test",
                             NormalizedUserName = "test2@test.test",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAILotjAQODxKIycZ/ZEvOxRlWEFezoe/QdR8sBeLAaq+16K5o5Wfg21ImVEqcn1zg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDfK4LQ7XzGiRJ05s2B430tKcQZ52h9iioNpOtxk+KG08+6RV2UDCp8KHq+qqgRg6g==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -135,8 +135,8 @@ namespace DAL.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -170,17 +170,7 @@ namespace DAL.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<Guid?>("TagId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UserRecipeId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TagId");
-
-                    b.HasIndex("UserRecipeId");
 
                     b.ToTable("Ingredients");
 
@@ -245,8 +235,8 @@ namespace DAL.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(6)")
-                        .HasMaxLength(6);
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
@@ -301,6 +291,17 @@ namespace DAL.Migrations
                     b.HasIndex("RecipeId");
 
                     b.ToTable("Meals");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            Accepted = false,
+                            DateTime = new DateTime(2020, 11, 14, 21, 38, 8, 214, DateTimeKind.Local).AddTicks(6790),
+                            GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            InitiatorId = "testUser1",
+                            RecipeId = new Guid("00000000-0000-0000-0000-000000000001")
+                        });
                 });
 
             modelBuilder.Entity("Core.Entities.MealVote", b =>
@@ -330,34 +331,18 @@ namespace DAL.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("MealVotes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            MealId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            UserId = "testUser2",
+                            Vote = 1
+                        });
                 });
 
-            modelBuilder.Entity("Core.Entities.Tag", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("IngredientId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Label")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IngredientId");
-
-                    b.ToTable("Tag");
-                });
-
-            modelBuilder.Entity("Core.Entities.UserRecipe", b =>
+            modelBuilder.Entity("Core.Entities.Recipe", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -375,13 +360,10 @@ namespace DAL.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("IngredientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -394,11 +376,9 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IngredientId");
-
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserRecipes");
+                    b.ToTable("Recipes");
 
                     b.HasData(
                         new
@@ -439,6 +419,93 @@ namespace DAL.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Core.Entities.Tag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Label")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tag");
+                });
+
+            modelBuilder.Entity("IngredientRecipe", b =>
+                {
+                    b.Property<Guid>("IngredientsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RecipesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("IngredientsId", "RecipesId");
+
+                    b.HasIndex("RecipesId");
+
+                    b.ToTable("IngredientRecipe");
+
+                    b.HasData(
+                        new
+                        {
+                            IngredientsId = new Guid("00000000-0000-0000-0000-000000000003"),
+                            RecipesId = new Guid("00000000-0000-0000-0000-000000000001")
+                        },
+                        new
+                        {
+                            IngredientsId = new Guid("00000000-0000-0000-0000-000000000006"),
+                            RecipesId = new Guid("00000000-0000-0000-0000-000000000002")
+                        },
+                        new
+                        {
+                            IngredientsId = new Guid("00000000-0000-0000-0000-000000000002"),
+                            RecipesId = new Guid("00000000-0000-0000-0000-000000000002")
+                        },
+                        new
+                        {
+                            IngredientsId = new Guid("00000000-0000-0000-0000-000000000007"),
+                            RecipesId = new Guid("00000000-0000-0000-0000-000000000003")
+                        },
+                        new
+                        {
+                            IngredientsId = new Guid("00000000-0000-0000-0000-000000000008"),
+                            RecipesId = new Guid("00000000-0000-0000-0000-000000000003")
+                        },
+                        new
+                        {
+                            IngredientsId = new Guid("00000000-0000-0000-0000-000000000004"),
+                            RecipesId = new Guid("00000000-0000-0000-0000-000000000004")
+                        },
+                        new
+                        {
+                            IngredientsId = new Guid("00000000-0000-0000-0000-000000000010"),
+                            RecipesId = new Guid("00000000-0000-0000-0000-000000000004")
+                        });
+                });
+
+            modelBuilder.Entity("IngredientTag", b =>
+                {
+                    b.Property<Guid>("IngredientsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TagsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("IngredientsId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("IngredientTag");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -449,18 +516,18 @@ namespace DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex")
+                        .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
@@ -471,7 +538,7 @@ namespace DAL.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -495,7 +562,7 @@ namespace DAL.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -575,17 +642,8 @@ namespace DAL.Migrations
                     b.HasOne("Core.Entities.Group", "Group")
                         .WithMany("Members")
                         .HasForeignKey("GroupId");
-                });
 
-            modelBuilder.Entity("Core.Entities.Ingredient", b =>
-                {
-                    b.HasOne("Core.Entities.Tag", null)
-                        .WithMany("Ingredients")
-                        .HasForeignKey("TagId");
-
-                    b.HasOne("Core.Entities.UserRecipe", null)
-                        .WithMany("Ingredients")
-                        .HasForeignKey("UserRecipeId");
+                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("Core.Entities.InviteCode", b =>
@@ -593,6 +651,8 @@ namespace DAL.Migrations
                     b.HasOne("Core.Entities.Group", "Group")
                         .WithMany("InviteCodes")
                         .HasForeignKey("GroupId");
+
+                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("Core.Entities.Meal", b =>
@@ -607,11 +667,17 @@ namespace DAL.Migrations
                         .WithMany()
                         .HasForeignKey("InitiatorId");
 
-                    b.HasOne("Core.Entities.UserRecipe", "Recipe")
+                    b.HasOne("Core.Entities.Recipe", "Recipe")
                         .WithMany("Meals")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Initiator");
+
+                    b.Navigation("Recipe");
                 });
 
             modelBuilder.Entity("Core.Entities.MealVote", b =>
@@ -625,24 +691,49 @@ namespace DAL.Migrations
                     b.HasOne("Core.Entities.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Meal");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Core.Entities.Tag", b =>
+            modelBuilder.Entity("Core.Entities.Recipe", b =>
                 {
-                    b.HasOne("Core.Entities.Ingredient", null)
-                        .WithMany("Tags")
-                        .HasForeignKey("IngredientId");
-                });
-
-            modelBuilder.Entity("Core.Entities.UserRecipe", b =>
-                {
-                    b.HasOne("Core.Entities.Ingredient", null)
-                        .WithMany("UserRecipes")
-                        .HasForeignKey("IngredientId");
-
                     b.HasOne("Core.Entities.ApplicationUser", "User")
                         .WithMany("Recipes")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("IngredientRecipe", b =>
+                {
+                    b.HasOne("Core.Entities.Ingredient", null)
+                        .WithMany()
+                        .HasForeignKey("IngredientsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.Recipe", null)
+                        .WithMany()
+                        .HasForeignKey("RecipesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("IngredientTag", b =>
+                {
+                    b.HasOne("Core.Entities.Ingredient", null)
+                        .WithMany()
+                        .HasForeignKey("IngredientsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -696,6 +787,30 @@ namespace DAL.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Core.Entities.ApplicationUser", b =>
+                {
+                    b.Navigation("Recipes");
+                });
+
+            modelBuilder.Entity("Core.Entities.Group", b =>
+                {
+                    b.Navigation("InviteCodes");
+
+                    b.Navigation("Meals");
+
+                    b.Navigation("Members");
+                });
+
+            modelBuilder.Entity("Core.Entities.Meal", b =>
+                {
+                    b.Navigation("Votes");
+                });
+
+            modelBuilder.Entity("Core.Entities.Recipe", b =>
+                {
+                    b.Navigation("Meals");
                 });
 #pragma warning restore 612, 618
         }

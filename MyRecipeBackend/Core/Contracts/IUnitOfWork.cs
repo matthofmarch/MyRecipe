@@ -11,7 +11,7 @@ namespace Core.Contracts
         IMealRepository Meals { get; }
         IGroupRepository Groups { get; }
         IInviteCodeRepository InviteCodes { get; }
-        IUserRecipeRepository UserRecipes { get; }
+        IRecipeRepository Recipes { get; }
         IIngredientRepository Ingredients { get; }
 
         Task<int> SaveChangesAsync();

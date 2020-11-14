@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Entities
 {
-    public class UserRecipe:EntityObject
+    public class Recipe:EntityObject
     {
         [Required]
         [MaxLength(30)]
@@ -13,6 +13,10 @@ namespace Core.Entities
         public string Description { get; set; }
         public int CookingTimeInMin { get; set; }
         public Uri Image { get; set; }
+        public List<Meal> Meals { get; set; }
+        public ICollection<Ingredient> Ingredients { get; set; }
+
+
 
         [Required]
         public string UserId { get; set; }
@@ -21,8 +25,5 @@ namespace Core.Entities
 
         [Required]
         public bool AddToGroupPool { get; set; }
-        public List<Meal> Meals { get; set; }
-        public ICollection<Ingredient> Ingredients { get; set; }
-
     }
 }

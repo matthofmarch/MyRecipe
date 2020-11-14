@@ -9,7 +9,7 @@ namespace Core.Entities
         [Required]
         public string Name { get; set; }
 
-        public ICollection<UserRecipe> UserRecipes { get; set; }
+        public ICollection<Recipe> Recipes { get; set; }
 
         public ICollection<Tag> Tags { get; set; }
     }

@@ -83,7 +83,6 @@ namespace MyRecipeBackend.Controllers
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
-                
 
                 var token = GenerateJwtToken(identityClaims.Concat(customClaims));
                 var refreshToken = await _userManager.GenerateUserTokenAsync(
@@ -95,7 +94,7 @@ namespace MyRecipeBackend.Controllers
                 return Ok(new
                 {
                     token,
-                    expiration = DateTime.Now.AddMinutes(_jwtConfiguration.TokenValidMinues),
+                    expiration = DateTime.Now.AddMinutes(Convert.ToInt32(_jwtConfiguration.TokenValidMinutes)),
                     refreshToken
                 });
             }
@@ -288,7 +287,7 @@ namespace MyRecipeBackend.Controllers
                     return Ok(new
                     {
                         token = newToken,
-                        expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_jwtConfiguration.TokenValidMinues)),
+                        expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_jwtConfiguration.TokenValidMinutes)),
                         refreshToken = newRefreshToken
                     });
                 }
@@ -305,7 +304,7 @@ namespace MyRecipeBackend.Controllers
             var token = new JwtSecurityToken(
                 _jwtConfiguration.Issuer,
                 _jwtConfiguration.Audience,
-                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_jwtConfiguration.TokenValidMinues)),
+                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_jwtConfiguration.TokenValidMinutes)),
                 claims: claims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );

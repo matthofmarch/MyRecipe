@@ -11,6 +11,6 @@ namespace MyRecipeBackend.Config
         public String Issuer { get; set; }
         public String Audience { get; set; }
         public String RefreshProvider { get; set; }
-        public int TokenValidMinues { get; set; }
+        public String TokenValidMinutes { get; set; }
     }
 }

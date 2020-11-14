@@ -11,6 +11,6 @@ namespace Core.Entities
         public Group Group { get; set; }
         public Guid? GroupId { get; set; } 
 
-        public List<UserRecipe> Recipes { get; set; }
+        public List<Recipe> Recipes { get; set; }
     }
 }
