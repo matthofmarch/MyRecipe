@@ -30,9 +30,10 @@ namespace MyRecipeBackend.Controllers
             _logger = logger;
         }
 
-        [HttpPost("propose")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult> ProposeMeal(ProposeInputModel model)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -69,34 +70,6 @@ namespace MyRecipeBackend.Controllers
                 string errMsg = "Could not propose Meal";
                 _logger.LogError($"{errMsg}: {e.Message}");
                 return BadRequest("Could not propose Meal");
-            }
-
-            return Ok();
-        }
-
-        [HttpPost("vote")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> VoteMeal(VoteRequestModel voteRequestModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            var user = await _userManager.GetUserAsync(User);
-
-            await _uow.Meals.VoteMealAsync(user, voteRequestModel.VoteEnum, voteRequestModel.MealId);
-
-            try
-            {
-                await _uow.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                string errMsg = "Could not vote for meal";
-                _logger.LogError($"{errMsg}: {e.Message}");
-                return BadRequest(errMsg);
             }
 
             return Ok();

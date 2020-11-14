@@ -8,7 +8,6 @@ namespace MyRecipeBackend.Models
 {
     public class ResetEmailConfirmModel
     {
-
         [Required(ErrorMessage = "Token is required")]
         public string Token { get; set; }
         [Required(ErrorMessage = "New Password is required")]
