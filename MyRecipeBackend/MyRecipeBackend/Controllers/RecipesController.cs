@@ -42,15 +42,15 @@ namespace MyRecipeBackend.Controllers
         }
 
         
-        [HttpPost("create")]
-        public async Task<ActionResult> CreateRecipe(UserRecipeModel userRecipeModel)
+        [HttpPost]
+        public async Task<ActionResult> CreateRecipe(RecipeModel recipeModel)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return BadRequest("User not found");
 
             Recipe recipe;
-            try { recipe = await userRecipeModel.ToUserRecipe(_uow, user); }
+            try { recipe = await recipeModel.ToUserRecipe(_uow, user); }
             catch(Exception e) { return BadRequest(e.Message); }
 
             await _uow.Recipes.AddAsync(recipe);
@@ -60,27 +60,26 @@ namespace MyRecipeBackend.Controllers
             return Ok();
         }
 
-        [HttpPut("update/{id}")]
-        public async Task<ActionResult> UpdateRecipe([FromRoute]Guid id, UserRecipeModel userRecipeModel)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateRecipe([FromRoute]Guid id, RecipeModel recipeModel)
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null) return BadRequest("User not found");
+            if (user is null) return BadRequest("User not found");
 
-            if (id != userRecipeModel.Id) return BadRequest("Ids do not match");
+            if (id != recipeModel.Id) return BadRequest("Ids do not match");
 
             var dbUserRecipe = await _uow.Recipes.GetByIdAsync(user, id);
             if (dbUserRecipe == null) return NotFound();
 
-            dbUserRecipe.AddToGroupPool = userRecipeModel.AddToGroupPool;
-            dbUserRecipe.CookingTimeInMin = userRecipeModel.CookingTimeInMin;
-            dbUserRecipe.Description = userRecipeModel.Description;
-            dbUserRecipe.Name = userRecipeModel.Name;
-            dbUserRecipe.Image = userRecipeModel.Image;
+            dbUserRecipe.AddToGroupPool = recipeModel.AddToGroupPool;
+            dbUserRecipe.CookingTimeInMin = recipeModel.CookingTimeInMin;
+            dbUserRecipe.Description = recipeModel.Description;
+            dbUserRecipe.Name = recipeModel.Name;
+            dbUserRecipe.Image = recipeModel.Image;
 
-            //TODO check if this works properly (can i use it without removing first)
             await _uow.Recipes.RemoveIngredients(dbUserRecipe.Id);
-            dbUserRecipe.Ingredients = await _uow.Ingredients.GetListByIdsAsync(
-                    userRecipeModel.IngredientIds);
+            dbUserRecipe.Ingredients = await _uow.Ingredients.GetListByNamesAsync(
+                    recipeModel.IngredientNames);
 
             try
             {
@@ -96,9 +95,9 @@ namespace MyRecipeBackend.Controllers
             return NoContent();
         }
 
-        [HttpGet("paged")]
-        public async Task<ActionResult<UserRecipeModel[]>> GetPaged(
-            string filter,
+        [HttpGet]
+        public async Task<ActionResult<RecipeModel[]>> GetPaged(
+            string filter = "",
             int page = 0,
             int pageSize = 20
         )
@@ -109,7 +108,7 @@ namespace MyRecipeBackend.Controllers
 
             Recipe[] recipes = await _uow.Recipes.GetPagedRecipesAsync(user, filter, page, pageSize);
 
-            return recipes.Select(r => new UserRecipeModel(r)).ToArray();
+            return recipes.Select(r => new RecipeModel(r)).ToArray();
         }
 
         [HttpDelete("{id}")]

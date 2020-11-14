@@ -30,6 +30,10 @@ namespace DAL
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<Ingredient>()
+                .HasIndex(i => i.Name)
+                .IsUnique();
+
             var hostEnvironment = this.GetService<IHostEnvironment>();
             if (hostEnvironment.IsDevelopment() || hostEnvironment.IsStaging())
             {

@@ -34,7 +34,7 @@ namespace MyRecipeBackend.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UserRecipeModel>> GetRecommendedMeal(RecommendMealRequestModel requestModel)
+        public async Task<ActionResult<RecipeModel>> GetRecommendedMeal(RecommendMealRequestModel requestModel)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -47,7 +47,7 @@ namespace MyRecipeBackend.Controllers
             if (recipe == null)
                 return NotFound("No more recipes found. Please clear prev Recipes if not already done!");
 
-            return new UserRecipeModel(recipe);
+            return new RecipeModel(recipe);
         }
     }
 }

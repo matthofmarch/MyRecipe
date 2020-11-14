@@ -18,11 +18,6 @@ namespace DAL.Repositories
         {
         }
 
-        public async Task AddAsync(Group group)
-        {
-            await _dbContext.AddAsync(group);
-        }
-
         public Task<Group> GetGroupForUserAsync(string userId)
         {
             return _dbContext.Users

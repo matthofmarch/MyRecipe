@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace MyRecipeBackend.Models
 {
-    public class UserRecipeModel
+    public class RecipeModel
     {
 
-        public UserRecipeModel()
+        public RecipeModel()
         {
 
         }
 
-        public UserRecipeModel(Recipe r)
+        public RecipeModel(Recipe r)
         {
             Id = r.Id;
             Name = r.Name;
@@ -24,7 +24,7 @@ namespace MyRecipeBackend.Models
             CookingTimeInMin = r.CookingTimeInMin;
             Image = r.Image;
             AddToGroupPool = r.AddToGroupPool;
-            IngredientIds = r.Ingredients.Select(i => i.Id).ToArray();
+            IngredientNames = r.Ingredients.Select(i => i.Name).ToArray();
         }
 
 
@@ -33,7 +33,7 @@ namespace MyRecipeBackend.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public int CookingTimeInMin { get; set; }
-        public Guid[] IngredientIds { get; set; }
+        public string[] IngredientNames { get; set; }
         public Uri Image { get; set; }
         public bool AddToGroupPool { get; set; }
 
@@ -47,7 +47,7 @@ namespace MyRecipeBackend.Models
                 AddToGroupPool = AddToGroupPool,
                 Image = Image,
                 User = user,
-                Ingredients = await uow.Ingredients.GetListByIdsAsync(IngredientIds)
+                Ingredients = await uow.Ingredients.GetListByNamesAsync(IngredientNames)
             };
 
             return userRecipe;

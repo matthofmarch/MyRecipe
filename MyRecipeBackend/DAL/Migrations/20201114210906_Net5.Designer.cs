@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201114203808_Net5")]
+    [Migration("20201114210906_Net5")]
     partial class Net5
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -95,14 +95,14 @@ namespace DAL.Migrations
                         {
                             Id = "testUser1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b63d3a48-8287-4e66-ba82-c8f3606b8ad1",
+                            ConcurrencyStamp = "f8011bfc-3899-4261-ae5b-0135bc3e3848",
                             Email = "test1@test.test",
                             EmailConfirmed = true,
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
                             LockoutEnabled = false,
                             NormalizedEmail = "test1@test.test",
                             NormalizedUserName = "test1@test.test",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBQlJfi/kmwVIj+vyiEiG4OOh4DX1vJuiBt0TDreJ4kUClefqtl+nTQPBoNG5HjQMw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHLYymjc7R8i0yPLYzjv/51FH5MC3aX/dBLS0Q2pnV/q/9mte4oBnIGdFFY/mV/Ncw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -112,14 +112,14 @@ namespace DAL.Migrations
                         {
                             Id = "testUser2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "48a2a383-60c3-47d9-9c79-55c5adb1f557",
+                            ConcurrencyStamp = "4c1df68a-4ecf-4852-b9bc-9afdd41cee8f",
                             Email = "test2@test.test",
                             EmailConfirmed = true,
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
                             LockoutEnabled = false,
                             NormalizedEmail = "test2@test.test",
                             NormalizedUserName = "test2@test.test",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDfK4LQ7XzGiRJ05s2B430tKcQZ52h9iioNpOtxk+KG08+6RV2UDCp8KHq+qqgRg6g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKjPtJVuGIPz63sCT5eiIx4IaRJ1t/wUBMmkznMKC8VDW6mDDR3yvsmgxLDmVvYVjw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -163,7 +163,7 @@ namespace DAL.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -171,6 +171,9 @@ namespace DAL.Migrations
                         .HasColumnType("rowversion");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Ingredients");
 
@@ -297,7 +300,7 @@ namespace DAL.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             Accepted = false,
-                            DateTime = new DateTime(2020, 11, 14, 21, 38, 8, 214, DateTimeKind.Local).AddTicks(6790),
+                            DateTime = new DateTime(2020, 11, 14, 22, 9, 5, 635, DateTimeKind.Local).AddTicks(8996),
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
                             InitiatorId = "testUser1",
                             RecipeId = new Guid("00000000-0000-0000-0000-000000000001")

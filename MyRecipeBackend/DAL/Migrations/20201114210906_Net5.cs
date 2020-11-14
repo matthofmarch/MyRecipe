@@ -39,7 +39,7 @@ namespace DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
@@ -378,12 +378,12 @@ namespace DAL.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GroupId", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "testUser1", 0, "b63d3a48-8287-4e66-ba82-c8f3606b8ad1", "test1@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, null, "test1@test.test", "test1@test.test", "AQAAAAEAACcQAAAAEBQlJfi/kmwVIj+vyiEiG4OOh4DX1vJuiBt0TDreJ4kUClefqtl+nTQPBoNG5HjQMw==", null, false, "", false, "test1@test.test" });
+                values: new object[] { "testUser1", 0, "f8011bfc-3899-4261-ae5b-0135bc3e3848", "test1@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, null, "test1@test.test", "test1@test.test", "AQAAAAEAACcQAAAAEHLYymjc7R8i0yPLYzjv/51FH5MC3aX/dBLS0Q2pnV/q/9mte4oBnIGdFFY/mV/Ncw==", null, false, "", false, "test1@test.test" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GroupId", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "testUser2", 0, "48a2a383-60c3-47d9-9c79-55c5adb1f557", "test2@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, null, "test2@test.test", "test2@test.test", "AQAAAAEAACcQAAAAEDfK4LQ7XzGiRJ05s2B430tKcQZ52h9iioNpOtxk+KG08+6RV2UDCp8KHq+qqgRg6g==", null, false, "", false, "test2@test.test" });
+                values: new object[] { "testUser2", 0, "4c1df68a-4ecf-4852-b9bc-9afdd41cee8f", "test2@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, null, "test2@test.test", "test2@test.test", "AQAAAAEAACcQAAAAEKjPtJVuGIPz63sCT5eiIx4IaRJ1t/wUBMmkznMKC8VDW6mDDR3yvsmgxLDmVvYVjw==", null, false, "", false, "test2@test.test" });
 
             migrationBuilder.InsertData(
                 table: "Recipes",
@@ -413,7 +413,7 @@ namespace DAL.Migrations
             migrationBuilder.InsertData(
                 table: "Meals",
                 columns: new[] { "Id", "Accepted", "DateTime", "GroupId", "InitiatorId", "RecipeId" },
-                values: new object[] { new Guid("00000000-0000-0000-0000-000000000001"), false, new DateTime(2020, 11, 14, 21, 38, 8, 214, DateTimeKind.Local).AddTicks(6790), new Guid("00000000-0000-0000-0000-000000000001"), "testUser1", new Guid("00000000-0000-0000-0000-000000000001") });
+                values: new object[] { new Guid("00000000-0000-0000-0000-000000000001"), false, new DateTime(2020, 11, 14, 22, 9, 5, 635, DateTimeKind.Local).AddTicks(8996), new Guid("00000000-0000-0000-0000-000000000001"), "testUser1", new Guid("00000000-0000-0000-0000-000000000001") });
 
             migrationBuilder.InsertData(
                 table: "MealVotes",
@@ -468,6 +468,12 @@ namespace DAL.Migrations
                 name: "IX_IngredientRecipe_RecipesId",
                 table: "IngredientRecipe",
                 column: "RecipesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ingredients_Name",
+                table: "Ingredients",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_IngredientTag_TagsId",
