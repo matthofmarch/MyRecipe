@@ -24,22 +24,23 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="proposeModel"></param>
         /// <returns></returns>
-        public async Task ProposeAndVoteMealAsync(ProposeAndVoteMealModel proposeModel)
+        public async Task ProposeAndVoteMealAsync(Meal mealModel)
         {
             var aloneInGroup = await _dbContext.Users
-                .Where(u => u.GroupId == proposeModel.Meal.Initiator.GroupId)
+                .Where(u => u.GroupId == mealModel.Initiator.GroupId)
                 .CountAsync() == 1;
+
             Meal meal = new Meal
             {
-                Initiator = proposeModel.Meal.Initiator,
-                Group = proposeModel.Meal.Group,
-                DateTime = proposeModel.Meal.DateTime,
-                Recipe = await _dbContext.UserRecipes.FindAsync(proposeModel.Meal.RecipeId),
+                Initiator = mealModel.Initiator,
+                Group = mealModel.Group,
+                DateTime = mealModel.DateTime,
+                Recipe = await _dbContext.UserRecipes.FindAsync(mealModel.RecipeId),
                 Votes = new List<MealVote>()
                 {
                     new MealVote
                     {
-                        User = proposeModel.Meal.Initiator,
+                        User = mealModel.Initiator,
                         Vote = VoteEnum.Approved
                     }
                 },
@@ -48,22 +49,24 @@ namespace DAL.Repositories
             await _dbContext.Meals.AddAsync(meal);
         }
 
-        public async Task VoteMealAsync(VoteMealModel voteModel)
+        public async Task VoteMealAsync(ApplicationUser user, VoteEnum vote, Guid mealId)
         {
-            var meal = await _dbContext.Meals.FindAsync(voteModel.MealId);
-            var groupSize = await _dbContext.Users.Where(u => u.GroupId == voteModel.User.GroupId).CountAsync();
+            var meal = await _dbContext.Meals.FindAsync(mealId);
+
+            var groupSize = await _dbContext.Users
+                .Where(u => u.GroupId == user.GroupId)
+                .CountAsync();
+
             var votes = await _dbContext.MealVotes
                 .Where(mv => mv.MealId == meal.Id)
                 .Where(mv => mv.Vote == VoteEnum.Approved)
                 .CountAsync();
-            if(meal is null || voteModel.User is null)
-                throw new ArgumentNullException();
 
             await _dbContext.MealVotes.AddAsync(new MealVote
             {
                 Meal = meal,
-                User = voteModel.User,
-                Vote = voteModel.Vote,
+                User = user,
+                Vote = vote,
             });
 
             var approved = votes >= groupSize / 2;
@@ -101,7 +104,7 @@ namespace DAL.Repositories
                 .Include(m => m.Votes)
                 .ThenInclude(v => v.User)
                 .Where(m => m.GroupId == groupId && m.Id == id)
-                .SingleOrDefaultAsync();
+                .SingleAsync();
         }
 
         public Task<bool> UserHasAlreadyVotedAsync(MealVote mealVote)

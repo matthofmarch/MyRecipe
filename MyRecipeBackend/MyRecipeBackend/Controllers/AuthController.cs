@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Net;
 using System.Resources;
 using System.Security.Claims;
@@ -70,10 +71,10 @@ namespace MyRecipeBackend.Controllers
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
-                var claims = await _userManager.GetClaimsAsync(user);
+                var customClaims = await _userManager.GetClaimsAsync(user);
 
 
-                var authClaims = new List<Claim>
+                var identityClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.Id),
                     new Claim(ClaimTypes.NameIdentifier, user.Id),
@@ -82,9 +83,9 @@ namespace MyRecipeBackend.Controllers
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
-                authClaims.AddRange(claims);
+                
 
-                var token = GenerateJwtToken(authClaims);
+                var token = GenerateJwtToken(identityClaims.Concat(customClaims));
                 var refreshToken = await _userManager.GenerateUserTokenAsync(
                     user, _jwtConfiguration.RefreshProvider, "RefreshToken");
 
@@ -295,6 +296,7 @@ namespace MyRecipeBackend.Controllers
 
             return BadRequest();
         }
+
 
         private string GenerateJwtToken(IEnumerable<Claim> claims)
         {
