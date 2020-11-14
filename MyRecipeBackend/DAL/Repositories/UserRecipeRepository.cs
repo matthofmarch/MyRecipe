@@ -6,21 +6,17 @@ using System.Threading.Tasks;
 using Core.Contracts;
 using Core.Entities;
 using DAL;
+using Devices.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    class UserRecipeRepository : IUserRecipeRepository
+    class UserRecipeRepository :BaseRepository<UserRecipe>, IUserRecipeRepository
     {
         private readonly ApplicationDbContext _dbContext;
-        public UserRecipeRepository(ApplicationDbContext dbContext)
+        public UserRecipeRepository(ApplicationDbContext dbContext):base(dbContext)
         {
             _dbContext = dbContext;
-        }
-
-        public async Task AddAsync(UserRecipe userRecipe )
-        {
-            await _dbContext.UserRecipes.AddAsync(userRecipe);
         }
 
         public void Delete(UserRecipe userRecipe)
@@ -38,27 +34,27 @@ namespace DAL.Repositories
         {
             var query = _dbContext.UserRecipes
                 .Where(r => r.User.Id == user.Id);
+                
 
-            if(filter != null)
+
+            if (filter != null)
             {
                 query = query.Where(r => r.Name.Contains(filter));
             }
 
-            query = query.OrderBy(r => r.Name);
-            
-            query = query.Include(r => r.Ingredients)
-                .ThenInclude(ri => ri.Ingredient);
-
+            query = query
+                .OrderBy(r => r.Name)
+                .Include(r => r.Ingredients);
 
             return await query.Skip(page * pageSize).Take(pageSize).ToArrayAsync();
         }
 
         public async Task RemoveIngredients(Guid recipeId)
         {
-            var relations = await _dbContext.RecipeIngredientRelations
-                .Where(ri => ri.RecipeId == recipeId)
+            var relations = await _dbContext.UserRecipes
+                .Where(r => r.Id == recipeId)
                 .ToArrayAsync();
-            _dbContext.RecipeIngredientRelations.RemoveRange(relations);
+            _dbContext.UserRecipes.RemoveRange(relations);
         }
     }
 }

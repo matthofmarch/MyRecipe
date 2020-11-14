@@ -6,6 +6,8 @@ using System.Linq;
 using Core.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.Hosting;
 
 namespace DAL
 {
@@ -15,50 +17,35 @@ namespace DAL
         public DbSet<MealVote> MealVotes { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<InviteCode> InviteCodes { get; set; }
-        public DbSet<BaseRecipe> BaseRecipes { get; set; }
         public DbSet<UserRecipe> UserRecipes { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
-        public DbSet<RecipeIngredientRelation> RecipeIngredientRelations { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
             : base(options)
         {
-            
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            
-            builder.Entity<RecipeIngredientRelation>(e =>
+
+            builder.Entity<Ingredient>(i =>
             {
-                e.HasKey(rel => new {rel.RecipeId, rel.IngredientId});
-
-                e.HasOne(rel => rel.Recipe)
-                    .WithMany(rel => rel.Ingredients) // Property from recipe
-                    .HasForeignKey(rel => rel.RecipeId);
-
-                e.HasOne(rel => rel.Ingredient)
-                    .WithMany(rel => rel.Recipes) // Property from ingredient
-                    .HasForeignKey(rel => rel.IngredientId);
+                i.HasMany(i => i.UserRecipes);
+                i.HasMany(i => i.Tags);
             });
 
-            builder.Entity<IngredientTagRelation>(e =>
+            builder.Entity<UserRecipe>().HasMany(r => r.Ingredients);
+            builder.Entity<Tag>().HasMany(t => t.Ingredients);
+
+            var hostEnvironment = this.GetService<IHostEnvironment>();
+            if (hostEnvironment.IsDevelopment() || hostEnvironment.IsStaging())
             {
-                e.HasKey(rel => new { rel.IngredientId, rel.TagId });
-
-                e.HasOne(rel => rel.Ingredient)
-                    .WithMany(rel => rel.Tags) // Property from ingredient
-                    .HasForeignKey(rel => rel.IngredientId);
-
-                e.HasOne(rel => rel.Tag)
-                    .WithMany(rel => rel.Ingredients) // Property from Tag
-                    .HasForeignKey(rel => rel.TagId);
-            });
-
-            SeedDatabase(builder);
+                SeedDatabase(builder);
+            }
         }
+
 
         private void SeedDatabase(ModelBuilder builder)
         {
@@ -160,69 +147,69 @@ namespace DAL
             };
             builder.Entity<UserRecipe>().HasData(userRecipes);
 
-            var recipeIngredientRelation = new[]
-            {
-                new RecipeIngredientRelation//rice for pot of rice
-                {
-                    IngredientId = ingredients[2].Id,
-                    RecipeId = userRecipes[0].Id
-                },
-                new RecipeIngredientRelation//steak for steak
-                {
-                    IngredientId = ingredients[5].Id,
-                    RecipeId = userRecipes[1].Id
-                },
-                new RecipeIngredientRelation //Potato for steak
-                {
-                    IngredientId = ingredients[1].Id,
-                    RecipeId = userRecipes[1].Id
-                },
-                new RecipeIngredientRelation //ham&eggs
-                {
-                    IngredientId = ingredients[6].Id,
-                    RecipeId = userRecipes[2].Id
-                },
-                new RecipeIngredientRelation
-                {
-                    IngredientId = ingredients[7].Id,
-                    RecipeId = userRecipes[2].Id
-                },
-                new RecipeIngredientRelation //yogurt
-                {
-                    IngredientId = ingredients[3].Id,
-                    RecipeId = userRecipes[3].Id
-                },
-                new RecipeIngredientRelation
-                {
-                    IngredientId = ingredients[9].Id,
-                    RecipeId = userRecipes[3].Id
-                }
-            };
-            builder.Entity<RecipeIngredientRelation>().HasData(recipeIngredientRelation);
+            //var recipeIngredientRelation = new[]
+            //{
+            //    new RecipeIngredientRelation//rice for pot of rice
+            //    {
+            //        IngredientId = ingredients[2].Id,
+            //        RecipeId = userRecipes[0].Id
+            //    },
+            //    new RecipeIngredientRelation//steak for steak
+            //    {
+            //        IngredientId = ingredients[5].Id,
+            //        RecipeId = userRecipes[1].Id
+            //    },
+            //    new RecipeIngredientRelation //Potato for steak
+            //    {
+            //        IngredientId = ingredients[1].Id,
+            //        RecipeId = userRecipes[1].Id
+            //    },
+            //    new RecipeIngredientRelation //ham&eggs
+            //    {
+            //        IngredientId = ingredients[6].Id,
+            //        RecipeId = userRecipes[2].Id
+            //    },
+            //    new RecipeIngredientRelation
+            //    {
+            //        IngredientId = ingredients[7].Id,
+            //        RecipeId = userRecipes[2].Id
+            //    },
+            //    new RecipeIngredientRelation //yogurt
+            //    {
+            //        IngredientId = ingredients[3].Id,
+            //        RecipeId = userRecipes[3].Id
+            //    },
+            //    new RecipeIngredientRelation
+            //    {
+            //        IngredientId = ingredients[9].Id,
+            //        RecipeId = userRecipes[3].Id
+            //    }
+            //};
+            //builder.Entity<RecipeIngredientRelation>().HasData(recipeIngredientRelation);
+            //TODO readd
+            //var meals = new[] {
+            //    new Meal
+            //    {
+            //        InitiatorId = users[0].Id,
+            //        RecipeId = userRecipes[0].Id,
+            //        DateTime = DateTime.Now,
+            //        GroupId = groups[0].Id,
+            //        Id = new Guid("00000000-0000-0000-0000-000000000001"),
+            //    }
+            //};
+            //builder.Entity<Meal>().HasData(meals);
 
-            var meals = new[] {
-                new Meal
-                {
-                    InitiatorId = users[0].Id,
-                    RecipeId = userRecipes[0].Id,
-                    DateTime = DateTime.Now,
-                    GroupId = groups[0].Id,
-                    Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                }
-            };
-            builder.Entity<Meal>().HasData(meals);
-
-            var mealVotes = new[]
-            {
-                new MealVote()
-                {
-                    Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                    MealId = meals[0].Id,
-                    UserId = users[1].Id,
-                    Vote = VoteEnum.Approved
-                }
-            };
-            builder.Entity<MealVote>().HasData(mealVotes);
+            //var mealVotes = new[]
+            //{
+            //    new MealVote()
+            //    {
+            //        Id = new Guid("00000000-0000-0000-0000-000000000001"),
+            //        MealId = meals[0].Id,
+            //        UserId = users[1].Id,
+            //        Vote = VoteEnum.Approved
+            //    }
+            //};
+            //builder.Entity<MealVote>().HasData(mealVotes);
         }
     }
 }

@@ -6,17 +6,16 @@ using System.Threading.Tasks;
 using Core.Contracts;
 using Core.Entities;
 using DAL;
+using Devices.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    public class GroupRepository : IGroupRepository
+    public class GroupRepository : BaseRepository<Group>,IGroupRepository
     {
-        private readonly ApplicationDbContext _dbContext;
 
-        public GroupRepository(ApplicationDbContext dbContext)
+        public GroupRepository(ApplicationDbContext dbContext):base(dbContext)
         {
-            _dbContext = dbContext;
         }
 
         public async Task AddAsync(Group group)
@@ -70,7 +69,6 @@ namespace DAL.Repositories
                 query = query.Skip(new Random().Next(length));
                 return await query
                     .Include(r => r.Ingredients)
-                    .ThenInclude(i => i.Ingredient)
                     .FirstAsync();
 
             }

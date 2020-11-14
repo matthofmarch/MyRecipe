@@ -35,13 +35,13 @@ namespace MyRecipeBackend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(builder =>
-            {
-                builder.UseSqlServer(
+            services.AddDbContext<ApplicationDbContext>(builder => builder
+                .UseSqlServer(
                         Configuration.GetConnectionString("DefaultConnection"),
                         sqlOptions => { sqlOptions.EnableRetryOnFailure(10, TimeSpan.FromSeconds(5), null); })
-                    .EnableSensitiveDataLogging(Environment.IsDevelopment());
-            });
+                    .EnableSensitiveDataLogging(Environment.IsDevelopment())
+                //.UseInternalServiceProvider(services.BuildServiceProvider())
+            );
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                 {

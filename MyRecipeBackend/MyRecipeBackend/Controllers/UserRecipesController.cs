@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using MyRecipeBackend.Models;
 
 namespace MyRecipeBackend.Controllers
@@ -26,12 +27,18 @@ namespace MyRecipeBackend.Controllers
         private readonly IUnitOfWork _uow;
         private readonly IConfiguration _configuration;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<UserRecipesController> _log;
 
-        public UserRecipesController(IUnitOfWork uow, IConfiguration config, UserManager<ApplicationUser> userManager)
+        public UserRecipesController(
+            IUnitOfWork uow, 
+            IConfiguration config, 
+            UserManager<ApplicationUser> userManager,
+            ILogger<UserRecipesController> log)
         {
             _uow = uow;
             _configuration = config;
             _userManager = userManager;
+            _log = log;
         }
 
         
@@ -70,16 +77,21 @@ namespace MyRecipeBackend.Controllers
             dbUserRecipe.Name = userRecipeModel.Name;
             dbUserRecipe.Image = userRecipeModel.Image;
 
-            var ingredients = await _uow.Ingredients
-                .GetListByIdentifiersAsync(userRecipeModel.Ingredients);
-
+            //TODO check if this works properly (can i use it without removing first)
             await _uow.UserRecipes.RemoveIngredients(dbUserRecipe.Id);
-            try { await _uow.SaveChangesAsync(); }
-            catch (ValidationException ex) { return BadRequest(ex.Message); }
+            dbUserRecipe.Ingredients = await _uow.Ingredients.GetListByIdsAsync(
+                    userRecipeModel.IngredientIds);
 
-            dbUserRecipe.SetIngredients(ingredients);
-            try { await _uow.SaveChangesAsync(); }
-            catch (ValidationException ex) { return BadRequest(ex.Message); }
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                string errMsg = "Could not update Recipe";
+                _log.LogError($"{errMsg}: {e}");
+                return BadRequest($"{errMsg}");
+            }
 
             return NoContent();
         }

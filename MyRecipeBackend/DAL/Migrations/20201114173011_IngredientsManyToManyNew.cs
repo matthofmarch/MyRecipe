@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DAL.Migrations
 {
-    public partial class Meal : Migration
+    public partial class IngredientsManyToManyNew : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -32,32 +32,6 @@ namespace DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Groups", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Ingredients",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                    Name = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ingredients", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tag",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                    Descriptor = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tag", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -132,30 +106,6 @@ namespace DAL.Migrations
                         principalTable: "Groups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "IngredientTagRelation",
-                columns: table => new
-                {
-                    IngredientId = table.Column<Guid>(nullable: false),
-                    TagId = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IngredientTagRelation", x => new { x.IngredientId, x.TagId });
-                    table.ForeignKey(
-                        name: "FK_IngredientTagRelation_Ingredients_IngredientId",
-                        column: x => x.IngredientId,
-                        principalTable: "Ingredients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_IngredientTagRelation_Tag_TagId",
-                        column: x => x.TagId,
-                        principalTable: "Tag",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -244,31 +194,6 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BaseRecipes",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                    Name = table.Column<string>(maxLength: 30, nullable: false),
-                    Description = table.Column<string>(nullable: true),
-                    CookingTimeInMin = table.Column<int>(nullable: false),
-                    Image = table.Column<string>(nullable: true),
-                    Discriminator = table.Column<string>(nullable: false),
-                    UserId = table.Column<string>(nullable: true),
-                    AddToGroupPool = table.Column<bool>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BaseRecipes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BaseRecipes_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Meals",
                 columns: table => new
                 {
@@ -295,36 +220,6 @@ namespace DAL.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Meals_BaseRecipes_RecipeId",
-                        column: x => x.RecipeId,
-                        principalTable: "BaseRecipes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RecipeIngredientRelations",
-                columns: table => new
-                {
-                    RecipeId = table.Column<Guid>(nullable: false),
-                    IngredientId = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RecipeIngredientRelations", x => new { x.RecipeId, x.IngredientId });
-                    table.ForeignKey(
-                        name: "FK_RecipeIngredientRelations_Ingredients_IngredientId",
-                        column: x => x.IngredientId,
-                        principalTable: "Ingredients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RecipeIngredientRelations_BaseRecipes_RecipeId",
-                        column: x => x.RecipeId,
-                        principalTable: "BaseRecipes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -354,6 +249,72 @@ namespace DAL.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserRecipes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(maxLength: 30, nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    CookingTimeInMin = table.Column<int>(nullable: false),
+                    Image = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: false),
+                    AddToGroupPool = table.Column<bool>(nullable: false),
+                    IngredientId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRecipes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserRecipes_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tag",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Label = table.Column<string>(nullable: false),
+                    IngredientId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tag", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Ingredients",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Name = table.Column<string>(nullable: false),
+                    TagId = table.Column<Guid>(nullable: true),
+                    UserRecipeId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ingredients", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Ingredients_Tag_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tag",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Ingredients_UserRecipes_UserRecipeId",
+                        column: x => x.UserRecipeId,
+                        principalTable: "UserRecipes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.InsertData(
                 table: "Groups",
                 columns: new[] { "Id", "Name" },
@@ -361,65 +322,41 @@ namespace DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "Ingredients",
-                columns: new[] { "Id", "Name" },
+                columns: new[] { "Id", "Name", "TagId", "UserRecipeId" },
                 values: new object[,]
                 {
-                    { new Guid("00000000-0000-0000-0000-000000000001"), "Green salad" },
-                    { new Guid("00000000-0000-0000-0000-000000000002"), "Potato" },
-                    { new Guid("00000000-0000-0000-0000-000000000003"), "Brown Rice" },
-                    { new Guid("00000000-0000-0000-0000-000000000004"), "Oats" },
-                    { new Guid("00000000-0000-0000-0000-000000000005"), "Tomato" },
-                    { new Guid("00000000-0000-0000-0000-000000000006"), "Steak" },
-                    { new Guid("00000000-0000-0000-0000-000000000007"), "Ham" },
-                    { new Guid("00000000-0000-0000-0000-000000000008"), "Whole chicken egg" },
-                    { new Guid("00000000-0000-0000-0000-000000000009"), "White rice" },
-                    { new Guid("00000000-0000-0000-0000-000000000010"), "Greek yogurt" }
+                    { new Guid("00000000-0000-0000-0000-000000000001"), "Green salad", null, null },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), "Potato", null, null },
+                    { new Guid("00000000-0000-0000-0000-000000000003"), "Brown Rice", null, null },
+                    { new Guid("00000000-0000-0000-0000-000000000004"), "Oats", null, null },
+                    { new Guid("00000000-0000-0000-0000-000000000005"), "Tomato", null, null },
+                    { new Guid("00000000-0000-0000-0000-000000000006"), "Steak", null, null },
+                    { new Guid("00000000-0000-0000-0000-000000000007"), "Ham", null, null },
+                    { new Guid("00000000-0000-0000-0000-000000000008"), "Whole chicken egg", null, null },
+                    { new Guid("00000000-0000-0000-0000-000000000009"), "White rice", null, null },
+                    { new Guid("00000000-0000-0000-0000-000000000010"), "Greek yogurt", null, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GroupId", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "testUser1", 0, "243dd3f3-0c33-46ab-a84f-71ea87911597", "test1@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, null, "test1@test.test", "test1@test.test", "AQAAAAEAACcQAAAAEE5tjBzl6eRuPIkKfcJmbKEv7RJVZzcZLHtHK7i6/PucArXLL2JOUMKEa+INOt1qtA==", null, false, "", false, "test1@test.test" });
+                values: new object[] { "testUser1", 0, "bdc725b4-5b56-47f3-88c2-00715888188a", "test1@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, null, "test1@test.test", "test1@test.test", "AQAAAAEAACcQAAAAECjcxbmCVtX5zmSuJmMLIiM7s+6cLS73ABsylLi4WW/mcI7FlTL8X5O72X82yjjlhg==", null, false, "", false, "test1@test.test" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GroupId", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "testUser2", 0, "a82e5785-50f2-4d66-8ac1-5ded395242f1", "test2@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, null, "test2@test.test", "test2@test.test", "AQAAAAEAACcQAAAAEGz7tMK8YSxj7E8VTUQjd2jqp6gMzhmZpQbYvEB/LSkatLcHgqk4vYMlQDxLxc5gSw==", null, false, "", false, "test2@test.test" });
+                values: new object[] { "testUser2", 0, "facb52e1-37e4-4d32-8546-1cca7ebc33c4", "test2@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, null, "test2@test.test", "test2@test.test", "AQAAAAEAACcQAAAAEAILotjAQODxKIycZ/ZEvOxRlWEFezoe/QdR8sBeLAaq+16K5o5Wfg21ImVEqcn1zg==", null, false, "", false, "test2@test.test" });
 
             migrationBuilder.InsertData(
-                table: "BaseRecipes",
-                columns: new[] { "Id", "CookingTimeInMin", "Description", "Discriminator", "Image", "Name", "AddToGroupPool", "UserId" },
+                table: "UserRecipes",
+                columns: new[] { "Id", "AddToGroupPool", "CookingTimeInMin", "Description", "Image", "IngredientId", "Name", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("00000000-0000-0000-0000-000000000001"), 20, "Just rice", "UserRecipe", null, "Pot of Rice", true, "testUser1" },
-                    { new Guid("00000000-0000-0000-0000-000000000002"), 30, "Steak", "UserRecipe", null, "A tasty steak", true, "testUser1" },
-                    { new Guid("00000000-0000-0000-0000-000000000003"), 10, "Fast", "UserRecipe", null, "Ham and Eggs", true, "testUser2" },
-                    { new Guid("00000000-0000-0000-0000-000000000004"), 3, "Healthy", "UserRecipe", null, "Yogurt", true, "testUser2" }
+                    { new Guid("00000000-0000-0000-0000-000000000001"), true, 20, "Just rice", null, null, "Pot of Rice", "testUser1" },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), true, 30, "Steak", null, null, "A tasty steak", "testUser1" },
+                    { new Guid("00000000-0000-0000-0000-000000000003"), true, 10, "Fast", null, null, "Ham and Eggs", "testUser2" },
+                    { new Guid("00000000-0000-0000-0000-000000000004"), true, 3, "Healthy", null, null, "Yogurt", "testUser2" }
                 });
-
-            migrationBuilder.InsertData(
-                table: "Meals",
-                columns: new[] { "Id", "Accepted", "DateTime", "GroupId", "InitiatorId", "RecipeId" },
-                values: new object[] { new Guid("00000000-0000-0000-0000-000000000001"), false, new DateTime(2020, 10, 23, 10, 50, 9, 866, DateTimeKind.Local).AddTicks(465), new Guid("00000000-0000-0000-0000-000000000001"), "testUser1", new Guid("00000000-0000-0000-0000-000000000001") });
-
-            migrationBuilder.InsertData(
-                table: "RecipeIngredientRelations",
-                columns: new[] { "RecipeId", "IngredientId" },
-                values: new object[,]
-                {
-                    { new Guid("00000000-0000-0000-0000-000000000001"), new Guid("00000000-0000-0000-0000-000000000003") },
-                    { new Guid("00000000-0000-0000-0000-000000000002"), new Guid("00000000-0000-0000-0000-000000000006") },
-                    { new Guid("00000000-0000-0000-0000-000000000002"), new Guid("00000000-0000-0000-0000-000000000002") },
-                    { new Guid("00000000-0000-0000-0000-000000000003"), new Guid("00000000-0000-0000-0000-000000000007") },
-                    { new Guid("00000000-0000-0000-0000-000000000003"), new Guid("00000000-0000-0000-0000-000000000008") },
-                    { new Guid("00000000-0000-0000-0000-000000000004"), new Guid("00000000-0000-0000-0000-000000000004") },
-                    { new Guid("00000000-0000-0000-0000-000000000004"), new Guid("00000000-0000-0000-0000-000000000010") }
-                });
-
-            migrationBuilder.InsertData(
-                table: "MealVotes",
-                columns: new[] { "Id", "MealId", "UserId", "Vote" },
-                values: new object[] { new Guid("00000000-0000-0000-0000-000000000001"), new Guid("00000000-0000-0000-0000-000000000001"), "testUser2", 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -466,14 +403,14 @@ namespace DAL.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BaseRecipes_UserId",
-                table: "BaseRecipes",
-                column: "UserId");
+                name: "IX_Ingredients_TagId",
+                table: "Ingredients",
+                column: "TagId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IngredientTagRelation_TagId",
-                table: "IngredientTagRelation",
-                column: "TagId");
+                name: "IX_Ingredients_UserRecipeId",
+                table: "Ingredients",
+                column: "UserRecipeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_InviteCodes_GroupId",
@@ -506,13 +443,59 @@ namespace DAL.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RecipeIngredientRelations_IngredientId",
-                table: "RecipeIngredientRelations",
+                name: "IX_Tag_IngredientId",
+                table: "Tag",
                 column: "IngredientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRecipes_IngredientId",
+                table: "UserRecipes",
+                column: "IngredientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRecipes_UserId",
+                table: "UserRecipes",
+                column: "UserId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Meals_UserRecipes_RecipeId",
+                table: "Meals",
+                column: "RecipeId",
+                principalTable: "UserRecipes",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_UserRecipes_Ingredients_IngredientId",
+                table: "UserRecipes",
+                column: "IngredientId",
+                principalTable: "Ingredients",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Tag_Ingredients_IngredientId",
+                table: "Tag",
+                column: "IngredientId",
+                principalTable: "Ingredients",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_UserRecipes_AspNetUsers_UserId",
+                table: "UserRecipes");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Ingredients_Tag_TagId",
+                table: "Ingredients");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Ingredients_UserRecipes_UserRecipeId",
+                table: "Ingredients");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -529,37 +512,31 @@ namespace DAL.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "IngredientTagRelation");
-
-            migrationBuilder.DropTable(
                 name: "InviteCodes");
 
             migrationBuilder.DropTable(
                 name: "MealVotes");
 
             migrationBuilder.DropTable(
-                name: "RecipeIngredientRelations");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Tag");
-
-            migrationBuilder.DropTable(
                 name: "Meals");
-
-            migrationBuilder.DropTable(
-                name: "Ingredients");
-
-            migrationBuilder.DropTable(
-                name: "BaseRecipes");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Groups");
+
+            migrationBuilder.DropTable(
+                name: "Tag");
+
+            migrationBuilder.DropTable(
+                name: "UserRecipes");
+
+            migrationBuilder.DropTable(
+                name: "Ingredients");
         }
     }
 }

@@ -23,7 +23,6 @@ namespace DAL
             _dbContext = dbContext;
             Groups = new GroupRepository(_dbContext);
             InviteCodes = new InviteCodeRepository(_dbContext);
-            BaseRecipes = new BaseRecipeRepository(_dbContext);
             UserRecipes = new UserRecipeRepository(_dbContext);
             Ingredients = new IngredientRepository(_dbContext);
             Meals = new MealRepository(_dbContext);
@@ -33,7 +32,6 @@ namespace DAL
 
         public IGroupRepository Groups { get; }
         public IInviteCodeRepository InviteCodes { get; }
-        public IBaseRecipeRepository BaseRecipes { get; }
         public IUserRecipeRepository UserRecipes { get; }
         public IIngredientRepository Ingredients { get; }
 

@@ -19,11 +19,8 @@ namespace MyRecipeBackend.Models
             CookingTimeInMin = r.CookingTimeInMin;
             Image = r.Image;
             AddToGroupPool = r.AddToGroupPool;
-            Ingredients = r.Ingredients
-                .Select(i => i.Ingredient.Name).ToArray();
+            IngredientIds = r.Ingredients.Select(i => i.Id).ToArray();
         }
-
-        public UserRecipeModel(){}
 
 
         public Guid Id { get; set; }
@@ -31,22 +28,12 @@ namespace MyRecipeBackend.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public int CookingTimeInMin { get; set; }
-        public string[] Ingredients { get; set; }
-
+        public Guid[] IngredientIds { get; set; }
         public Uri Image { get; set; }
-
         public bool AddToGroupPool { get; set; }
 
         public async Task<UserRecipe> ToUserRecipe(IUnitOfWork uow, ApplicationUser user)
         {
-            Ingredient[] ingredients;
-            try
-            {
-                ingredients = await uow.Ingredients
-                    .GetListByIdentifiersAsync(Ingredients);
-            }
-            catch(Exception e) { throw e; }
-
             var userRecipe = new UserRecipe
             {
                 Name = Name,
@@ -54,9 +41,9 @@ namespace MyRecipeBackend.Models
                 CookingTimeInMin = CookingTimeInMin,
                 AddToGroupPool = AddToGroupPool,
                 Image = Image,
-                User = user
+                User = user,
+                Ingredients = await uow.Ingredients.GetListByIdsAsync(IngredientIds)
             };
-            userRecipe.SetIngredients(ingredients);
 
             return userRecipe;
         }

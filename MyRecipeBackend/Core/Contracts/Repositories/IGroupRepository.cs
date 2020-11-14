@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Entities;
+using Devices.Core.Contracts;
 
 namespace Core.Contracts
 {
-    public interface IGroupRepository
+    public interface IGroupRepository:IBaseRepository<Group>
     {
-        Task AddAsync(Group group);
         Task<Group> GetGroupForUserAsync(string userId);
         Task<Group> GetGroupForInviteCodeAsync(string inviteCode);
         Task<Group> GetGroupForUserIncludeAllAsync(string userId);

@@ -13,22 +13,6 @@ namespace Core.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public int CookingTimeInMin { get; set; }
-        public ICollection<RecipeIngredientRelation> Ingredients { get; set; }
         public Uri Image { get; set; }
-
-        public BaseRecipe()
-        {
-            Ingredients = new List<RecipeIngredientRelation>();
-        }
-
-        public void SetIngredients(ICollection<Ingredient> ingredients)
-        {
-            Ingredients = ingredients.Select(i =>
-                new RecipeIngredientRelation
-                {
-                    Ingredient = i,
-                    Recipe = this
-                }).ToArray();
-        }
     }
 }

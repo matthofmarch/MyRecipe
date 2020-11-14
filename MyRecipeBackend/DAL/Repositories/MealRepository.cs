@@ -6,17 +6,16 @@ using System.Threading.Tasks;
 using Core.Contracts.Repositories;
 using Core.Entities;
 using Core.Model;
+using Devices.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    public class MealRepository : IMealRepository
+    public class MealRepository :BaseRepository<Meal>, IMealRepository
     {
-        private readonly ApplicationDbContext _dbContext;
 
-        public MealRepository(ApplicationDbContext dbContext)
+        public MealRepository(ApplicationDbContext dbContext):base(dbContext)
         {
-            _dbContext = dbContext;
         }
 
         /// <summary>
@@ -79,7 +78,6 @@ namespace DAL.Repositories
                 .Include(m => m.Initiator)
                 .Include(m => m.Recipe)
                 .ThenInclude(r => r.Ingredients)
-                .ThenInclude(r => r.Ingredient)
                 .Include(m => m.Votes)
                 .ThenInclude(v => v.User)
                 .Where(m => m.GroupId == groupId);
@@ -100,7 +98,6 @@ namespace DAL.Repositories
                 .Include(m => m.Initiator)
                 .Include(m => m.Recipe)
                 .ThenInclude(r => r.Ingredients)
-                .ThenInclude(r => r.Ingredient)
                 .Include(m => m.Votes)
                 .ThenInclude(v => v.User)
                 .Where(m => m.GroupId == groupId && m.Id == id)
