@@ -23,7 +23,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="proposeModel"></param>
         /// <returns></returns>
-        public async Task ProposeAndVoteMealAsync(Meal mealModel)
+        public async Task ProposeMealAsync(Meal mealModel)
         {
             var aloneInGroup = await _dbContext.Users
                 .Where(u => u.GroupId == mealModel.Initiator.GroupId)
@@ -35,15 +35,6 @@ namespace DAL.Repositories
                 Group = mealModel.Group,
                 DateTime = mealModel.DateTime,
                 Recipe = await _dbContext.Recipes.FindAsync(mealModel.RecipeId),
-                Votes = new List<MealVote>()
-                {
-                    new MealVote
-                    {
-                        User = mealModel.Initiator,
-                        Vote = VoteEnum.Approved
-                    }
-                },
-                Accepted = aloneInGroup
             };
             await _dbContext.Meals.AddAsync(meal);
         }
@@ -68,8 +59,7 @@ namespace DAL.Repositories
                 Vote = vote,
             });
 
-            var approved = votes >= groupSize / 2;
-            meal.Accepted = approved;
+            //TODO
         }
 
         public async Task<Meal[]> GetMealsWithRecipeAndInitiatorAsync(Guid groupId, bool? isAccepted)

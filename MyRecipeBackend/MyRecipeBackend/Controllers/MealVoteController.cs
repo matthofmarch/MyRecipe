@@ -21,7 +21,7 @@ namespace MyRecipeBackend.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger _logger;
 
-        public MealVoteController(IUnitOfWork uow, UserManager<ApplicationUser> userManager, ILogger<MealPollController> logger)
+        public MealVoteController(IUnitOfWork uow, UserManager<ApplicationUser> userManager, ILogger<MealProposeController> logger)
         {
             _uow = uow;
             _userManager = userManager;

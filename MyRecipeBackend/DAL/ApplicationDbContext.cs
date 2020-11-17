@@ -57,6 +57,7 @@ namespace DAL
                     SecurityStamp = String.Empty,
                     Recipes = new List<Recipe>(),
                     EmailConfirmed = true,
+                    IsAdmin = true,
                     GroupId=seedGroupId
                 },
                 new ApplicationUser()

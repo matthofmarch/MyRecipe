@@ -36,8 +36,9 @@ namespace MyRecipeBackend.Controllers
             if (user == null)
                 return BadRequest("User not found");
 
-            var group = new Group() { Name = name };
+            var group = new Group() { Name = name};
             user.Group = group;
+            user.IsAdmin = true;
 
             try
             {

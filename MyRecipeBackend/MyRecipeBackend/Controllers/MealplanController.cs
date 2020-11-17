@@ -72,5 +72,39 @@ namespace MyRecipeBackend.Controllers
 
             return new MealDto(meal);
         }
+
+
+        [HttpPut("accept/{mealId}")]
+        public async Task<ActionResult<MealDto>> AcceptMealById(Guid mealId, bool accepted)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
+            if (user is null || group is null)
+            {
+                return BadRequest();
+            }
+
+            if (!await _uow.Groups.CheckIsUserAdmin(user.Id, group.Id))
+            {
+                var errMsg = "User is not an Admin";
+                return Forbid(errMsg);
+            }
+
+            var meal = await _uow.Meals.GetMealByIdAsync(group.Id, mealId);
+            meal.Accepted = accepted;
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch(Exception e)
+            {
+                _logger.LogError(e.Message);
+
+                return BadRequest("Could not accept meal");
+            }
+            return new MealDto(meal);
+        }
+
+        
     }
 }

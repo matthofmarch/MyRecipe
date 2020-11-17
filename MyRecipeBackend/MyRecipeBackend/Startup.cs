@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Text.Json.Serialization;
 using Core.Contracts;
 using Core.Entities;
 using DAL;
