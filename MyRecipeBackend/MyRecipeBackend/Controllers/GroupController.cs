@@ -96,6 +96,7 @@ namespace MyRecipeBackend.Controllers
 
             // TODO Review
             user.Group = group;
+            user.IsAdmin = false;
             // group.Members.Add(user);
             await _uow.InviteCodes.Delete(inviteCode.ToUpper());
 

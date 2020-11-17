@@ -83,6 +83,11 @@ namespace MyRecipeBackend.Controllers
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
+                if (user.IsAdmin)
+                {
+                    identityClaims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                }
+
 
                 var token = GenerateJwtToken(identityClaims.Concat(customClaims));
                 var refreshToken = await _userManager.GenerateUserTokenAsync(

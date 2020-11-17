@@ -52,7 +52,7 @@ namespace MyRecipeBackend.Controllers
             return Ok(proposedMealList);
         }
 
-        [HttpGet("getMeals/{id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -75,6 +75,9 @@ namespace MyRecipeBackend.Controllers
 
 
         [HttpPut("accept/{mealId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<MealDto>> AcceptMealById(Guid mealId, bool accepted)
         {
             var user = await _userManager.GetUserAsync(User);
