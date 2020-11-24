@@ -6,7 +6,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Core.Contracts;
-using Core.Contracts.Services;
 using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using MyRecipeBackend.Models;
 
 namespace MyRecipeBackend.Controllers
@@ -21,100 +21,110 @@ namespace MyRecipeBackend.Controllers
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
-    public class UserRecipesController : ControllerBase
+    public class RecipesController : ControllerBase
     {
 
         private readonly IUnitOfWork _uow;
         private readonly IConfiguration _configuration;
-        private readonly IUserService _userService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<RecipesController> _log;
 
-        public UserRecipesController(IUnitOfWork uow, IConfiguration config, IUserService userService)
+        public RecipesController(
+            IUnitOfWork uow, 
+            IConfiguration config, 
+            UserManager<ApplicationUser> userManager,
+            ILogger<RecipesController> log)
         {
             _uow = uow;
             _configuration = config;
-            _userService = userService;
+            _userManager = userManager;
+            _log = log;
         }
 
         
-        [HttpPost("create")]
-        public async Task<ActionResult> CreateRecipe(UserRecipeModel userRecipeModel)
+        [HttpPost]
+        public async Task<ActionResult> CreateRecipe(RecipeModel recipeModel)
         {
-            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return BadRequest("User not found");
 
-            UserRecipe userRecipe;
-            try { userRecipe = await userRecipeModel.ToUserRecipe(_uow, user); }
+            Recipe recipe;
+            try { recipe = await recipeModel.ToUserRecipe(_uow, user); }
             catch(Exception e) { return BadRequest(e.Message); }
 
-            await _uow.UserRecipes.AddAsync(userRecipe);
+            await _uow.Recipes.AddAsync(recipe);
             try { await _uow.SaveChangesAsync(); }
             catch(ValidationException e){ return BadRequest(e.Message); }
 
             return Ok();
         }
 
-        [HttpPut("update/{id}")]
-        public async Task<ActionResult> UpdateRecipe([FromRoute]Guid id, UserRecipeModel userRecipeModel)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateRecipe([FromRoute]Guid id, RecipeModel recipeModel)
         {
-            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
-            if (user == null) return BadRequest("User not found");
+            var user = await _userManager.GetUserAsync(User);
+            if (user is null) return BadRequest("User not found");
 
-            if (id != userRecipeModel.Id) return BadRequest("Ids do not match");
+            if (id != recipeModel.Id) return BadRequest("Ids do not match");
 
-            var dbUserRecipe = await _uow.UserRecipes.GetByIdAsync(user, id);
+            var dbUserRecipe = await _uow.Recipes.GetByIdAsync(user, id);
             if (dbUserRecipe == null) return NotFound();
 
-            dbUserRecipe.AddToGroupPool = userRecipeModel.AddToGroupPool;
-            dbUserRecipe.CookingTimeInMin = userRecipeModel.CookingTimeInMin;
-            dbUserRecipe.Description = userRecipeModel.Description;
-            dbUserRecipe.Name = userRecipeModel.Name;
-            dbUserRecipe.Image = userRecipeModel.Image;
+            dbUserRecipe.AddToGroupPool = recipeModel.AddToGroupPool;
+            dbUserRecipe.CookingTimeInMin = recipeModel.CookingTimeInMin;
+            dbUserRecipe.Description = recipeModel.Description;
+            dbUserRecipe.Name = recipeModel.Name;
+            dbUserRecipe.Image = recipeModel.Image;
 
-            var ingredients = await _uow.Ingredients
-                .GetListByIdentifiersAsync(userRecipeModel.Ingredients);
+            await _uow.Recipes.RemoveIngredients(dbUserRecipe.Id);
+            dbUserRecipe.Ingredients = await _uow.Ingredients.GetListByNamesAsync(
+                    recipeModel.IngredientNames);
 
-            await _uow.UserRecipes.RemoveIngredients(dbUserRecipe.Id);
-            try { await _uow.SaveChangesAsync(); }
-            catch (ValidationException ex) { return BadRequest(ex.Message); }
-
-            dbUserRecipe.SetIngredients(ingredients);
-            try { await _uow.SaveChangesAsync(); }
-            catch (ValidationException ex) { return BadRequest(ex.Message); }
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                string errMsg = "Could not update Recipe";
+                _log.LogError($"{errMsg}: {e}");
+                return BadRequest($"{errMsg}");
+            }
 
             return NoContent();
         }
 
-        [HttpGet("paged")]
-        public async Task<ActionResult<UserRecipeModel[]>> GetPaged(
-            string filter,
+        [HttpGet]
+        public async Task<ActionResult<RecipeModel[]>> GetPaged(
+            string filter = "",
             int page = 0,
             int pageSize = 20
         )
         {
-            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return BadRequest("User not found");
 
-            UserRecipe[] recipes = await _uow.UserRecipes.GetPagedRecipesAsync(user, filter, page, pageSize);
+            Recipe[] recipes = await _uow.Recipes.GetPagedRecipesAsync(user, filter, page, pageSize);
 
-            return recipes.Select(r => new UserRecipeModel(r)).ToArray();
+            return recipes.Select(r => new RecipeModel(r)).ToArray();
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteRecipe(Guid id)
         {
-            var user = await _userService.GetUserByClaimsPrincipalAsync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return BadRequest("User not found");
 
-            UserRecipe userRecipe = await _uow.UserRecipes.GetByIdAsync(user, id);
-            if(userRecipe == null)
+            Recipe recipe = await _uow.Recipes.GetByIdAsync(user, id);
+            if(recipe == null)
             {
                 return NotFound();
             }
 
-            _uow.UserRecipes.Delete(userRecipe);
+            _uow.Recipes.Delete(recipe);
 
             try { await _uow.SaveChangesAsync(); }
             catch(Exception e) { return BadRequest(e.Message); }

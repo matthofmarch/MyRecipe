@@ -7,7 +7,7 @@ using Core.Entities;
 
 namespace MyRecipeBackend.Models.Mealplan
 {
-    public class VoteInputModel
+    public class VoteRequestModel
     {
         [Required]
         public Guid MealId { get; set; }

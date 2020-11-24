@@ -1,13 +1,16 @@
-﻿using Core.Entities;
+﻿using System;
+using Core.Entities;
 using System.Threading.Tasks;
+using Devices.Core.Contracts;
 
 namespace Core.Contracts
 {
-    public interface IIngredientRepository
+    public interface IIngredientRepository:IBaseRepository<Ingredient>
     {
-        Task<Ingredient> GetByIdentifierAsync(string identifier);
+        Task<Ingredient> GetByNameAsync(string identifier);
 
-        Task<Ingredient[]> GetListByIdentifiersAsync(string[] identifiers);
+        Task<Ingredient[]> GetListByNamesAsync(string[] identifiers);
 
+        Task<Ingredient[]> GetListByIdsAsync(Guid[] ids);
     }
 }

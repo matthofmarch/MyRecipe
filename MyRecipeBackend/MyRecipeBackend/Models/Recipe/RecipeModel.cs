@@ -8,10 +8,15 @@ using System.Threading.Tasks;
 
 namespace MyRecipeBackend.Models
 {
-    public class UserRecipeModel
+    public class RecipeModel
     {
 
-        public UserRecipeModel(UserRecipe r)
+        public RecipeModel()
+        {
+
+        }
+
+        public RecipeModel(Recipe r)
         {
             Id = r.Id;
             Name = r.Name;
@@ -19,11 +24,8 @@ namespace MyRecipeBackend.Models
             CookingTimeInMin = r.CookingTimeInMin;
             Image = r.Image;
             AddToGroupPool = r.AddToGroupPool;
-            Ingredients = r.Ingredients
-                .Select(i => i.Ingredient.Name).ToArray();
+            IngredientNames = r.Ingredients.Select(i => i.Name).ToArray();
         }
-
-        public UserRecipeModel(){}
 
 
         public Guid Id { get; set; }
@@ -31,32 +33,22 @@ namespace MyRecipeBackend.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public int CookingTimeInMin { get; set; }
-        public string[] Ingredients { get; set; }
-
+        public string[] IngredientNames { get; set; }
         public Uri Image { get; set; }
-
         public bool AddToGroupPool { get; set; }
 
-        public async Task<UserRecipe> ToUserRecipe(IUnitOfWork uow, ApplicationUser user)
+        public async Task<Recipe> ToUserRecipe(IUnitOfWork uow, ApplicationUser user)
         {
-            Ingredient[] ingredients;
-            try
-            {
-                ingredients = await uow.Ingredients
-                    .GetListByIdentifiersAsync(Ingredients);
-            }
-            catch(Exception e) { throw e; }
-
-            var userRecipe = new UserRecipe
+            var userRecipe = new Recipe
             {
                 Name = Name,
                 Description = Description,
                 CookingTimeInMin = CookingTimeInMin,
                 AddToGroupPool = AddToGroupPool,
                 Image = Image,
-                User = user
+                User = user,
+                Ingredients = await uow.Ingredients.GetListByNamesAsync(IngredientNames)
             };
-            userRecipe.SetIngredients(ingredients);
 
             return userRecipe;
         }

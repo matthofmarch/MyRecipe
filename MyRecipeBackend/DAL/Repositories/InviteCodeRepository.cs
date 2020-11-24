@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 using Core.Contracts;
 using Core.Entities;
 using DAL;
+using Devices.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    public class InviteCodeRepository: IInviteCodeRepository
+    public class InviteCodeRepository: BaseRepository<InviteCode>, IInviteCodeRepository
     {
-        private readonly ApplicationDbContext _dbContext;
-        public InviteCodeRepository(ApplicationDbContext dbContext)
+        public InviteCodeRepository(ApplicationDbContext dbContext):base(dbContext)
         {
-            _dbContext = dbContext;
         }
 
         public async Task<bool> InviteCodeExistsAsync(string inviteCode)
