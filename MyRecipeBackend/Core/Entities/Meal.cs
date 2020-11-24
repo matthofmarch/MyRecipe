@@ -33,7 +33,7 @@ namespace Core.Entities
 
         //This flag shall be set after a threshold of positive votes has been reached
         [Required]
-        public Boolean Accepted { get; set; } = false;
+        public bool Accepted { get; set; } = false;
         
         public List<MealVote> Votes { get; set; }
     }

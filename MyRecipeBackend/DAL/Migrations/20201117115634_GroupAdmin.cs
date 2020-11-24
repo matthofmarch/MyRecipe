@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DAL.Migrations
 {
-    public partial class Net5 : Migration
+    public partial class GroupAdmin : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -87,6 +87,7 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsAdmin = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -377,13 +378,13 @@ namespace DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GroupId", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "testUser1", 0, "f8011bfc-3899-4261-ae5b-0135bc3e3848", "test1@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, null, "test1@test.test", "test1@test.test", "AQAAAAEAACcQAAAAEHLYymjc7R8i0yPLYzjv/51FH5MC3aX/dBLS0Q2pnV/q/9mte4oBnIGdFFY/mV/Ncw==", null, false, "", false, "test1@test.test" });
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GroupId", "IsAdmin", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "testUser1", 0, "3633a29b-99e5-4eaa-98c0-0bce3948d032", "test1@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), true, false, null, "test1@test.test", "test1@test.test", "AQAAAAEAACcQAAAAEBV5V16YzOz1vPjjhmoybV82LOFXuIOTi3YngufzNa1bksSuYWC+hdZ6AUYJj1o1Zw==", null, false, "", false, "test1@test.test" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GroupId", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "testUser2", 0, "4c1df68a-4ecf-4852-b9bc-9afdd41cee8f", "test2@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, null, "test2@test.test", "test2@test.test", "AQAAAAEAACcQAAAAEKjPtJVuGIPz63sCT5eiIx4IaRJ1t/wUBMmkznMKC8VDW6mDDR3yvsmgxLDmVvYVjw==", null, false, "", false, "test2@test.test" });
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GroupId", "IsAdmin", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "testUser2", 0, "cf2b29b9-8d81-49ba-b1c5-0848e2076db0", "test2@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, false, null, "test2@test.test", "test2@test.test", "AQAAAAEAACcQAAAAEEz7iizl5SuQi3DTQ3SqdfrTypFPbTYJLdY/+x+f7pZHrzcN7fVX6nmhg9K+8aYXYw==", null, false, "", false, "test2@test.test" });
 
             migrationBuilder.InsertData(
                 table: "Recipes",
@@ -413,7 +414,7 @@ namespace DAL.Migrations
             migrationBuilder.InsertData(
                 table: "Meals",
                 columns: new[] { "Id", "Accepted", "DateTime", "GroupId", "InitiatorId", "RecipeId" },
-                values: new object[] { new Guid("00000000-0000-0000-0000-000000000001"), false, new DateTime(2020, 11, 14, 22, 9, 5, 635, DateTimeKind.Local).AddTicks(8996), new Guid("00000000-0000-0000-0000-000000000001"), "testUser1", new Guid("00000000-0000-0000-0000-000000000001") });
+                values: new object[] { new Guid("00000000-0000-0000-0000-000000000001"), false, new DateTime(2020, 11, 17, 12, 56, 33, 460, DateTimeKind.Local).AddTicks(4636), new Guid("00000000-0000-0000-0000-000000000001"), "testUser1", new Guid("00000000-0000-0000-0000-000000000001") });
 
             migrationBuilder.InsertData(
                 table: "MealVotes",

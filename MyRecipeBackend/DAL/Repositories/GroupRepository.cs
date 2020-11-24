@@ -70,5 +70,13 @@ namespace DAL.Repositories
 
             return null;
         }
+
+        public async Task<bool> CheckIsUserAdmin(string userId, Guid groupId)
+        {
+            return await _dbContext.Users
+                .AnyAsync(u => u.GroupId == groupId 
+                               && u.Id == userId
+                               && u.IsAdmin);
+        }
     }
 }

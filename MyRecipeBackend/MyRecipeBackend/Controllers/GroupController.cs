@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyRecipeBackend.Models;
+using MyRecipeBackend.Models.Group;
 
 namespace MyRecipeBackend.Controllers
 {
@@ -27,17 +28,23 @@ namespace MyRecipeBackend.Controllers
             _userManger = userManger;
         }
 
-        [HttpPost("create")]
+        /// <summary>
+        /// Create a new group
+        /// </summary>
+        /// <param name="input">Name of the new group</param>
+        /// <returns>group</returns>
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<GroupDto>> CreateGroup(string name)
+        public async Task<ActionResult<GroupDto>> CreateGroup(CreateGroupModel input)
         {
             var user = await _userManger.GetUserAsync(User);
             if (user == null)
                 return BadRequest("User not found");
 
-            var group = new Group() { Name = name };
+            var group = new Group() { Name = input.Name};
             user.Group = group;
+            user.IsAdmin = true;
 
             try
             {
@@ -51,65 +58,10 @@ namespace MyRecipeBackend.Controllers
             return CreatedAtAction(nameof(GetGroup), new GroupDto(group));
         }
 
-        [HttpGet("createInviteCode")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<InviteCode>> CreateInviteCode()
-        {
-            var user = await _userManger.GetUserAsync(User);
-            if (user == null) return BadRequest("User not found");
-
-            var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
-            if (group == null) return BadRequest("User not in Group");
-
-            var inviteCode = new InviteCode
-            {   //TODO generate as often until unique
-                Code = GenerateInviteCode(),
-                CreationDate = DateTime.Now
-            };
-
-            group.InviteCodes.Add(inviteCode);
-
-            try
-            {
-                await _uow.SaveChangesAsync();
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
-            return Ok(new InviteCodeDto(inviteCode));
-        }
-
-        [HttpGet("acceptInviteCode")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> AcceptInvite(string inviteCode)
-        {
-            var user = await _userManger.GetUserAsync(User);
-            if (user == null) return BadRequest("User not found");
-
-            var group = await _uow.Groups.GetGroupForInviteCodeAsync(inviteCode.ToUpper());
-            if (group == null) return BadRequest("Invite Code does not belong to group");
-
-            // TODO Review
-            user.Group = group;
-            // group.Members.Add(user);
-            await _uow.InviteCodes.Delete(inviteCode.ToUpper());
-
-            try
-            {
-                await _uow.SaveChangesAsync();
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
-            return Ok();
-        }
-
+        /// <summary>
+        /// Get group for user
+        /// </summary>
+        /// <returns>Group for the loggend in user</returns>
         [HttpGet("getGroupForUser")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -125,14 +77,5 @@ namespace MyRecipeBackend.Controllers
             return new GroupDto(group);
         }
 
-        private static string GenerateInviteCode(int length = 6)
-        {
-            var rnd = new Random();
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Range(1,length)
-                .Select(_ => chars[rnd.Next(chars.Length)])
-                .ToArray());
-
-        }
     }
 }

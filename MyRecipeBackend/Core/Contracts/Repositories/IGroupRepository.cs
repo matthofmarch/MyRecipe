@@ -13,5 +13,6 @@ namespace Core.Contracts
         Task<Group> GetGroupForInviteCodeAsync(string inviteCode);
         Task<Group> GetGroupForUserIncludeAllAsync(string userId);
         Task<Recipe> GetNextRecipeRecommendationForGroupAsync(string userId, Guid[] prevRecipeIds);
+        Task<bool> CheckIsUserAdmin(string userId, Guid groupId);
     }
 }

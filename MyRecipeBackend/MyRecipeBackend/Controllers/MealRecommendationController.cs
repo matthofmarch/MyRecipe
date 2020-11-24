@@ -29,7 +29,11 @@ namespace MyRecipeBackend.Controllers
             _logger = logger;
         }
 
-
+        /// <summary>
+        /// Get random recommendations of what to eat based on the entire recipes of a group
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

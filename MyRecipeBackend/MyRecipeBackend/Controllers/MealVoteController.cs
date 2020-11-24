@@ -21,13 +21,18 @@ namespace MyRecipeBackend.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger _logger;
 
-        public MealVoteController(IUnitOfWork uow, UserManager<ApplicationUser> userManager, ILogger<MealPollController> logger)
+        public MealVoteController(IUnitOfWork uow, UserManager<ApplicationUser> userManager, ILogger<MealProposeController> logger)
         {
             _uow = uow;
             _userManager = userManager;
             _logger = logger;
         }
 
+        /// <summary>
+        /// Vote for a meal that has been proposed
+        /// </summary>
+        /// <param name="voteRequestModel"></param>
+        /// <returns></returns>
         [HttpPost("vote")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

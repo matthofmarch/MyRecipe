@@ -10,7 +10,7 @@ namespace Core.Contracts.Repositories
 {
     public interface IMealRepository:IBaseRepository<Meal>
     {
-        Task ProposeAndVoteMealAsync(Meal meal);
+        Task ProposeMealAsync(Meal meal);
         Task VoteMealAsync(ApplicationUser user, VoteEnum vote, Guid mealId);
 
         Task<Meal[]> GetMealsWithRecipeAndInitiatorAsync(Guid groupId, bool? isAccepted);

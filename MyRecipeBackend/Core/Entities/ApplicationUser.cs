@@ -9,8 +9,10 @@ namespace Core.Entities
     {
         [ForeignKey(nameof(GroupId))]
         public Group Group { get; set; }
-        public Guid? GroupId { get; set; } 
-
+        public Guid? GroupId { get; set; }
+        public bool IsAdmin { get; set; }
         public List<Recipe> Recipes { get; set; }
+
+
     }
 }

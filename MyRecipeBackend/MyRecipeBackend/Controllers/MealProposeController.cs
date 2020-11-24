@@ -17,19 +17,24 @@ namespace MyRecipeBackend.Controllers
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
-    public class MealPollController : Controller
+    public class MealProposeController : Controller
     {
         private readonly IUnitOfWork _uow;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger _logger;
 
-        public MealPollController(IUnitOfWork uow, UserManager<ApplicationUser> userManager, ILogger<MealPollController> logger)
+        public MealProposeController(IUnitOfWork uow, UserManager<ApplicationUser> userManager, ILogger<MealProposeController> logger)
         {
             _uow = uow;
             _userManager = userManager;
             _logger = logger;
         }
 
+        /// <summary>
+        /// Propose a recipe to be used in the selection process
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -59,7 +64,7 @@ namespace MyRecipeBackend.Controllers
                 Initiator = user,
                 Group = group
             };
-            await _uow.Meals.ProposeAndVoteMealAsync(meal);
+            await _uow.Meals.ProposeMealAsync(meal);
 
             try
             {
@@ -75,6 +80,10 @@ namespace MyRecipeBackend.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Gets all the meals that have been proposed but not accepted
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

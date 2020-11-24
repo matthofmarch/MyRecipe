@@ -41,6 +41,9 @@ namespace DAL.Migrations
                     b.Property<Guid?>("GroupId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -93,14 +96,15 @@ namespace DAL.Migrations
                         {
                             Id = "testUser1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f8011bfc-3899-4261-ae5b-0135bc3e3848",
+                            ConcurrencyStamp = "3633a29b-99e5-4eaa-98c0-0bce3948d032",
                             Email = "test1@test.test",
                             EmailConfirmed = true,
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            IsAdmin = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "test1@test.test",
                             NormalizedUserName = "test1@test.test",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHLYymjc7R8i0yPLYzjv/51FH5MC3aX/dBLS0Q2pnV/q/9mte4oBnIGdFFY/mV/Ncw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBV5V16YzOz1vPjjhmoybV82LOFXuIOTi3YngufzNa1bksSuYWC+hdZ6AUYJj1o1Zw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -110,14 +114,15 @@ namespace DAL.Migrations
                         {
                             Id = "testUser2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4c1df68a-4ecf-4852-b9bc-9afdd41cee8f",
+                            ConcurrencyStamp = "cf2b29b9-8d81-49ba-b1c5-0848e2076db0",
                             Email = "test2@test.test",
                             EmailConfirmed = true,
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
+                            IsAdmin = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "test2@test.test",
                             NormalizedUserName = "test2@test.test",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKjPtJVuGIPz63sCT5eiIx4IaRJ1t/wUBMmkznMKC8VDW6mDDR3yvsmgxLDmVvYVjw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEz7iizl5SuQi3DTQ3SqdfrTypFPbTYJLdY/+x+f7pZHrzcN7fVX6nmhg9K+8aYXYw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -298,7 +303,7 @@ namespace DAL.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             Accepted = false,
-                            DateTime = new DateTime(2020, 11, 14, 22, 9, 5, 635, DateTimeKind.Local).AddTicks(8996),
+                            DateTime = new DateTime(2020, 11, 17, 12, 56, 33, 460, DateTimeKind.Local).AddTicks(4636),
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
                             InitiatorId = "testUser1",
                             RecipeId = new Guid("00000000-0000-0000-0000-000000000001")

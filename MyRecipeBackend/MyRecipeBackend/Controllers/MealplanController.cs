@@ -32,6 +32,10 @@ namespace MyRecipeBackend.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Get all the meals that have been accepted
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -52,7 +56,12 @@ namespace MyRecipeBackend.Controllers
             return Ok(proposedMealList);
         }
 
-        [HttpGet("getMeals/{id}")]
+        /// <summary>
+        /// Get a meal by its id (has to be owned by the users group of course)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -72,5 +81,49 @@ namespace MyRecipeBackend.Controllers
 
             return new MealDto(meal);
         }
+
+        /// <summary>
+        /// Accept a meal as an admin (probably the one with the highest vote count
+        /// </summary>
+        /// <param name="mealId"></param>
+        /// <param name="accepted"></param>
+        /// <returns></returns>
+        [HttpPut("accept/{mealId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<ActionResult<MealDto>> AcceptMealById(Guid mealId, bool accepted)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
+            if (user is null || group is null)
+            {
+                return BadRequest();
+            }
+
+            if (!await _uow.Groups.CheckIsUserAdmin(user.Id, group.Id))
+            {
+                var errMsg = "User is not an Admin";
+                return Forbid(errMsg);
+            }
+
+            var meal = await _uow.Meals.GetMealByIdAsync(group.Id, mealId);
+            if (meal == null)
+                return BadRequest("Meal with given id not found");
+            meal.Accepted = accepted;
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch(Exception e)
+            {
+                _logger.LogError(e.Message);
+
+                return BadRequest("Could not accept meal");
+            }
+            return new MealDto(meal);
+        }
+
+        
     }
 }

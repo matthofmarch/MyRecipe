@@ -46,10 +46,12 @@ namespace MyRecipeBackend.Models
                 CookingTimeInMin = CookingTimeInMin,
                 AddToGroupPool = AddToGroupPool,
                 Image = Image,
-                User = user,
-                Ingredients = await uow.Ingredients.GetListByNamesAsync(IngredientNames)
+                User = user
             };
-
+            if (IngredientNames != null)
+            {
+                userRecipe.Ingredients = await uow.Ingredients.GetListByNamesAsync(IngredientNames);
+            }
             return userRecipe;
         }
     }
