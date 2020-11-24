@@ -49,5 +49,11 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="MyRecipeBackend.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 
 </Project>
