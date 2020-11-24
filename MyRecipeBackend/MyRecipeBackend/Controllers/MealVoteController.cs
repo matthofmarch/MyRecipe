@@ -28,6 +28,11 @@ namespace MyRecipeBackend.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Vote for a meal that has been proposed
+        /// </summary>
+        /// <param name="voteRequestModel"></param>
+        /// <returns></returns>
         [HttpPost("vote")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

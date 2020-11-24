@@ -26,6 +26,10 @@ namespace MyRecipeBackend.Controllers
             _userManger = userManger;
         }
 
+        /// <summary>
+        /// Create a new invite code for the group the user is in
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -57,7 +61,11 @@ namespace MyRecipeBackend.Controllers
             return Ok(new InviteCodeDto(inviteCode));
         }
 
-
+        /// <summary>
+        /// Accept an invite code in order to join group
+        /// </summary>
+        /// <param name="inviteCode"></param>
+        /// <returns></returns>
         [HttpGet("acceptInviteCode")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]

@@ -30,6 +30,11 @@ namespace MyRecipeBackend.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Propose a recipe to be used in the selection process
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -75,6 +80,10 @@ namespace MyRecipeBackend.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Gets all the meals that have been proposed but not accepted
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

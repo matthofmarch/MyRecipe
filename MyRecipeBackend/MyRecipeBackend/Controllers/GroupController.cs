@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyRecipeBackend.Models;
+using MyRecipeBackend.Models.Group;
 
 namespace MyRecipeBackend.Controllers
 {
@@ -27,16 +28,21 @@ namespace MyRecipeBackend.Controllers
             _userManger = userManger;
         }
 
+        /// <summary>
+        /// Create a new group
+        /// </summary>
+        /// <param name="input">Name of the new group</param>
+        /// <returns>group</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<GroupDto>> CreateGroup(string name)
+        public async Task<ActionResult<GroupDto>> CreateGroup(CreateGroupModel input)
         {
             var user = await _userManger.GetUserAsync(User);
             if (user == null)
                 return BadRequest("User not found");
 
-            var group = new Group() { Name = name};
+            var group = new Group() { Name = input.Name};
             user.Group = group;
             user.IsAdmin = true;
 
@@ -52,7 +58,10 @@ namespace MyRecipeBackend.Controllers
             return CreatedAtAction(nameof(GetGroup), new GroupDto(group));
         }
 
-
+        /// <summary>
+        /// Get group for user
+        /// </summary>
+        /// <returns>Group for the loggend in user</returns>
         [HttpGet("getGroupForUser")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]

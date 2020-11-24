@@ -56,7 +56,7 @@ namespace MyRecipeBackend.Controllers
         /// Login endpoint for a user, Default users: test1@test.test and test2@test.test, Pw: Pass123$
         /// </summary>
         /// <param name="model"></param>
-        /// <returns></returns>
+        /// <returns>accessToken, refreshToken</returns>
         [HttpPost]
         [Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -110,6 +110,11 @@ namespace MyRecipeBackend.Controllers
 
         }
 
+        /// <summary>
+        /// Register a new user
+        /// </summary>
+        /// <param name="loginModel"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -138,6 +143,13 @@ namespace MyRecipeBackend.Controllers
             return BadRequest(result.Errors);
         }
 
+
+        /// <summary>
+        /// Called to confirm a users email
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("confirmemail")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -154,6 +166,11 @@ namespace MyRecipeBackend.Controllers
             return BadRequest(result.Errors);
         }
 
+        /// <summary>
+        /// Change a users password (has to be logged in)
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("changePassword")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -169,9 +186,15 @@ namespace MyRecipeBackend.Controllers
             return BadRequest("Reset failed");
         }
 
+        /// <summary>
+        /// Request the reset of a users password (via email)
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("resetPassword")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ResetPassword(string email)
         {
             if (email == null) return BadRequest("Email not set");
@@ -186,6 +209,11 @@ namespace MyRecipeBackend.Controllers
             return Ok("Email sent");
         }
 
+        /// <summary>
+        /// Confirm reset of a users password
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("resetPassword")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -210,6 +238,11 @@ namespace MyRecipeBackend.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// Request the change of email for a user (has to be logged in)
+        /// </summary>
+        /// <param name="newEmail"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("changeEmail")]
         [Authorize]
@@ -231,6 +264,11 @@ namespace MyRecipeBackend.Controllers
             return Ok("Email sent");
         }
 
+        /// <summary>
+        /// Confirm the change of a users email
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("changeEmail")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -256,6 +294,11 @@ namespace MyRecipeBackend.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// Exchange refresh tokens for a new access token
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("refresh")]
         [ProducesResponseType(StatusCodes.Status200OK)]

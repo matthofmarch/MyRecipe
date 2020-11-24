@@ -12,7 +12,7 @@ namespace MyRecipeBackend.Models
 
         public List<UserDto> Members { get; set; }
 
-        public GroupDto(Group group)
+        public GroupDto(Core.Entities.Group group)
         {
             Name = group.Name;
             Members = group.Members.Select(m => new UserDto(m)).ToList();

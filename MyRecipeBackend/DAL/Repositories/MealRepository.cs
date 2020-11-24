@@ -91,7 +91,7 @@ namespace DAL.Repositories
                 .Include(m => m.Votes)
                 .ThenInclude(v => v.User)
                 .Where(m => m.GroupId == groupId && m.Id == id)
-                .SingleAsync();
+                .SingleOrDefaultAsync();
         }
 
         public Task<bool> UserHasAlreadyVotedAsync(MealVote mealVote)

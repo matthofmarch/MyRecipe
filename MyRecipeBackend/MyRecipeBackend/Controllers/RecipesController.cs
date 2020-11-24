@@ -41,8 +41,14 @@ namespace MyRecipeBackend.Controllers
             _log = log;
         }
 
-        
+        /// <summary>
+        /// Add a recipe to the users cookbook
+        /// </summary>
+        /// <param name="recipeModel"></param>
+        /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> CreateRecipe(RecipeModel recipeModel)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -60,7 +66,16 @@ namespace MyRecipeBackend.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Update a users recipe
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="recipeModel"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> UpdateRecipe([FromRoute]Guid id, RecipeModel recipeModel)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -95,7 +110,16 @@ namespace MyRecipeBackend.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Get recipes for user with paging
+        /// </summary>
+        /// <param name="filter">Filters by name of recipes</param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<RecipeModel[]>> GetPaged(
             string filter = "",
             int page = 0,
@@ -111,7 +135,15 @@ namespace MyRecipeBackend.Controllers
             return recipes.Select(r => new RecipeModel(r)).ToArray();
         }
 
+        /// <summary>
+        /// Delete a users recipe
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteRecipe(Guid id)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -132,8 +164,14 @@ namespace MyRecipeBackend.Controllers
             return NoContent();
         }
 
-
+        /// <summary>
+        /// Upload a image
+        /// </summary>
+        /// <param name="image"></param>
+        /// <returns>Path to the image file</returns>
         [HttpPost("uploadImage")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> UploadImage(IFormFile image)
         {
             if (image == null)

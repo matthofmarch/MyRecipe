@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using Core.Contracts;
@@ -15,10 +17,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using MyRecipeBackend.Config;
 using MyRecipeBackend.Services;
-using NSwag;
-using NSwag.Generation.Processors.Security;
 
 namespace MyRecipeBackend
 {
@@ -57,7 +58,6 @@ namespace MyRecipeBackend
             var jwtSection = Configuration.GetSection("Jwt");
             services.Configure<JwtConfiguration>(jwtSection);
             var jwtConfiguration = jwtSection.Get<JwtConfiguration>();
-            var key = Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]);
 
             services.AddAuthentication(options =>
                 {
@@ -75,38 +75,48 @@ namespace MyRecipeBackend
                         ValidateAudience = true,
                         ValidAudience = jwtConfiguration.Audience,
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.Key)),
                         ValidateLifetime = true,
                         ClockSkew = TimeSpan.Zero
                     };
                 });
 
-            services.AddSwaggerDocument(config =>
+            services.AddSwaggerGen(c =>
             {
-                config.PostProcess = document =>
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    document.Info.Version = "v1";
-                    document.Info.Title = "MyRecipe API";
-                    document.Info.Description = "A backend for MyRecipes";
-                    document.Info.Contact = new OpenApiContact
+                    Title = "MyRecipes", 
+                    Version = "v1",
+                    Description = "Backend of the MyRecipes app",
+                    Contact = new OpenApiContact
                     {
-                        Name = "MyRecipes Team",
-                        Email = "myRecipes.austria@gmail.com",
-                        Url = "https://htl-leonding.at"
-                    };
-                };
-
-                config.AddSecurity("Bearer", new OpenApiSecurityScheme
-                {
-                    Description = "Standard Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
-                    In = OpenApiSecurityApiKeyLocation.Header,
-                    Name = "Authorization",
-                    Type = OpenApiSecuritySchemeType.ApiKey
+                        Name = "HTL Leonding",
+                        Email = string.Empty,
+                        Url = new Uri("https://htl-leonding.at")
+                    }
                 });
-
-                config.OperationProcessors.Add(new OperationSecurityScopeProcessor("Bearer"));
-            });
-
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.ApiKey,
+                    Description = "Add jwt",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement {{
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new List<string>()
+                }});
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            }); 
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
 
@@ -155,8 +165,8 @@ namespace MyRecipeBackend
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-            app.UseOpenApi();
-            app.UseSwaggerUi3();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Recipes"));
         }
     }
 }
