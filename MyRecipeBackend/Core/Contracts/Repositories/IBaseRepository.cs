@@ -9,7 +9,7 @@ namespace Devices.Core.Contracts
     public interface IBaseRepository<T>
     {
         Task<T[]> AllAsync();
-        Task<T> FindAsync(int id);
+        Task<T> FindAsync(Guid id);
         Task AddAsync(T entity);
         void Remove(T entity);
         void Update(T entity);

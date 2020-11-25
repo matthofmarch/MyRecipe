@@ -23,7 +23,7 @@ namespace Devices.Persistence.Repositories
             return await _dbContext.Set<T>().ToArrayAsync();
         }
 
-        public async Task<T> FindAsync(int id)
+        public async Task<T> FindAsync(Guid id)
         {
             return await _dbContext.Set<T>().FindAsync(id);
         }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Entities;
-using Core.Model;
 using Devices.Core.Contracts;
 
 namespace Core.Contracts.Repositories

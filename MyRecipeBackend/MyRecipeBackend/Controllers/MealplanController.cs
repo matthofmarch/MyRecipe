@@ -89,6 +89,7 @@ namespace MyRecipeBackend.Controllers
         /// <param name="accepted"></param>
         /// <returns></returns>
         [HttpPut("accept/{mealId}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -124,6 +125,48 @@ namespace MyRecipeBackend.Controllers
             return new MealDto(meal);
         }
 
-        
+
+        /// <summary>
+        /// Delete a meal as an admin (doesnt matter if it is accepted or not)
+        /// </summary>
+        /// <param name="id">Id of the meal to delete</param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<ActionResult> DeleteMeal(Guid id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
+            if (user is null || group is null)
+            {
+                return BadRequest();
+            }
+
+            if (!await _uow.Groups.CheckIsUserAdmin(user.Id, group.Id))
+            {
+                var errMsg = "User is not an Admin";
+                return Forbid(errMsg);
+            }
+
+            var meal = await _uow.Meals.FindAsync(id);
+            if (meal == null)
+            {
+                return NotFound();
+            }
+
+            _uow.Meals.Remove(meal);
+
+            try { await _uow.SaveChangesAsync(); }
+            catch (Exception e) 
+            {
+                _logger.LogError(e, "Error when trying to delete meal");
+                return BadRequest("Could not delete meal"); 
+            }
+
+            return NoContent();
+        }
     }
 }

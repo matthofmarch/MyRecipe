@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Contracts.Repositories;
 using Core.Entities;
-using Core.Model;
 using Devices.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
