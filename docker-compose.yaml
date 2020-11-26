@@ -34,18 +34,14 @@ services:
         labels:
             - traefik.enable=true
             # Host and Port definition
-            - traefik.http.routers.api.entrypoints=web
+            - traefik.http.routers.api.entrypoints=websecure
             - traefik.http.routers.api.rule=Host(`vm133.htl-leonding.ac.at`)
-            # redirect to docker internal port (like port configuration in docker-compose: - port: xxxx:3030)
-            - traefik.http.services.api.loadbalancer.server.port=3030
             # TLS Certificate configuration
             - traefik.http.routers.api.tls=true
             - traefik.http.routers.api.tls.certresolver=myrecipesresolver
-            # Redirect to https
             - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
             - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
-            - traefik.http.middlewares.https-redirect.redirectscheme.port=80
-            - traefik.http.routers.api.middlewares=https-redirect@docker
+            - traefik.http.middlewares.https-redirect.redirectscheme.port=443
     db:
         image: "mcr.microsoft.com/mssql/server"
         restart: unless-stopped
