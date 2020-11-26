@@ -35,7 +35,7 @@ services:
             - traefik.enable=true
             # Host and Port definition
             - traefik.http.routers.api.entrypoints=web
-            - traefik.http.routers.api.rule=(`vm133.htl-leonding.ac.at`)
+            - traefik.http.routers.api.rule=Host(`vm133.htl-leonding.ac.at`)
             # redirect to docker internal port (like port configuration in docker-compose: - port: xxxx:3030)
             - traefik.http.services.api.loadbalancer.server.port=3030
             # TLS Certificate configuration
