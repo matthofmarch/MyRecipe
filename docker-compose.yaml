@@ -1,9 +1,22 @@
 version: "3.3"
 services:
-    web:
-        image: "jrichtsfeld/myrecipebackend"
+    reverse-proxy:
+        image: traefik:2.3    # official v2 traefik docker image
+        restart: unless-stopped
+        # Enables the web UI and tells Traefik to listen to docker
+        # command: --api.insecure=true --providers.docker
         ports:
-            - "5000:80"
+          - 80:80   # The HTTP port
+          - 443:443   # HTTPS port, needed for tlsChallenge in certResolvers
+          - 5000:8080   # The web ui (eneabled by --api.insecure=true)
+        volumes:
+          # So thaht Traefik can listen to the docker events
+          - /var/run/docker.sock:/var/run/docker.sock
+          - ./traefik.yml:/etc/traefik/traefik.yml
+          - ./letsencrypt:/letsencrypt
+    api:
+        image: "jrichtsfeld/myrecipebackend"
+        restart: unless-stopped
         environment:
             - ASPNETCORE_ENVIRONMENT=Staging
             - StaticFiles:ImageBasePath=RecipeImages
@@ -18,8 +31,27 @@ services:
             - SendGridKey=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
         depends_on:
             - db
+        labels:
+            - traefik.enable=true
+            # Host and Port definition
+            - traefik.http.routers.api.entrypoints=web
+            - traefik.http.routers.api.rule=(`vm133.htl-leonding.ac.at`)
+            # redirect to docker internal port (like port configuration in docker-compose: - port: xxxx:3030)
+            - traefik.http.services.api.loadbalancer.server.port=3030
+            # TLS Certificate configuration
+            - traefik.http.routers.api.tls=true
+            - traefik.http.routers.api.tls.certresolver=myrecipesresolver
+            # Redirect to https
+            - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+            - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
+            - traefik.http.middlewares.https-redirect.redirectscheme.port=80
+            - traefik.http.routers.api.middlewares=https-redirect@docker
     db:
         image: "mcr.microsoft.com/mssql/server"
+        restart: unless-stopped
         environment:
             - SA_PASSWORD=Al26Dnas!123
             - ACCEPT_EULA=Y
+        labels:
+            - traefik.enable=false
+
