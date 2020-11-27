@@ -140,6 +140,7 @@ namespace MyRecipeBackend
             {
                 dbContext.Database.EnsureDeleted();
                 dbContext.Database.Migrate();
+                app.UseHttpsRedirection();
             }
             else if (env.IsProduction())
             {
