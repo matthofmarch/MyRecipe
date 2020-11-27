@@ -191,7 +191,7 @@ namespace MyRecipeBackend.Controllers
             await image.CopyToAsync(fileStream);
         
 
-            return Ok(new {uri = $"{this.Request.Scheme}://{this.Request.Host}/{_configuration["StaticFiles:ImageBasePath"]}/{filename}"});
+            return Ok(new {uri = $"{this.Request.Scheme}s://{this.Request.Host}/{_configuration["StaticFiles:ImageBasePath"]}/{filename}"});
         }
 
     }
