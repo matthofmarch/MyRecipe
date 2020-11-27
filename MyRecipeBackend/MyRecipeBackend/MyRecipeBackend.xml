@@ -115,6 +115,13 @@
             <param name="accepted"></param>
             <returns></returns>
         </member>
+        <member name="M:MyRecipeBackend.Controllers.MealplanController.DeleteMeal(System.Guid)">
+            <summary>
+            Delete a meal as an admin (doesnt matter if it is accepted or not)
+            </summary>
+            <param name="id">Id of the meal to delete</param>
+            <returns></returns>
+        </member>
         <member name="M:MyRecipeBackend.Controllers.MealProposeController.ProposeMeal(MyRecipeBackend.Models.Mealplan.ProposeInputModel)">
             <summary>
             Propose a recipe to be used in the selection process
@@ -179,6 +186,12 @@
             </summary>
             <param name="image"></param>
             <returns>Path to the image file</returns>
+        </member>
+        <member name="M:MyRecipeBackend.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            This method gets called by the runtime. Use this method to add services to the container.
+            </summary>
+            <param name="services"></param>
         </member>
     </members>
 </doc>

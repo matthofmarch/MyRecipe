@@ -23,19 +23,5 @@ namespace Core.Validations
             }
             return ValidationResult.Success;
         }
-
-        public static async Task<ValidationResult> CheckIfUserAlreadyVotedAsync(MealVote mealVote, IUnitOfWork unitOfWork)
-        {
-            if(mealVote == null)
-                throw new ArgumentNullException();
-
-            var hasVoted = await unitOfWork.Meals.UserHasAlreadyVotedAsync(mealVote);
-
-            if (hasVoted)
-            {
-                return new ValidationResult("User has already voted for this meal", new []{nameof(mealVote.User)});
-            }
-            return ValidationResult.Success;
-        }
     }
 }
