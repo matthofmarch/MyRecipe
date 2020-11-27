@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Http;
 using MyRecipeBackend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Configuration;
@@ -134,7 +135,7 @@ namespace MyRecipeBackend.Controllers
             if (result.Succeeded)
             {
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var callbackUrl = Url.Action("ConfirmEmail", "Auth", new {userId = user.Id, code}, Request.Scheme);
+                var callbackUrl = Url.Action("ConfirmEmail", "Auth", new {userId = user.Id, code}, HttpScheme.Https.ToString());
                 await _emailSender.SendEmailAsync(loginModel.Email, "Confirm your email",
                     $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
                 return Ok();

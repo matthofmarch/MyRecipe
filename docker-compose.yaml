@@ -33,11 +33,11 @@ services:
             - StaticFiles:ImageBasePath=RecipeImages
             - ConnectionStrings:DefaultConnection=Data Source=db;Initial Catalog=MyRecipe;User=sa;Password=Al26Dnas!123;
             - Jwt:Key=YVBy0OLlMQG6VVVp1OH7Xzyr7gHuw1qvUC5dcGt3SBM=
-            - Jwt:Issuer=http://185.239.238.179
-            - Jwt:Audience=http://185.239.238.179
+            - Jwt:Issuer=https://vm133.htl-leonding.ac.at:5000
+            - Jwt:Audience=http://vm133.htl-leonding.ac.at
             - Jwt:RefreshProvider=RefTokenProvider
-            - SpaLinks:ResetPasswordBaseLink=http://185.239.238.179/confirmreset
-            - SpaLinks:ResetEmailBaseLink=http://185.239.238.179/confirmemailchange
+            - SpaLinks:ResetPasswordBaseLink=http://vm133.htl-leonding.ac.at/confirmreset
+            - SpaLinks:ResetEmailBaseLink=http://vm133.htl-leonding.ac.at/confirmemailchange
             - SendGridUser=MyRecipe
             - SendGridKey=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
         depends_on:
