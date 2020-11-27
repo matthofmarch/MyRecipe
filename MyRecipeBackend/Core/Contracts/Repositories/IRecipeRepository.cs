@@ -10,6 +10,5 @@ namespace Core.Contracts
         Task<Recipe[]> GetPagedRecipesAsync(ApplicationUser user, string filter, int page, int pageSize);
         Task<Recipe> GetByIdAsync(ApplicationUser user, Guid id);
         void Delete(Recipe recipe);
-        public Task RemoveIngredients(Guid recipeId);
     }
 }

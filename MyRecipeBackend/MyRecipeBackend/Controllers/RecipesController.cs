@@ -92,7 +92,6 @@ namespace MyRecipeBackend.Controllers
             dbUserRecipe.Name = recipeModel.Name;
             dbUserRecipe.Image = recipeModel.Image;
 
-            await _uow.Recipes.RemoveIngredients(dbUserRecipe.Id);
             dbUserRecipe.Ingredients = await _uow.Ingredients.GetListByNamesAsync(
                     recipeModel.IngredientNames);
 
