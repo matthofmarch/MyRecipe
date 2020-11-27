@@ -160,6 +160,8 @@ namespace MyRecipeBackend.Controllers
             if (userId == null || code == null)
                 return BadRequest();
             var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return BadRequest();
             var result = await _userManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
                 return Ok("Successfully confirmed");
