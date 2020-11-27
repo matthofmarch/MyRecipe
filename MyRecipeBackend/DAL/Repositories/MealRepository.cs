@@ -42,14 +42,23 @@ namespace DAL.Repositories
         {
             var meal = await _dbContext.Meals.FindAsync(mealId);
 
-            var groupSize = await _dbContext.Users
-                .Where(u => u.GroupId == user.GroupId)
-                .CountAsync();
+            var existing = await _dbContext.MealVotes
+                .Where(mv => mv.MealId == mealId)
+                .Where(mv => mv.UserId == user.Id)
+                .SingleOrDefaultAsync();
 
-            var votes = await _dbContext.MealVotes
-                .Where(mv => mv.MealId == meal.Id)
-                .Where(mv => mv.Vote == VoteEnum.Approved)
-                .CountAsync();
+            if (existing != null)
+            {
+                //withdrawl vote
+                if (vote == existing.Vote)
+                {
+                    _dbContext.MealVotes.Remove(existing);
+                    return;
+                }
+                //If different, then apply change
+                existing.Vote = vote;
+                return;
+            }
 
             await _dbContext.MealVotes.AddAsync(new MealVote
             {
@@ -58,7 +67,6 @@ namespace DAL.Repositories
                 Vote = vote,
             });
 
-            //TODO
         }
 
         public async Task<Meal[]> GetMealsWithRecipeAndInitiatorAsync(Guid groupId, bool? isAccepted)

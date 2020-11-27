@@ -33,7 +33,7 @@ namespace MyRecipeBackend.Controllers
         /// </summary>
         /// <param name="voteRequestModel"></param>
         /// <returns></returns>
-        [HttpPost("vote")]
+        [HttpPost()]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> VoteMeal(VoteRequestModel voteRequestModel)
@@ -44,7 +44,6 @@ namespace MyRecipeBackend.Controllers
             }
 
             var user = await _userManager.GetUserAsync(User);
-
             await _uow.Meals.VoteMealAsync(user, voteRequestModel.VoteEnum, voteRequestModel.MealId);
 
             try
