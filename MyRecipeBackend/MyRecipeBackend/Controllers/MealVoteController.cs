@@ -9,10 +9,12 @@ using Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using MyRecipeBackend.Models.Mealplan;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyRecipeBackend.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class MealVoteController : ControllerBase
     {

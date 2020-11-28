@@ -102,7 +102,8 @@
         </member>
         <member name="M:MyRecipeBackend.Controllers.MealplanController.GetMealById(System.Guid)">
             <summary>
-            Get a meal by its id (has to be owned by the users group of course)
+            Get a meal by its id (has to be owned by the users group of course).
+            Does not matter if it is accepted or not
             </summary>
             <param name="id"></param>
             <returns></returns>
@@ -186,6 +187,19 @@
             </summary>
             <param name="image"></param>
             <returns>Path to the image file</returns>
+        </member>
+        <member name="M:MyRecipeBackend.Controllers.UserController.LeaveGroup">
+            <summary>
+            Leave the group the user is currently in
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MyRecipeBackend.Controllers.UserController.UpdateMembership(MyRecipeBackend.Models.User.UpdateUserModel)">
+            <summary>
+            Change a users admin status and/or kick him from a group (user has to be the admin of the group)
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
         </member>
         <member name="M:MyRecipeBackend.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>

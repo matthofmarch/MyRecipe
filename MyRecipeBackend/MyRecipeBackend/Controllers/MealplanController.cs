@@ -57,7 +57,8 @@ namespace MyRecipeBackend.Controllers
         }
 
         /// <summary>
-        /// Get a meal by its id (has to be owned by the users group of course)
+        /// Get a meal by its id (has to be owned by the users group of course).
+        /// Does not matter if it is accepted or not
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
