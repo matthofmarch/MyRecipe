@@ -9,10 +9,12 @@ using Core.Contracts;
 using Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using MyRecipeBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyRecipeBackend.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class InviteCodeController : ControllerBase
     {

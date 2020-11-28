@@ -13,6 +13,7 @@ namespace Core.Contracts
         IInviteCodeRepository InviteCodes { get; }
         IRecipeRepository Recipes { get; }
         IIngredientRepository Ingredients { get; }
+        IApplicationUserRepository Users { get; }
 
         Task<int> SaveChangesAsync();
         Task DeleteDatabaseAsync();
