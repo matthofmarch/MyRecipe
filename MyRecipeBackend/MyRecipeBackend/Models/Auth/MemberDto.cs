@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MyRecipeBackend.Models
 {
-    public class UserDto
+    public class MemberDto
     {
         public string Email { get; set; }
         public bool IsAdmin { get; set; }
 
-        public UserDto(ApplicationUser user)
+        public MemberDto(ApplicationUser user)
         {
             Email = user.Email;
             IsAdmin = user.IsAdmin;

@@ -194,7 +194,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MyRecipeBackend.Controllers.UserController.UpdateUserAdmin(MyRecipeBackend.Models.User.UpdateUserModel)">
+        <member name="M:MyRecipeBackend.Controllers.UserController.UpdateMembership(MyRecipeBackend.Models.User.UpdateUserModel)">
             <summary>
             Change a users admin status and/or kick him from a group (user has to be the admin of the group)
             </summary>

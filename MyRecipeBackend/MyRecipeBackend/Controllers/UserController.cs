@@ -68,7 +68,7 @@ namespace MyRecipeBackend.Controllers
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> UpdateUserAdmin(UpdateUserModel model)
+        public async Task<ActionResult> UpdateMembership(UpdateUserModel model)
         {
             var adminuser = await _userManger.GetUserAsync(User);
             if (adminuser == null || model == null)
