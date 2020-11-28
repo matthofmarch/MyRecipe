@@ -92,6 +92,7 @@ namespace MyRecipeBackend.Controllers
             dbUserRecipe.Name = recipeModel.Name;
             dbUserRecipe.Image = recipeModel.Image;
 
+            dbUserRecipe.Ingredients = null;
             dbUserRecipe.Ingredients = await _uow.Ingredients.GetListByNamesAsync(
                     recipeModel.IngredientNames);
 

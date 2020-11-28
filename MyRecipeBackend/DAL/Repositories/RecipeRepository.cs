@@ -25,6 +25,7 @@ namespace DAL.Repositories
         public Task<Recipe> GetByIdAsync(ApplicationUser user, Guid id)
         {
             return _dbContext.Recipes
+                .Include(r => r.Ingredients)
                 .SingleOrDefaultAsync(r => r.User.Id == user.Id && r.Id == id);
         }
 
