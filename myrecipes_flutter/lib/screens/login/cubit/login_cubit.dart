@@ -12,11 +12,11 @@ class LoginCubit extends Cubit<LoginState> {
 
   void login(String email, String password) async {
     emit(LoginProgress());
-    var jwt = await _authRepository.login(email, password);
-    if(jwt == null){
-      emit(LoginError());
-    }else{
-        emit(LoginSuccess(jwt));
+    try{
+      await _authRepository.login(email, password);
+      emit(LoginSuccess());
+    } on Exception {
+      emit(LoginFailure());
     }
   }
 }

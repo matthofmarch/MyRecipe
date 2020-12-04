@@ -23,9 +23,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_bloc: ^6.0.6
+  flutter_bloc: 7.0.0-dev.2
   flutter_secure_storage: ^3.3.5
   equatable: ^1.2.3
+  flutter_platform_widgets: 0.72.0
+  google_fonts: ^1.1.0
+
 
 
 
@@ -52,6 +55,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -10,6 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.12.2
+  equatable: ^1.2.3
+  flutter_secure_storage: 3.3.5
+
 
 
 dev_dependencies:
