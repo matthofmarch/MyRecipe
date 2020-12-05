@@ -23,6 +23,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MyRecipeBackend.Config;
+using MyRecipeBackend.ViewModels;
 
 namespace MyRecipeBackend.Controllers
 {
@@ -252,9 +253,9 @@ namespace MyRecipeBackend.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> ChangeEmail(string newEmail)
         {
-            if (newEmail == null) return BadRequest("New Email not provided");
+            if (string.IsNullOrWhiteSpace(newEmail)) return BadRequest("New Email not provided");
             var user = await _userManager.GetUserAsync(User);
-            if (user == null) return BadRequest("Could not find User");
+            if (user is null) return BadRequest("Could not find User");
 
             var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
             var callbackUrl =
@@ -270,31 +271,31 @@ namespace MyRecipeBackend.Controllers
         /// <summary>
         /// Confirm the change of a users email
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="viewModel"></param>
         /// <returns></returns>
         [HttpPost]
         [Route("changeEmail")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ChangeEmail(ResetEmailConfirmModel model)
+        public async Task<IActionResult> ChangeEmail(ResetEmailViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var user = await _userManager.FindByIdAsync(model.UserId);
-                if (user == null) return BadRequest("Could not find User");
-
-                var result = await _userManager.ChangeEmailAsync(user, model.NewEmail, model.Token);
-                var resultUserNameChange = await _userManager.SetUserNameAsync(user, model.NewEmail);
-
-                if (result.Succeeded && resultUserNameChange.Succeeded)
-                {
-                    return Ok();
-                }
-
-                return BadRequest(result.Succeeded ? resultUserNameChange.Errors : result.Errors);
+                return BadRequest();
             }
 
-            return BadRequest();
+            var user = await _userManager.FindByIdAsync(viewModel.UserId);
+            if (user == null) return BadRequest("Could not find User");
+
+            var result = await _userManager.ChangeEmailAsync(user, viewModel.NewEmail, viewModel.Token);
+            var resultUserNameChange = await _userManager.SetUserNameAsync(user, viewModel.NewEmail);
+
+            if (result.Succeeded && resultUserNameChange.Succeeded)
+            {
+                return Ok();
+            }
+
+            return BadRequest(result.Succeeded ? resultUserNameChange.Errors : result.Errors);
         }
 
         /// <summary>

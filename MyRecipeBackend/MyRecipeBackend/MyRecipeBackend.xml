@@ -54,11 +54,11 @@
             <param name="newEmail"></param>
             <returns></returns>
         </member>
-        <member name="M:MyRecipeBackend.Controllers.AuthController.ChangeEmail(MyRecipeBackend.Models.ResetEmailConfirmModel)">
+        <member name="M:MyRecipeBackend.Controllers.AuthController.ChangeEmail(MyRecipeBackend.ViewModels.ResetEmailViewModel)">
             <summary>
             Confirm the change of a users email
             </summary>
-            <param name="model"></param>
+            <param name="viewModel"></param>
             <returns></returns>
         </member>
         <member name="M:MyRecipeBackend.Controllers.AuthController.Refresh(MyRecipeBackend.Models.RefreshModel)">
@@ -66,6 +66,20 @@
             Exchange refresh tokens for a new access token
             </summary>
             <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MyRecipeBackend.Controllers.ChangeEmailController.RequestChangeEmail(System.String)">
+            <summary>
+            Request the change of email for a user (has to be logged in)
+            </summary>
+            <param name="newEmail"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MyRecipeBackend.Controllers.ChangeEmailController.ChangeEmail(MyRecipeBackend.ViewModels.ResetEmailViewModel)">
+            <summary>s
+            Confirm the change of a users email
+            </summary>
+            <param name="viewModel"></param>
             <returns></returns>
         </member>
         <member name="M:MyRecipeBackend.Controllers.GroupController.CreateGroup(MyRecipeBackend.Models.Group.CreateGroupModel)">
@@ -187,6 +201,20 @@
             </summary>
             <param name="image"></param>
             <returns>Path to the image file</returns>
+        </member>
+        <member name="M:MyRecipeBackend.Controllers.ResetPasswordController.RequestResetPassword(System.String)">
+            <summary>
+            Request the reset of a users password (via email)
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MyRecipeBackend.Controllers.ResetPasswordController.ResetPassword(MyRecipeBackend.Models.ResetPasswordViewModel)">
+            <summary>
+            Confirm reset of a users password
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
         </member>
         <member name="M:MyRecipeBackend.Controllers.UserController.LeaveGroup">
             <summary>
