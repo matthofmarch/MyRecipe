@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:myrecipes_flutter/screens/home/cubit/home_cubit.dart';
 
-class Home extends StatelessWidget {
-  const Home({Key key}) : super(key: key);
+import 'cubit/home_cubit.dart';
+
+class HomePage extends StatelessWidget {
+  const HomePage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<HomeCubit>(
+    return BlocProvider<HomePageCubit>(
         create: (context) =>
-            HomeCubit(RepositoryProvider.of<AuthRepository>(context)),
-        child: BlocBuilder<HomeCubit, HomeState>(
+            HomePageCubit(RepositoryProvider.of<AuthRepository>(context)),
+        child: BlocBuilder<HomePageCubit, HomeState>(
             builder: (context, state) => Container(
 
                   child: Center(child: PlatformText("Home")),

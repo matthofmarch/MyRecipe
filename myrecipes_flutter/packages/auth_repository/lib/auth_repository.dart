@@ -7,16 +7,22 @@ import 'package:auth_repository/models/login_result.dart';
 import 'package:auth_repository/models/models.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:rxdart/rxdart.dart';
 
-class AuthRepository {
+class AuthRepository{
   final String _loginUrl;
   final String _signUpUrl;
   final storage = FlutterSecureStorage();
 
-  final _userController = StreamController<User>();
+  final _userController = StreamController<User>.broadcast();
   Stream<User> get userStream async*{
     yield* _userController.stream;
   }
+
+  //TODO dispose stream
+  final authSubject = BehaviorSubject<User>();
+  get authState => authSubject.stream.value;
+
 
   AuthRepository(this._loginUrl, this._signUpUrl){
     print("New repo was created\n\n");
@@ -49,6 +55,7 @@ class AuthRepository {
       var user = User(email: email, accessToken: accessToken);
       print(email);
       _userController.add(user);
+      authSubject.value = user;
     } catch(e){
       print(e);
       _userController.add(null);
@@ -71,6 +78,4 @@ class AuthRepository {
     var accessToken = await storage.read(key: "access_token");
     updateUserWithAccessToken(accessToken);
   }
-
-
-}
+  }

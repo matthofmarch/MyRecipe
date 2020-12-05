@@ -29,11 +29,20 @@ dependencies:
   flutter_platform_widgets: 0.72.0
   google_fonts: ^1.1.0
 
+  http_interceptor: 0.3.3
+  rxdart: 0.24.1
+  intl: 0.16.1
+
+  flutter_svg: 0.19.1
 
 
 
   auth_repository:
     path: packages/auth_repository
+  meal_repository:
+    path: packages/meal_repository
+  models:
+    path: packages/model
 
 
 

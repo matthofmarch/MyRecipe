@@ -1,13 +1,13 @@
-import 'dart:math';
-
 import 'package:auth_repository/auth_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:myrecipes_flutter/screens/home/home.dart';
-import 'package:myrecipes_flutter/screens/pagemealview/pagemealview.dart';
-
+import 'package:http_interceptor/http_client_with_interceptor.dart';
+import 'package:myrecipes_flutter/interceptors/bearer_interceptor.dart';
+import 'package:myrecipes_flutter/pages/home_page/home.dart';
+import 'package:myrecipes_flutter/pages/pagemealview/pagemealview.dart';
+import 'package:myrecipes_flutter/pages/recipepage/recipepage.dart';
+import 'package:meal_repository/meal_repository.dart';
 import 'cubit/content_root_cubit.dart';
 
 class Destination {
@@ -30,17 +30,12 @@ class ContentRoot extends StatefulWidget {
 }
 
 class _ContentRootState extends State<ContentRoot> {
-/*  List<Key> _destinationKeys;
-  List<AnimationController> _faders;
-  AnimationController _hide;*/
-  int _currentIndex = 1;
-
   PlatformTabController tabController;
 
   @override
   void initState() {
     super.initState();
-    this.tabController = PlatformTabController(initialIndex: 0);
+    this.tabController = PlatformTabController(initialIndex: 1);
   }
 
   @override
@@ -63,9 +58,15 @@ class _ContentRootState extends State<ContentRoot> {
                   BlocProvider.of<ContentRootCubit>(context).logout(),
             )
           ],
+          material: (context, platform) => MaterialAppBarData(
+            toolbarHeight: 40.0
+          ),
         ),
-        bodyBuilder: (context, index) => getDestinationWidget(index),
+
+        bodyBuilder: (context, index) => makeBody(context, index),
+
         tabController: tabController,
+
         items: destinations.asMap().entries.map((entry) {
           final destination = entry.value;
           return BottomNavigationBarItem(
@@ -77,16 +78,23 @@ class _ContentRootState extends State<ContentRoot> {
     );
   }
 
-  Widget getDestinationWidget(int destinationIndex) {
-    switch (destinationIndex) {
+  makeBody(BuildContext context, int index) {
+    final httpClient = HttpClientWithInterceptor.build(interceptors: [
+      BearerInterceptor(RepositoryProvider.of<AuthRepository>(context))]);
+    return MultiRepositoryProvider(providers: [
+      RepositoryProvider<MealRepository>(create: (context) => MealRepository(httpClient)),
+    ],
+        child: getDestinationWidget(index));
+  }
+
+  Widget getDestinationWidget(int index) {
+    switch (index) {
       case 0:
-        return Center(
-          child: PlatformText("0"),
-        );
-      case 1:
         return PageMealView();
+      case 1:
+        return RecipePage();
       default:
-        return Home();
+        return HomePage();
     }
   }
 }

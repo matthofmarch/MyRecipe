@@ -4,9 +4,9 @@ import 'package:meta/meta.dart';
 
 part 'home_state.dart';
 
-class HomeCubit extends Cubit<HomeState> {
+class HomePageCubit extends Cubit<HomeState> {
   final AuthRepository _authRepository;
-  HomeCubit(this._authRepository) : super(HomeInitial());
+  HomePageCubit(this._authRepository) : super(HomePageInitial());
 
 
 }
