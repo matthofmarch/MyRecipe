@@ -21,6 +21,7 @@ using Microsoft.OpenApi.Models;
 using MyRecipeBackend.Config;
 using MyRecipeBackend.Config.StartupExtensions;
 using MyRecipeBackend.Services;
+using Serilog;
 
 namespace MyRecipeBackend
 {
@@ -112,6 +113,8 @@ namespace MyRecipeBackend
                 FileProvider = new PhysicalFileProvider(staticFileDirectory),
                 RequestPath = "/" + Configuration["StaticFiles:ImageBasePath"]
             });
+            app.UseSerilogRequestLogging();
+
 
             app.UseRouting();
             app.UseCors();
