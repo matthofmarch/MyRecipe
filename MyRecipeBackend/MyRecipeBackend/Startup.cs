@@ -98,6 +98,7 @@ namespace MyRecipeBackend
             else if (env.IsProduction())
             {
                 app.UseHttpsRedirection();
+                dbContext.Database.Migrate();
             }
 
             var staticFileDirectory =
