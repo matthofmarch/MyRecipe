@@ -26,10 +26,6 @@ class RecipePage extends StatelessWidget {
               final recipes = state.recipes;
 
               return Scaffold(
-                appBar: AppBar(
-                  title: Text("MyRecipes"),
-                  toolbarHeight: 40,
-                ),
                 body: ListView.builder(
                     itemCount: recipes.length,
                     itemBuilder: (context, index) {

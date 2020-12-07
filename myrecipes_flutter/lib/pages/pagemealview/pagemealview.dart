@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:meal_repository/meal_repository.dart';
+import 'package:myrecipes_flutter/appbarclipper.dart';
 
 import 'cubit/pagemealview_cubit.dart';
 import 'pagemealcontent/PageMealContent.dart';
@@ -34,9 +35,10 @@ class PageMealView extends StatelessWidget {
 
   Widget _makeCalendar(BuildContext context, PagemealviewSuccess state) {
     return Scaffold(
-      appBar: AppBar(
-        title: PlatformText("MyRecipes"),
-        toolbarHeight: 40,
-      ), body: MealCalendar(state.meals, DateTime.now()));
+
+      body: MealCalendar(state.meals, DateTime.now())
+    );
   }
 }
+
+

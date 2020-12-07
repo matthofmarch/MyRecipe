@@ -14,9 +14,9 @@ import 'package:recipe_repository/recipe_repository.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class AddRecipe extends StatelessWidget {
-  final _nameController = TextEditingController()..text = "";
-  final _descriptionController = TextEditingController()..text = "";
-  final _cookingTimeInMinController = TextEditingController()..text = "";
+  final _nameController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _cookingTimeInMinController = TextEditingController();
 
   final picker = ImagePicker();
 

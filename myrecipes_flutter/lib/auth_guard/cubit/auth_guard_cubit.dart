@@ -10,12 +10,12 @@ part 'auth_guard_state.dart';
 class AuthGuardCubit extends Cubit<AuthGuardState> {
   AuthRepository _authRepository;
   AuthGuardCubit(this._authRepository) : super(AuthGuardUnknown()){
-     _authRepository.tryOpenSession();
-     _userSubscription = _authRepository.userStream.listen((u) => {
+     _userSubscription = _authRepository.authStateStream.listen((u) => {
        this.emit(u == null
            ? AuthGuardUnauthenticated()
            : AuthGuardAuthenticated(u))
      });
+     _authRepository.tryOpenSession();
   }
 
   StreamSubscription<User> _userSubscription;
@@ -23,6 +23,7 @@ class AuthGuardCubit extends Cubit<AuthGuardState> {
   @override
   Future<void> close() {
     _userSubscription.cancel();
+    _authRepository.dispose();
     return super.close();
   }
 

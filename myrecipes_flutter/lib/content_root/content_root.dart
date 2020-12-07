@@ -10,6 +10,7 @@ import 'package:myrecipes_flutter/pages/pagemealview/pagemealview.dart';
 import 'package:myrecipes_flutter/pages/recipepage/recipepage.dart';
 import 'package:meal_repository/meal_repository.dart';
 import 'package:recipe_repository/recipe_repository.dart';
+import '../appbarclipper.dart';
 import 'cubit/content_root_cubit.dart';
 
 class Destination {
@@ -50,28 +51,26 @@ class _ContentRootState extends State<ContentRoot> {
     return BlocProvider<ContentRootCubit>(
       create: (context) =>
           ContentRootCubit(RepositoryProvider.of<AuthRepository>(context)),
-      child: PlatformTabScaffold(
-/*        appBarBuilder: (context, index) => PlatformAppBar(
-          title: PlatformText("MyRecipes"),
-          trailingActions: [
-            PlatformIconButton(
-              icon: Icon(Icons.logout),
-              onPressed: () =>
-                  BlocProvider.of<ContentRootCubit>(context).logout(),
-            )
-          ],
-          material: (context, platform) =>
-              MaterialAppBarData(toolbarHeight: 40.0),
-        ),*/
-        bodyBuilder: (context, index) => getDestinationWidget(index),
-        tabController: tabController,
-        items: destinations.asMap().entries.map((entry) {
-          final destination = entry.value;
-          return BottomNavigationBarItem(
-            label: destination.label,
-            icon: Icon(destination.icon),
-          );
-        }).toList(),
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size(double.infinity, 35),
+          child: ClipPath(clipper: AppBarClipper(),clipBehavior: Clip.hardEdge,
+            child: Container(
+              color: Theme.of(context).primaryColor,
+              child: Center(child: Text("MyRecipes", style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white))),
+            ),),
+        ),
+        body: PlatformTabScaffold(
+          bodyBuilder: (context, index) => getDestinationWidget(index),
+          tabController: tabController,
+          items: destinations.asMap().entries.map((entry) {
+            final destination = entry.value;
+            return BottomNavigationBarItem(
+              label: destination.label,
+              icon: Icon(destination.icon),
+            );
+          }).toList(),
+        ),
       ),
     );
   }

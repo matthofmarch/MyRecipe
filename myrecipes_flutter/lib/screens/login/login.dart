@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myrecipes_flutter/screens/login/cubit/login_cubit.dart';
-import 'package:myrecipes_flutter/screens/signup/cubit/signup_cubit.dart';
 import 'package:myrecipes_flutter/screens/signup/signup.dart';
 
 class Login extends StatelessWidget {
@@ -17,8 +16,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext buildContext) {
     return BlocProvider(
-        create: (context) =>
-            LoginCubit(RepositoryProvider.of<AuthRepository>(context)),
+        create: (context) => LoginCubit(RepositoryProvider.of<AuthRepository>(context)),
         child: BlocBuilder<LoginCubit, LoginState>(builder: (context, state) {
           return PlatformScaffold(
             body: Padding(

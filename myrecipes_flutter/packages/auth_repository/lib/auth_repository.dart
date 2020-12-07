@@ -9,21 +9,14 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
 
-class AuthRepository{
-
+class AuthRepository {
   final storage = FlutterSecureStorage();
-
-  final _userController = StreamController<User>.broadcast();
-
   var _baseUrl;
-  Stream<User> get userStream async*{
-    yield* _userController.stream;
-  }
 
-  //TODO dispose stream
-  final authSubject = BehaviorSubject<User>();
-  User get authState => authSubject.stream.value;
 
+  final _authSubject = BehaviorSubject<User>();
+  User get authState => _authSubject.value;
+  Stream<User> get authStateStream => _authSubject.stream;
 
   AuthRepository(this._baseUrl);
 
@@ -32,7 +25,6 @@ class AuthRepository{
       "$_baseUrl/api/Auth/login",
       headers: {
         'Content-type' : 'application/json',
-        //'Accept': 'application/json',
       },
       body: jsonEncode({"Email": email, "Password": password}),
     );
@@ -45,18 +37,20 @@ class AuthRepository{
     updateUserWithAccessToken(loginResult.token);
   }
 
-
   updateUserWithAccessToken(String accessToken){
     try{
       final jwtUtil = JwtUtil();
       var claims = jwtUtil.parseJwt(accessToken);
+      var expiration = claims["exp"];
+      if(DateTime.now().isAfter(DateTime(expiration))){
+        _authSubject.sink.add(null);
+      }
       var email = claims["sub"];
       var user = User(email: email, accessToken: accessToken);
-      _userController.add(user);
-      authSubject.value = user;
+      _authSubject.sink.add(user);
     } catch(e){
       print(e);
-      _userController.add(null);
+      _authSubject.sink.add(null);
     }
   }
 
@@ -69,11 +63,16 @@ class AuthRepository{
   void logout() async{
     await storage.delete(key: "access_token");
     await storage.delete(key: "refresh_token");
-    _userController.add(null);
+    _authSubject.add(null);
   }
 
   Future<void> tryOpenSession() async {
     var accessToken = await storage.read(key: "access_token");
     updateUserWithAccessToken(accessToken);
   }
+
+  void dispose(){
+    _authSubject.close();
   }
+
+}
