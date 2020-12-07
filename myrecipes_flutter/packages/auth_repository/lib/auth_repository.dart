@@ -60,7 +60,7 @@ class AuthRepository {
       throw Exception("Could not sign up");
   }
 
-  void logout() async{
+  Future logout() async{
     await storage.delete(key: "access_token");
     await storage.delete(key: "refresh_token");
     _authSubject.add(null);

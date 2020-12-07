@@ -32,19 +32,9 @@ class ContentRoot extends StatefulWidget {
   State<StatefulWidget> createState() => _ContentRootState();
 }
 
+
 class _ContentRootState extends State<ContentRoot> {
-  PlatformTabController tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    this.tabController = PlatformTabController(initialIndex: 1);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  int _currentIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -60,16 +50,19 @@ class _ContentRootState extends State<ContentRoot> {
               child: Center(child: Text("MyRecipes", style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white))),
             ),),
         ),
-        body: PlatformTabScaffold(
-          bodyBuilder: (context, index) => getDestinationWidget(index),
-          tabController: tabController,
-          items: destinations.asMap().entries.map((entry) {
-            final destination = entry.value;
-            return BottomNavigationBarItem(
-              label: destination.label,
-              icon: Icon(destination.icon),
-            );
-          }).toList(),
+        body: getDestinationWidget(_currentIndex),
+        bottomNavigationBar: BottomNavigationBar(
+          items: destinations.asMap().entries.map((e) =>
+             BottomNavigationBarItem(
+              label: e.value.label,
+              icon: Icon(e.value.icon),
+            )).toList(),
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          }
         ),
       ),
     );

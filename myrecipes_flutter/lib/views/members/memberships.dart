@@ -22,12 +22,12 @@ class MembershipsView extends StatelessWidget {
             return Container();
           }
           if (state is MembershipsProgress) {
-            return CircularProgressIndicator();
+            return Container(child: Center(child: CircularProgressIndicator()));
           }
           if (state is MembershipsSuccess) {
             final group = state.group as Group;
             return Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Card(
                 child: Container(
                   margin: EdgeInsets.all(8),
@@ -68,7 +68,7 @@ class MembershipsView extends StatelessWidget {
               ),
             );
           }
-          return null;
+          return SizedBox.shrink();
         },
       ),
     );
