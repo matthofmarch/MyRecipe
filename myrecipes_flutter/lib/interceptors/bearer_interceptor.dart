@@ -17,7 +17,6 @@ class BearerInterceptor implements InterceptorContract {
 
   @override
   Future<ResponseData> interceptResponse({ResponseData data}) async {
-    print(data);
     return data;
   }
 

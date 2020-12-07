@@ -1,0 +1,24 @@
+import 'package:auth_repository/auth_repository.dart';
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
+import 'package:models/model.dart';
+import 'package:recipe_repository/recipe_repository.dart';
+
+part 'recipepage_state.dart';
+
+class RecipepageCubit extends Cubit<RecipepageState> {
+  RecipeRepository _recipeRepository;
+
+  RecipepageCubit(this._recipeRepository) : super(RecipepageInitial());
+
+  loadRecipes() async{
+    emit(RecipepageProgress());
+    try{
+      final recipes = await _recipeRepository.get();
+      emit(RecipepageSuccess(recipes));
+    }catch(e){
+      emit(RecipepageFailure());
+    }
+  }
+}

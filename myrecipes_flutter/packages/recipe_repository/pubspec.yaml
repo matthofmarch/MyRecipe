@@ -1,4 +1,4 @@
-name: meal_repository
+name: recipe_repository
 description: A new Flutter package project.
 version: 0.0.1
 author:
@@ -12,13 +12,18 @@ dependencies:
   flutter:
     sdk: flutter
 
+
   http_interceptor:
     git:
       url: https://github.com/januwA/http_interceptor.git
       ref: master
+
   models:
     path: ../model
 
+  #remove as soon as interceptor works with formdata
+  auth_repository:
+    path: ../auth_repository
 
 dev_dependencies:
   flutter_test:

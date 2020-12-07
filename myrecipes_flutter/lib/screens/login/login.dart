@@ -9,13 +9,10 @@ import 'package:myrecipes_flutter/screens/signup/cubit/signup_cubit.dart';
 import 'package:myrecipes_flutter/screens/signup/signup.dart';
 
 class Login extends StatelessWidget {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController()..text = "test1@test.test";
+  final TextEditingController _passwordController = TextEditingController()..text = "Pass123\$";
 
-  Login() {
-    _emailController.text = "test1@test.test";
-    _passwordController.text = "Pass123\$";
-  }
+  Login();
 
   @override
   Widget build(BuildContext buildContext) {
@@ -30,13 +27,15 @@ class Login extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Expanded(
+                    Flexible(
                         child: SvgPicture.asset("assets/undraw_eating_together.svg")),
+                    PlatformText("MyRecipes", style: Theme.of(context).textTheme.headline4,),
                     Padding(
                       padding: EdgeInsets.all(16),
                       child: Column(children: [
                         PlatformTextField(
                           controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
                           material: (context, platform) => MaterialTextFieldData(
                               decoration: InputDecoration(labelText: "Email")),
                           cupertino: (context, platform) =>
@@ -55,22 +54,27 @@ class Login extends StatelessWidget {
                         ),
                       ]),
                     ),
-                    FlatButton(
+                    PlatformButton(
+
                         onPressed: () => BlocProvider.of<LoginCubit>(context)
                             .login(
                                 _emailController.text, _passwordController.text),
-                        child: Text("Login")),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text("Login"),
+                            Icon(PlatformIcons(context).forward)
+                          ],
+                        ),
+                      color: Theme.of(context).primaryColor,
+                    ),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       Text("You don't have an account? "),
                       TextButton(
                           onPressed: () {
-                            Navigator.push(
-                                context,
+                            Navigator.of(context).push(
                                 MaterialPageRoute(
-                                    builder: (_) => BlocProvider<SignupCubit>(
-                                        create: (_) => SignupCubit(
-                                            RepositoryProvider.of(context)),
-                                        child: Signup())));
+                                    builder: (_) => Signup()));
                           },
                           child: Text("Sign Up"))
                     ])

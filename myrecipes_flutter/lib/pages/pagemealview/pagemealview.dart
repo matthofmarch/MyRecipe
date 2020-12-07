@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:meal_repository/meal_repository.dart';
 
 import 'cubit/pagemealview_cubit.dart';
@@ -32,6 +33,10 @@ class PageMealView extends StatelessWidget {
   }
 
   Widget _makeCalendar(BuildContext context, PagemealviewSuccess state) {
-    return MealCalendar(state.meals, DateTime.now());
+    return Scaffold(
+      appBar: AppBar(
+        title: PlatformText("MyRecipes"),
+        toolbarHeight: 40,
+      ), body: MealCalendar(state.meals, DateTime.now()));
   }
 }

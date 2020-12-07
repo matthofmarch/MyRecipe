@@ -10,27 +10,26 @@ import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
 
 class AuthRepository{
-  final String _loginUrl;
-  final String _signUpUrl;
+
   final storage = FlutterSecureStorage();
 
   final _userController = StreamController<User>.broadcast();
+
+  var _baseUrl;
   Stream<User> get userStream async*{
     yield* _userController.stream;
   }
 
   //TODO dispose stream
   final authSubject = BehaviorSubject<User>();
-  get authState => authSubject.stream.value;
+  User get authState => authSubject.stream.value;
 
 
-  AuthRepository(this._loginUrl, this._signUpUrl){
-    print("New repo was created\n\n");
-  }
+  AuthRepository(this._baseUrl);
 
   Future<void> login(String email, String password) async {
     var res = await http.post(
-      _loginUrl,
+      "$_baseUrl/api/Auth/login",
       headers: {
         'Content-type' : 'application/json',
         //'Accept': 'application/json',
@@ -53,7 +52,6 @@ class AuthRepository{
       var claims = jwtUtil.parseJwt(accessToken);
       var email = claims["sub"];
       var user = User(email: email, accessToken: accessToken);
-      print(email);
       _userController.add(user);
       authSubject.value = user;
     } catch(e){
@@ -63,7 +61,7 @@ class AuthRepository{
   }
 
   Future<void> signup(String email, String password) async {
-    var res = await http.post(_signUpUrl, body: {email, password});
+    var res = await http.post("$_baseUrl/api/Auth/register", body: {email, password});
     if(res.statusCode != 200)
       throw Exception("Could not sign up");
   }

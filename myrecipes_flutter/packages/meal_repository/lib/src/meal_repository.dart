@@ -6,10 +6,12 @@ import 'package:models/model.dart';
 class MealRepository{
   final HttpClientWithInterceptor _client;
 
-  MealRepository(this._client){}
+  final String _baseUrl;
+
+  MealRepository(this._client, this._baseUrl);
 
   Future<List<Meal>>getAccepted() async{
-    var url = "https://vm133.htl-leonding.ac.at:5000/api/Mealplan";
+    var url = "$_baseUrl/api/Mealplan";
 
     final response = await _client.get(url);
     if(response.statusCode == 200){

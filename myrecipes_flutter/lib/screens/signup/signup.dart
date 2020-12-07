@@ -11,8 +11,11 @@ class Signup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignupCubit, SignupState>(
-        builder: (context, state) => Scaffold(
+    return BlocProvider<SignupCubit>(
+        create: (_) => SignupCubit(RepositoryProvider.of(context)),
+            child:
+            BlocBuilder<SignupCubit, SignupState>(
+                builder: (context, state) => Scaffold(
             appBar: AppBar(),
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -23,6 +26,7 @@ class Signup extends StatelessWidget {
                   child: Column(children: [
                     PlatformTextField(
                       controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
                       material: (context, platform) => MaterialTextFieldData(
                           decoration: InputDecoration(labelText: "Email")),
                       cupertino: (context, platform) =>
@@ -47,6 +51,6 @@ class Signup extends StatelessWidget {
                             _emailController.text, _passwordController.text),
                     child: Text("Sign Up")),
               ],
-            )));
+            ))));
   }
 }

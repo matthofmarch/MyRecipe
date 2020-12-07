@@ -12,7 +12,6 @@ class JwtUtil{
     if (payloadMap is! Map<String, dynamic>) {
       throw Exception('invalid payload');
     }
-    print(payloadMap);
     return payloadMap;
   }
 

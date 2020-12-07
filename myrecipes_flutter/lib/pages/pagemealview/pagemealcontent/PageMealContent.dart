@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -8,6 +9,7 @@ import 'package:models/model.dart';
 
 int kPageIdentation = 1000;
 
+@immutable
 class MealCalendar extends StatefulWidget {
   final DateTime originalDate;
   final List<Meal> meals;
@@ -32,7 +34,7 @@ class _MealCalendarState extends State<MealCalendar> {
           height: 8,
         ),
         TextButton(
-          child: PlatformText(DateFormat.yMMMMd().format(currentDate),
+          child: Text(DateFormat.yMMMMd().format(currentDate),
               style: Theme.of(context).textTheme.headline6),
           onPressed: () async {
             final pickedDate = await showDatePicker(
@@ -74,8 +76,15 @@ class _MealCalendarState extends State<MealCalendar> {
                             width: 1, color: Theme.of(context).dividerColor))),
                 child: Column(
                   children: [
-                    PlatformText(
-                      DateFormat.E().format(columnDate),
+                    Badge(
+                      child: Chip(
+                        label: PlatformText(
+                          DateFormat.E().format(columnDate),
+                        ),
+                        backgroundColor: Theme.of(context).primaryColor,
+                      ),
+                      position: BadgePosition.topEnd(top: 5.0, end: 5.0),
+                      badgeColor: Colors.red,
                     ),
                     ...widget.meals
                         .where((m) => mealOnCurrentDay(m, columnDate))
@@ -100,50 +109,52 @@ class _MealCalendarState extends State<MealCalendar> {
     return Padding(
       key: Key(meal.mealId),
       padding: const EdgeInsets.all(2.0),
-      child: Card(
-        shadowColor: Theme.of(context).shadowColor,
-
-        elevation: 15,
-        child: AspectRatio(
-          aspectRatio: 3 / 5,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: Image.network(
-                    meal.recipe.image,
-                    fit: BoxFit.fitHeight,
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        child: Card(
+          shadowColor: Theme.of(context).shadowColor,
+          elevation: 2,
+          child: AspectRatio(
+            aspectRatio: 3 / 5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Image.network(
+                      meal.recipe.image,
+                      fit: BoxFit.fitHeight,
+                    ),
                   ),
                 ),
-              ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${meal.recipe.name}",
-                        softWrap: true,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.subtitle1,
-                      ),
-                      SizedBox(height: 8),
-                      Flexible(
-                        child: Text(
-                          "${meal.recipe.description}",
-                          style: Theme.of(context).textTheme.caption,
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${meal.recipe.name}",
+                          softWrap: true,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.subtitle1,
                         ),
-                      )
-                    ],
+                        SizedBox(height: 8),
+                        Flexible(
+                          child: Text(
+                            "${meal.recipe.description}",
+                            style: Theme.of(context).textTheme.caption,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),

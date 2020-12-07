@@ -6,7 +6,7 @@ class Recipe {
   final String id;
   final String name;
   final String description;
-  final int cookingTimeInMinutes;
+  final int cookingTimeInMin;
   final List<String> ingredientNames;
   final String image;
   final bool addToGroupPool;
@@ -14,7 +14,7 @@ class Recipe {
     this.id,
     this.name,
     this.description,
-    this.cookingTimeInMinutes,
+    this.cookingTimeInMin,
     this.ingredientNames,
     this.image,
     this.addToGroupPool,
@@ -24,7 +24,7 @@ class Recipe {
     String id,
     String name,
     String description,
-    int cookingTimeInMinutes,
+    int cookingTimeInMin,
     List<String> ingredientNames,
     String image,
     bool addToGroupPool,
@@ -33,7 +33,7 @@ class Recipe {
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
-      cookingTimeInMinutes: cookingTimeInMinutes ?? this.cookingTimeInMinutes,
+      cookingTimeInMin: cookingTimeInMin ?? this.cookingTimeInMin,
       ingredientNames: ingredientNames ?? this.ingredientNames,
       image: image ?? this.image,
       addToGroupPool: addToGroupPool ?? this.addToGroupPool,
@@ -45,7 +45,7 @@ class Recipe {
       'id': id,
       'name': name,
       'description': description,
-      'cookingTimeInMinutes': cookingTimeInMinutes,
+      'cookingTimeInMin': cookingTimeInMin,
       'ingredientNames': ingredientNames,
       'image': image,
       'addToGroupPool': addToGroupPool,
@@ -59,7 +59,7 @@ class Recipe {
       id: map['id'],
       name: map['name'],
       description: map['description'],
-      cookingTimeInMinutes: map['cookingTimeInMinutes'],
+      cookingTimeInMin: map['cookingTimeInMin'],
       ingredientNames: List<String>.from(map['ingredientNames']),
       image: map['image'],
       addToGroupPool: map['addToGroupPool'],
@@ -72,7 +72,7 @@ class Recipe {
 
   @override
   String toString() {
-    return 'Recipe(id: $id, name: $name, description: $description, cookingTimeInMinutes: $cookingTimeInMinutes, ingredientNames: $ingredientNames, image: $image, addToGroupPool: $addToGroupPool)';
+    return 'Recipe(id: $id, name: $name, description: $description, cookingTimeInMin: $cookingTimeInMin, ingredientNames: $ingredientNames, image: $image, addToGroupPool: $addToGroupPool)';
   }
 
   @override
@@ -84,7 +84,7 @@ class Recipe {
         o.id == id &&
         o.name == name &&
         o.description == description &&
-        o.cookingTimeInMinutes == cookingTimeInMinutes &&
+        o.cookingTimeInMin == cookingTimeInMin &&
         listEquals(o.ingredientNames, ingredientNames) &&
         o.image == image &&
         o.addToGroupPool == addToGroupPool;
@@ -95,7 +95,7 @@ class Recipe {
     return id.hashCode ^
         name.hashCode ^
         description.hashCode ^
-        cookingTimeInMinutes.hashCode ^
+        cookingTimeInMin.hashCode ^
         ingredientNames.hashCode ^
         image.hashCode ^
         addToGroupPool.hashCode;
