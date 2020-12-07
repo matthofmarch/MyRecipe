@@ -25,9 +25,9 @@ namespace MyRecipeBackend.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Ingredient[]>> Get()
+        public async Task<ActionResult<String[]>> GetNames()
         {
-            return await _uow.Ingredients.AllAsync();
+            return (await _uow.Ingredients.AllAsync()).Select(i => i.Name).ToArray();
         }
     }
 }
