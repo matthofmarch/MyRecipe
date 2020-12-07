@@ -1,4 +1,4 @@
-import 'package:auth_repository/auth_repository.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,8 +20,7 @@ class RecipePage extends StatelessWidget {
               return Container();
             }
             if (state is RecipepageProgress) {
-              //TODO how to I catch errors here
-              return CircularProgressIndicator();
+              return Container(child: Center(child: CircularProgressIndicator()));
             }
             if (state is RecipepageSuccess) {
               final recipes = state.recipes;
@@ -41,17 +40,26 @@ class RecipePage extends StatelessWidget {
                         child: Card(
                           child: Column(
                             children: [
-                              if(recipe.image != null) Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 4, left: 4, right: 4),
-                                child: AspectRatio(
-                                  aspectRatio: 3 / 2,
-                                  child: Image.network(
-                                    recipe.image,
+                              if (recipe.image != null) Builder(builder: (context) {
+                                final image = CachedNetworkImage(
+                                    imageUrl: recipe.image,
                                     fit: BoxFit.fitWidth,
-                                  ),
-                                ),
-                              ),
+                                    placeholder: (context, url) => Text("When I grow up, I want to be an Image"),
+                                    errorWidget: (context, url, error) => Container(),
+                                );
+
+                                return image != null ?
+                                   Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 4, left: 4, right: 4),
+                                    child: AspectRatio(
+                                        aspectRatio: 3 / 2,
+                                        child: image
+                                    ),
+                                  ):Text("Image not available");
+
+
+                                }),
                               SizedBox(
                                 height: 8,
                               ),
@@ -88,10 +96,12 @@ class RecipePage extends StatelessWidget {
                       );
                     }),
                 floatingActionButton: FloatingActionButton(
-
                   child: Icon(context.platformIcons.add),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddRecipe(),));
+                  onPressed: () async {
+                    await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AddRecipe(),
+                    ));
+                    BlocProvider.of<RecipepageCubit>(context).loadRecipes();
                   },
                 ),
               );

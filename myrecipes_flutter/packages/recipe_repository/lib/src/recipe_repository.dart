@@ -32,14 +32,13 @@ class RecipeRepository {
       recipe = recipe.copyWith(image: await uploadImage(image));
     }
 
-
     final response = await _client.post(addRecipeUrl, body: json.encode({
       "name": recipe.name,
       "description": recipe.description,
       "cookingTimeInMin": recipe.cookingTimeInMin,
       "addToGroupPool": recipe.addToGroupPool,
       "ingredientNames": recipe.ingredientNames,
-      "image": recipe.image ?? ""
+      "image": recipe.image
     }));
     if (response.statusCode == 200) {
       return recipe;

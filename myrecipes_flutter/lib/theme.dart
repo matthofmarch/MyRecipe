@@ -17,6 +17,15 @@ final theme = ThemeData(
   accentColor: secondary,
   scaffoldBackgroundColor: Colors.brown[50],
   dividerColor: Colors.grey,
+
+  cardTheme: CardTheme(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10))
+    )
+  ),
+  cardColor: Colors.brown.shade50,
+  iconTheme: IconThemeData(color: primary),
+
   inputDecorationTheme: InputDecorationTheme(
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),

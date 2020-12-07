@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_repository/group_repository.dart';
 import 'package:http_interceptor/http_client_with_interceptor.dart';
+import 'package:ingredient_repository/ingredient_repository.dart';
 import 'package:meal_repository/meal_repository.dart';
 import 'package:myrecipes_flutter/interceptors/jsoncontent_interceptor.dart';
 import 'package:myrecipes_flutter/splash/splash.dart';
@@ -36,7 +37,9 @@ class App extends StatelessWidget {
                 RepositoryProvider(
                     create: (context) => RecipeRepository(httpClient, baseUrl, RepositoryProvider.of<AuthRepository>(context))),
                 RepositoryProvider(
-                    create: (context) => GroupRepository(httpClient,baseUrl))
+                    create: (context) => GroupRepository(httpClient,baseUrl)),
+                RepositoryProvider(
+                    create: (context) => IngredientRepository(httpClient,baseUrl))
               ],
               child: MaterialApp(
                 theme: theme,

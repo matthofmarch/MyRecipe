@@ -30,29 +30,31 @@ class Login extends StatelessWidget {
                     Flexible(
                         child: SvgPicture.asset("assets/undraw_eating_together.svg")),
                     PlatformText("MyRecipes", style: Theme.of(context).textTheme.headline4,),
-                    Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Column(children: [
-                        PlatformTextField(
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          material: (context, platform) => MaterialTextFieldData(
-                              decoration: InputDecoration(labelText: "Email")),
-                          cupertino: (context, platform) =>
-                              CupertinoTextFieldData(placeholder: "Email"),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        PlatformTextField(
-                          obscureText: true,
-                          controller: _passwordController,
-                          material: (context, platform) => MaterialTextFieldData(
-                              decoration: InputDecoration(labelText: "Password")),
-                          cupertino: (context, platform) =>
-                              CupertinoTextFieldData(placeholder: "Password"),
-                        ),
-                      ]),
+                    Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Column(children: [
+                          PlatformTextField(
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            material: (context, platform) => MaterialTextFieldData(
+                                decoration: InputDecoration(labelText: "Email")),
+                            cupertino: (context, platform) =>
+                                CupertinoTextFieldData(placeholder: "Email"),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          PlatformTextField(
+                            obscureText: true,
+                            controller: _passwordController,
+                            material: (context, platform) => MaterialTextFieldData(
+                                decoration: InputDecoration(labelText: "Password")),
+                            cupertino: (context, platform) =>
+                                CupertinoTextFieldData(placeholder: "Password"),
+                          ),
+                        ]),
+                      ),
                     ),
                     PlatformButton(
 

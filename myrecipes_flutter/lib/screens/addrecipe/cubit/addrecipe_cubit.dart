@@ -5,26 +5,41 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:models/model.dart';
 import 'package:recipe_repository/recipe_repository.dart';
+import 'package:ingredient_repository/ingredient_repository.dart';
+
+
 
 part 'addrecipe_state.dart';
 
 class AddrecipeCubit extends Cubit<AddrecipeState> {
   RecipeRepository _recipeRepository;
+  List<String> _ingredients;
+  IngredientRepository _ingredientRepository;
 
-  AddrecipeCubit(this._recipeRepository) : super(AddrecipeInitial(null));
+  List<int> _selectedIngredientsIndexes;
 
-  void useImage(File image) {
-    emit(AddrecipeInitial(image));
+  AddrecipeCubit(this._recipeRepository, this._ingredientRepository) : super(AddrecipeInitial());
+
+  Future reload({File image}) async{
+    if(_ingredients == null){
+      _ingredients = await _ingredientRepository.get();
+    }
+    emit(AddrecipeInteraction(_ingredients, image: image));
   }
 
-  Future<Recipe> addRecipe(Recipe recipe, File image)async{
-    emit(AddrecipeSubmitting());
+  silentSetSelectedIngredients(List<int> selected) => _selectedIngredientsIndexes = selected;
+
+  Future<Recipe> submit(Recipe recipe, File image)async{
+    emit(AddrecipeSubmitting(_ingredients, image: image));
     try{
       var recipeResult = await _recipeRepository.addRecipe(recipe, image);
       emit(AddrecipeSuccess(recipeResult));
+      return recipeResult;
     }catch(e){
       print(e);
       emit(AddrecipeFailure());
     }
   }
+
+
 }

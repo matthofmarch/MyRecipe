@@ -6,16 +6,21 @@ abstract class AddrecipeState extends Equatable {
   List<Object> get props => [];
 }
 
-class AddrecipeInitial extends AddrecipeState {
-  File image;
+class AddrecipeInitial extends AddrecipeState {}
 
-  AddrecipeInitial(this.image);
+class AddrecipeInteraction extends AddrecipeState {
+  File image;
+  List<String> ingredients;
+  List<int> selectedIngredients = List<int>();
+
+  AddrecipeInteraction(this.ingredients, {this.image, this.selectedIngredients});
 
   @override
-  List<Object> get props =>[image];
-
+  List<Object> get props =>[image, ingredients];
 }
-class AddrecipeSubmitting extends AddrecipeState {}
+class AddrecipeSubmitting extends AddrecipeInteraction {
+  AddrecipeSubmitting(ingredients, {image, selectedIngredients}):super(ingredients, image: image, selectedIngredients: selectedIngredients);
+}
 class AddrecipeFailure extends AddrecipeState {}
 class AddrecipeSuccess extends AddrecipeState {
   Recipe recipe;

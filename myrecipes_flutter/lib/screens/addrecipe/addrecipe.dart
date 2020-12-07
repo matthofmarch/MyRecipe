@@ -1,106 +1,286 @@
 import 'dart:io';
 
-import 'package:auth_repository/auth_repository.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ingredient_repository/ingredient_repository.dart';
 import 'package:models/model.dart';
 import 'package:myrecipes_flutter/screens/addrecipe/cubit/addrecipe_cubit.dart';
 import 'package:recipe_repository/recipe_repository.dart';
+import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class AddRecipe extends StatelessWidget {
-  final _nameController = TextEditingController()..text = "Name";
-  final _descriptionController = TextEditingController()..text = "Description";
+  final _nameController = TextEditingController()..text = "";
+  final _descriptionController = TextEditingController()..text = "";
+  final _cookingTimeInMinController = TextEditingController()..text = "";
+
   final picker = ImagePicker();
-  File _image = null;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AddrecipeCubit>(
-      create: (context) =>
-          AddrecipeCubit(RepositoryProvider.of<RecipeRepository>(context)),
+      create: (context) => AddrecipeCubit(
+          RepositoryProvider.of<RecipeRepository>(context),
+          RepositoryProvider.of<IngredientRepository>(context)),
       child: BlocBuilder<AddrecipeCubit, AddrecipeState>(
           builder: (context, state) {
-            if(state is AddrecipeInitial)
-              _image = state.image;
-
-        return Scaffold(
-          appBar: AppBar(
-            title: Text("MyRecipes"),
-            toolbarHeight: 40,
-          ),
-          body: Stack(
-            children: [
-              _makeContent(context),
-              if (state is AddrecipeSubmitting) CircularProgressIndicator()
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            child: Icon(context.platformIcons.checkMark),
-            onPressed: () {
-              RepositoryProvider.of<RecipeRepository>(context).addRecipe(
-                  Recipe(
-                    name: _nameController.text.toString(),
-                    description: _nameController.text.toString(),
-                    cookingTimeInMin: 20,
-                    ingredientNames: [],
-                    addToGroupPool: true,
-                  ),
-                  _image);
-            },
-          ),
-        );
+        if (state is AddrecipeInitial) {
+          BlocProvider.of<AddrecipeCubit>(context).reload();
+        }
+        if (state is AddrecipeSuccess) {
+          Navigator.of(context).pop();
+        }
+        if (state is AddrecipeInteraction) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("MyRecipes"),
+              toolbarHeight: 40,
+            ),
+            body: Stack(
+              children: [
+                if (state is AddrecipeInteraction) _makeContent(context, state),
+                if (state is AddrecipeSubmitting) CircularProgressIndicator()
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              child: Icon(context.platformIcons.checkMark),
+              onPressed: () {
+                BlocProvider.of<AddrecipeCubit>(context).submit(
+                    Recipe(
+                      name: _nameController.text.toString(),
+                      description: _nameController.text.toString(),
+                      cookingTimeInMin:
+                          int.tryParse(_cookingTimeInMinController.text) ?? 0,
+                      ingredientNames: state.selectedIngredients
+                          .map((e) => state.ingredients[e]),
+                      addToGroupPool: true,
+                    ),
+                    state is AddrecipeInteraction ? state.image : null);
+              },
+            ),
+          );
+        }
+        return Container();
       }),
     );
   }
 
-  _makeContent(BuildContext context) {
-    return Column(
-      children: [
-        PlatformTextField(
-          controller: _nameController,
-          material: (context, platform) => MaterialTextFieldData(
-              decoration: InputDecoration(labelText: "Name")),
-          cupertino: (context, platform) =>
-              CupertinoTextFieldData(placeholder: "Name"),
-        ),
-        PlatformTextField(
-          controller: _descriptionController,
-          maxLines: 10,
-          material: (context, platform) => MaterialTextFieldData(
-              decoration: InputDecoration(labelText: "Name")),
-          cupertino: (context, platform) =>
-              CupertinoTextFieldData(placeholder: "Name"),
-        ),
-        Row(
-          children: [
-            Text("Add image "),
-            TextButton(
-                onPressed: () async {
-                  var picked =
-                      await picker.getImage(source: ImageSource.camera);
-                  if (picked != null) {
-                    BlocProvider.of<AddrecipeCubit>(context)
-                        .useImage(File(picked.path));
-                  }
-                },
-                child: Icon(context.platformIcons.photoCamera)),
-            TextButton(
-                onPressed: () async {
-                  var picked =
-                      await picker.getImage(source: ImageSource.gallery);
-                  if (picked != null) {
-                    BlocProvider.of<AddrecipeCubit>(context)
-                        .useImage(File(picked.path));
-                  }
-                },
-                child: Icon(context.platformIcons.bookmark)),
-          ],
-        ),
-        if (_image != null) Image.file(_image)
-      ],
+  _makeContent(BuildContext context, AddrecipeInteraction state) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: ListView(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 8),
+              Text(
+                "Add a recipe",
+                style: Theme.of(context).textTheme.headline5,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Information",
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                      Divider(),
+                      Row(
+                        children: [
+                          Flexible(
+                            flex: 2,
+                            child: PlatformTextField(
+                              controller: _nameController,
+                              material: (context, platform) =>
+                                  MaterialTextFieldData(
+                                      decoration:
+                                          InputDecoration(labelText: "Name")),
+                              cupertino: (context, platform) =>
+                                  CupertinoTextFieldData(placeholder: "Name"),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: PlatformTextField(
+                              controller: _cookingTimeInMinController,
+                              keyboardType: TextInputType.number,
+                              material: (context, platform) =>
+                                  MaterialTextFieldData(
+                                      decoration: InputDecoration(
+                                          labelText: "Cooking time")),
+                              cupertino: (context, platform) =>
+                                  CupertinoTextFieldData(
+                                placeholder: "Cooking time",
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      PlatformTextField(
+                        controller: _descriptionController,
+                        minLines: 1,
+                        material: (context, platform) => MaterialTextFieldData(
+                            decoration:
+                                InputDecoration(labelText: "Description")),
+                        cupertino: (context, platform) =>
+                            CupertinoTextFieldData(
+                          placeholder: "Description",
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Image",
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                      Divider(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          TextButton(
+                              onPressed: () async {
+                                var pickedPath = (await picker.getImage(
+                                        source: ImageSource.camera,
+                                        maxWidth: 1920,
+                                        maxHeight: 1280))
+                                    .path;
+
+                                if (pickedPath != null && !kIsWeb) {
+                                  pickedPath = (await ImageCropper.cropImage(
+                                          sourcePath: pickedPath,
+                                          aspectRatio: CropAspectRatio(
+                                              ratioX: 3, ratioY: 2)))
+                                      .path;
+                                }
+                                BlocProvider.of<AddrecipeCubit>(context).reload(
+                                    image: pickedPath == null
+                                        ? null
+                                        : File(pickedPath));
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    context.platformIcons.photoCamera,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  Text(
+                                    " Camera",
+                                    style:
+                                        Theme.of(context).textTheme.subtitle2,
+                                  ),
+                                ],
+                              )),
+                          TextButton(
+                              onPressed: () async {
+                                var picked = await picker.getImage(
+                                    source: ImageSource.gallery);
+                                if (picked != null) {
+                                  BlocProvider.of<AddrecipeCubit>(context)
+                                      .reload(image: File(picked.path));
+                                }
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    context.platformIcons.collections,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  Text(
+                                    " Gallery",
+                                    style:
+                                        Theme.of(context).textTheme.subtitle2,
+                                  ),
+                                ],
+                              )),
+                        ],
+                      ),
+                      state is AddrecipeInteraction && state.image != null
+                          ? ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
+                              child: Image.file(state.image))
+                          : Text("No Image selected"),
+                    ],
+                  ),
+                ),
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Ingredients",
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                      Divider(),
+                      SearchableDropdown.multiple(
+                        items: state.ingredients
+                            .map((e) => DropdownMenuItem<String>(
+                                value: e, child: Text(e)))
+                            .toList(),
+                        hint: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text("Select any"),
+                        ),
+                        searchHint: "Select any",
+                        onChanged: (List<int> selectedItems) {
+                          BlocProvider.of<AddrecipeCubit>(context)
+                              .silentSetSelectedIngredients(selectedItems);
+                        },
+                        searchFn: (String keyword, items) {
+                          final results = List<int>();
+                          int i = 0;
+                          items.forEach((item) {
+                            String itemValue;
+                            if ((itemValue = item?.value.toString()) != null &&
+                                itemValue
+                                    .toLowerCase()
+                                    .contains(keyword.toLowerCase())) {
+                              results.add(i);
+                            }
+                            ++i;
+                          });
+                          return results;
+                        },
+                        closeButton: "Select",
+                        doneButton: SizedBox.shrink(),
+                        isExpanded: true,
+                        dialogBox: true,
+                        clearIcon: Icon(context.platformIcons.delete),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
