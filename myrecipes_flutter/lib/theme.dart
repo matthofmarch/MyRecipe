@@ -23,7 +23,7 @@ final theme = ThemeData(
       borderRadius: BorderRadius.all(Radius.circular(10))
     )
   ),
-  cardColor: Colors.brown.shade50,
+  //cardColor: Colors.brown.shade50,
   iconTheme: IconThemeData(color: primary),
 
   inputDecorationTheme: InputDecorationTheme(
