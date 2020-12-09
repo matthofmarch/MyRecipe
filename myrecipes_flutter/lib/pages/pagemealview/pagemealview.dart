@@ -3,12 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:meal_repository/meal_repository.dart';
-import 'package:myrecipes_flutter/appbarclipper.dart';
 
 import 'cubit/pagemealview_cubit.dart';
-import 'pagemealcontent/PageMealContent.dart';
+import 'pagemealcontent/meal_calendar.dart';
 
 class PageMealView extends StatelessWidget {
   @override
@@ -26,17 +24,13 @@ class PageMealView extends StatelessWidget {
           return CircularProgressIndicator();
         }
         if (state is PagemealviewSuccess) {
-          return _makeCalendar(context, state);
+          return Scaffold(
+            extendBodyBehindAppBar: false,
+            body: MealCalendar(state.meals, DateTime.now()),
+          );
         }
         return Container();
       }),
-    );
-  }
-
-  Widget _makeCalendar(BuildContext context, PagemealviewSuccess state) {
-    return Scaffold(
-
-      body: MealCalendar(state.meals, DateTime.now())
     );
   }
 }

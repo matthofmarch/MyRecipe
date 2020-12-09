@@ -13,6 +13,8 @@ import 'package:recipe_repository/recipe_repository.dart';
 import '../appbarclipper.dart';
 import 'cubit/content_root_cubit.dart';
 
+const kToolbarHeight = 35.0;
+
 class Destination {
   const Destination(this.index, this.label, this.icon);
 
@@ -42,15 +44,19 @@ class _ContentRootState extends State<ContentRoot> {
       create: (context) =>
           ContentRootCubit(RepositoryProvider.of<AuthRepository>(context)),
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size(double.infinity, 35),
-          child: ClipPath(clipper: AppBarClipper(),clipBehavior: Clip.hardEdge,
-            child: Container(
-              color: Theme.of(context).primaryColor,
-              child: Center(child: Text("MyRecipes", style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white))),
-            ),),
+        appBar: AppBar(
+          shape: AppBarBorder(),
+          toolbarHeight: kToolbarHeight,
+          primary: false,
+          backgroundColor: Theme.of(context).primaryColor,
+          centerTitle: true,
+          title: Text("MyRecipes", style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white)),
         ),
-        body: getDestinationWidget(_currentIndex),
+        extendBodyBehindAppBar: true,
+        body: Padding(
+          padding: const EdgeInsets.all(4.0).copyWith(top: 4.0+kToolbarHeight),
+          child: getDestinationWidget(_currentIndex),
+        ),
         bottomNavigationBar: BottomNavigationBar(
           items: destinations.asMap().entries.map((e) =>
              BottomNavigationBarItem(

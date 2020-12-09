@@ -19,26 +19,19 @@ class HomePage extends StatelessWidget {
         create: (context) =>
             HomePageCubit(RepositoryProvider.of<AuthRepository>(context)),
         child: BlocBuilder<HomePageCubit, HomeState>(
-            builder: (context, state) => Scaffold(
-                    body: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 8,
-                      ),
-                      MembershipsView(),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      _makeInviteCard(context),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      _makeLogoutCard(context)
-                    ],
-                  ),
-                ))));
+            builder: (context, state) => Column(
+              children: [
+                MembershipsView(),
+                SizedBox(
+                  height: 8,
+                ),
+                _makeInviteCard(context),
+                SizedBox(
+                  height: 8,
+                ),
+                _makeLogoutCard(context)
+              ],
+            )));
   }
 
   void _showLogoutDialog(BuildContext context) => showDialog<void>(
