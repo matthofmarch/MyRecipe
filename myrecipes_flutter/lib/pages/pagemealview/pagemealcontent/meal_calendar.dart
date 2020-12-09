@@ -30,9 +30,6 @@ class _MealCalendarState extends State<MealCalendar> {
     DateTime currentDate = widget.originalDate.add(Duration(days: _pageOffset));
     return Column(
       children: [
-        SizedBox(
-          height: 8,
-        ),
         TextButton(
           child: Text(DateFormat.yMMMMd().format(currentDate),
               style: Theme.of(context).textTheme.headline6),

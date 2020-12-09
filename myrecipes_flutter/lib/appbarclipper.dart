@@ -33,10 +33,14 @@ class AppBarClipper extends CustomClipper<Path> {
 }
 
 class AppBarBorder extends ContinuousRectangleBorder {
+  var relativeUpperHeight;
+
+  AppBarBorder({this.relativeUpperHeight=1/3})
+
   @override
   Path getOuterPath(Rect rect,{TextDirection textDirection}) {
     var path = Path();
-    var baseLineHeight = rect.height*1/3;
+    var baseLineHeight = rect.height*relativeUpperHeight;
     var intermediateHeight = (rect.height+baseLineHeight)/2;
 
     var bezierXStretch = 10;

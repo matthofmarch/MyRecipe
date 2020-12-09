@@ -15,7 +15,7 @@ class RecipepageCubit extends Cubit<RecipepageState> {
   loadRecipes() async{
     emit(RecipepageProgress());
     try{
-      final recipes = await _recipeRepository.get();
+      final recipes = await _recipeRepository.all();
       emit(RecipepageSuccess(recipes));
     }catch(e){
       emit(RecipepageFailure());

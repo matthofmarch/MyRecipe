@@ -14,6 +14,8 @@ import '../appbarclipper.dart';
 import 'cubit/content_root_cubit.dart';
 
 const kToolbarHeight = 35.0;
+var kToolbarRelativeUpperHeight = 1/3;
+
 
 class Destination {
   const Destination(this.index, this.label, this.icon);
@@ -38,6 +40,7 @@ class ContentRoot extends StatefulWidget {
 class _ContentRootState extends State<ContentRoot> {
   int _currentIndex = 1;
 
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ContentRootCubit>(
@@ -45,7 +48,7 @@ class _ContentRootState extends State<ContentRoot> {
           ContentRootCubit(RepositoryProvider.of<AuthRepository>(context)),
       child: Scaffold(
         appBar: AppBar(
-          shape: AppBarBorder(),
+          shape: AppBarBorder(relativeUpperHeight: kToolbarRelativeUpperHeight),
           toolbarHeight: kToolbarHeight,
           primary: false,
           backgroundColor: Theme.of(context).primaryColor,
@@ -53,10 +56,7 @@ class _ContentRootState extends State<ContentRoot> {
           title: Text("MyRecipes", style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white)),
         ),
         extendBodyBehindAppBar: true,
-        body: Padding(
-          padding: const EdgeInsets.all(4.0).copyWith(top: 4.0+kToolbarHeight),
-          child: getDestinationWidget(_currentIndex),
-        ),
+        body: getDestinationWidget(_currentIndex),
         bottomNavigationBar: BottomNavigationBar(
           items: destinations.asMap().entries.map((e) =>
              BottomNavigationBarItem(
@@ -77,11 +77,20 @@ class _ContentRootState extends State<ContentRoot> {
   Widget getDestinationWidget(int index) {
     switch (index) {
       case 0:
-        return PageMealView();
+        return Padding(
+          padding: const EdgeInsets.all(4.0).copyWith(top: 4.0+kToolbarHeight, bottom: 0),
+          child: PageMealView(),
+        );
       case 1:
-        return RecipePage();
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0).copyWith(top: kToolbarHeight*kToolbarRelativeUpperHeight),
+          child: RecipePage(),
+        );
       default:
-        return HomePage();
+        return Padding(
+          padding: const EdgeInsets.all(4.0).copyWith(top: 4.0+kToolbarHeight, bottom: 0),
+          child: HomePage(),
+        );
     }
   }
 }

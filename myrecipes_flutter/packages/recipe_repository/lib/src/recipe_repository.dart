@@ -13,7 +13,7 @@ class RecipeRepository {
 
   RecipeRepository(this._client, this._baseUrl, this._authRepository) {}
 
-  Future<List<Recipe>> get() async {
+  Future<List<Recipe>> all() async {
     var url = "$_baseUrl/api/Recipes";
 
     final response = await _client.get(url);
@@ -60,5 +60,17 @@ class RecipeRepository {
       return jsonResult["uri"];
     }
     throw Exception("$imageUploadUrl got ${response.statusCode}");
+  }
+
+  Future<Recipe> single(String recipeId)async {
+    var url = "$_baseUrl/api/Recipes/$recipeId";
+
+    final response = await _client.get(url);
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.body);
+      final recipe = Recipe.fromJson(body);
+      return recipe;
+    }
+    throw Exception("$url got ${response.statusCode}");
   }
 }
