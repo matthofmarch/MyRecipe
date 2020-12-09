@@ -26,44 +26,41 @@ class MembershipsView extends StatelessWidget {
           }
           if (state is MembershipsSuccess) {
             final group = state.group as Group;
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Card(
-                child: Container(
-                  margin: EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                    Text(
-                    "Memberships",
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline6,
-                  ),
-                  Divider(),
-                  Column(
-                    children: [
-                      ...group.members.map((member) =>
-                          ListTile(
-                              title: Text(member.email),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  if (member.email == RepositoryProvider.of<AuthRepository>(context).authState.email)Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: Chip(label: Text("You"), backgroundColor: Theme.of(context).primaryColor,)
-                                  ),
-                                  if(member.isAdmin) Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: Chip(label: Text("Admin"), backgroundColor: Theme.of(context).accentColor,)
-                                  ),
-                                ],
-                              )))
-                        ],
-                      )
-                    ],
-                  ),
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                  Text(
+                  "Memberships",
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .headline6,
+                ),
+                Divider(),
+                Column(
+                  children: [
+                    ...group.members.map((member) =>
+                        ListTile(
+                            title: Text(member.email),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (member.email == RepositoryProvider.of<AuthRepository>(context).authState.email)Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Chip(label: Text("You"), backgroundColor: Theme.of(context).primaryColor,)
+                                ),
+                                if(member.isAdmin) Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Chip(label: Text("Admin"), backgroundColor: Theme.of(context).accentColor,)
+                                ),
+                              ],
+                            )))
+                      ],
+                    )
+                  ],
                 ),
               ),
             );
