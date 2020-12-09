@@ -33,9 +33,9 @@ class AppBarClipper extends CustomClipper<Path> {
 }
 
 class AppBarBorder extends ContinuousRectangleBorder {
-  var relativeUpperHeight;
+  final double relativeUpperHeight;
 
-  AppBarBorder({this.relativeUpperHeight=1/3})
+  AppBarBorder({this.relativeUpperHeight=1/3});
 
   @override
   Path getOuterPath(Rect rect,{TextDirection textDirection}) {

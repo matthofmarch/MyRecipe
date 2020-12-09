@@ -3,13 +3,11 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:group_repository/group_repository.dart';
 import 'package:models/model.dart';
-import 'package:myrecipes_flutter/auth_guard/cubit/auth_guard_cubit.dart';
 import 'package:myrecipes_flutter/views/members/cubit/memberships_cubit.dart';
 
-class MembershipsView extends StatelessWidget {
+class MembershipsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

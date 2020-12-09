@@ -7,12 +7,12 @@ import '../model.dart';
 import 'vote.dart';
 
 class Meal extends Equatable {
-  String mealId;
-  String initiatorName;
-  Recipe recipe;
-  DateTime date;
-  bool accepted;
-  List<Vote> votes;
+  final String mealId;
+  final String initiatorName;
+  final Recipe recipe;
+  final DateTime date;
+  final bool accepted;
+  final List<Vote> votes;
   Meal({
     this.mealId,
     this.initiatorName,
