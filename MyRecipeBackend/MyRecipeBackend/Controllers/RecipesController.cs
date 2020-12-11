@@ -135,6 +135,37 @@ namespace MyRecipeBackend.Controllers
             return recipes.Select(r => new RecipeModel(r)).ToArray();
         }
 
+
+        /// <summary>
+        /// Gets all the recipes from the users of a group
+        /// </summary>
+        /// <param name="filter">Filter by name of the recipes</param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet("group")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<RecipeGroupModel[]>> GetPagedGroupRecipes(
+            string filter = "",
+            int page = 0,
+            int pageSize = 20
+        )
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return BadRequest("User not found");
+            var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
+            if (group == null)
+            {
+                return BadRequest("User not in a group");
+            }
+
+            Recipe[] recipes = await _uow.Recipes.GetPagedRecipesForGroupAsync(user, filter, page, pageSize, group.Id);
+
+            return recipes.Select(r => new RecipeGroupModel(r)).ToArray();
+        }
+
         /// <summary>
         /// Delete a users recipe
         /// </summary>
