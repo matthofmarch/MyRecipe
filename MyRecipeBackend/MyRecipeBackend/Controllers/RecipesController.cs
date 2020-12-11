@@ -146,7 +146,7 @@ namespace MyRecipeBackend.Controllers
         [HttpGet("group")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<RecipeGroupModel[]>> GetPagedGroupRecipes(
+        public async Task<ActionResult<RecipeModel[]>> GetPagedGroupRecipes(
             string filter = "",
             int page = 0,
             int pageSize = 20
@@ -163,7 +163,7 @@ namespace MyRecipeBackend.Controllers
 
             Recipe[] recipes = await _uow.Recipes.GetPagedRecipesForGroupAsync(user, filter, page, pageSize, group.Id);
 
-            return recipes.Select(r => new RecipeGroupModel(r)).ToArray();
+            return recipes.Select(r => new RecipeModel(r)).ToArray();
         }
 
         /// <summary>

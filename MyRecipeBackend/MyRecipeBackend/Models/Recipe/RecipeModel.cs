@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Threading.Tasks;
 
 namespace MyRecipeBackend.Models
@@ -25,6 +26,7 @@ namespace MyRecipeBackend.Models
             Image = r.Image;
             AddToGroupPool = r.AddToGroupPool;
             IngredientNames = r.Ingredients.Select(i => i.Name).ToArray();
+            Username = r.User?.Email;
         }
 
 
@@ -36,6 +38,8 @@ namespace MyRecipeBackend.Models
         public string[] IngredientNames { get; set; }
         public Uri Image { get; set; }
         public bool AddToGroupPool { get; set; }
+        public string Username { get; set; }
+
 
         public async Task<Recipe> ToUserRecipe(IUnitOfWork uow, ApplicationUser user)
         {
