@@ -18,6 +18,9 @@ class Login extends StatelessWidget {
     return BlocProvider(
         create: (context) => LoginCubit(RepositoryProvider.of<AuthRepository>(context)),
         child: BlocBuilder<LoginCubit, LoginState>(builder: (context, state) {
+          if(state is LoginProgress){
+            return Center(child: CircularProgressIndicator());
+          }
           return PlatformScaffold(
             body: Padding(
               padding: const EdgeInsets.all(16.0),

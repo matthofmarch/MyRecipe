@@ -10,7 +10,6 @@ import 'package:myrecipes_flutter/interceptors/jsoncontent_interceptor.dart';
 import 'package:myrecipes_flutter/splash/splash.dart';
 import 'package:myrecipes_flutter/theme.dart';
 import 'package:recipe_repository/recipe_repository.dart';
-
 import 'auth_guard/auth_guard.dart';
 import 'interceptors/bearer_interceptor.dart';
 
