@@ -35,7 +35,6 @@ class PageMealView extends StatelessWidget {
 
   Widget _makeCalendar(BuildContext context, PagemealviewSuccess state) {
     return Scaffold(
-
       body: MealCalendar(state.meals, DateTime.now())
     );
   }

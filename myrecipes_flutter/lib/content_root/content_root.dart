@@ -42,14 +42,6 @@ class _ContentRootState extends State<ContentRoot> {
       create: (context) =>
           ContentRootCubit(RepositoryProvider.of<AuthRepository>(context)),
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size(double.infinity, 35),
-          child: ClipPath(clipper: AppBarClipper(),clipBehavior: Clip.hardEdge,
-            child: Container(
-              color: Theme.of(context).primaryColor,
-              child: Center(child: Text("MyRecipes", style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white))),
-            ),),
-        ),
         body: getDestinationWidget(_currentIndex),
         bottomNavigationBar: BottomNavigationBar(
           items: destinations.asMap().entries.map((e) =>

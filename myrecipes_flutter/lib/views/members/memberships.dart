@@ -32,32 +32,64 @@ class MembershipsView extends StatelessWidget {
                 child: Container(
                   margin: EdgeInsets.all(8),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                    Text(
-                    "Memberships",
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline6,
-                  ),
-                  Divider(),
-                  Column(
-                    children: [
-                      ...group.members.map((member) =>
-                          ListTile(
+                      Text(
+                        "Members in " + group.name,
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Divider(),
+                      Column(
+                        children: [
+                          ...group.members.map((member) => ListTile(
+                              leading: Icon(Icons.person),
                               title: Text(member.email),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  if (member.email == RepositoryProvider.of<AuthRepository>(context).authState.email)Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: Chip(label: Text("You"), backgroundColor: Theme.of(context).primaryColor,)
-                                  ),
-                                  if(member.isAdmin) Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: Chip(label: Text("Admin"), backgroundColor: Theme.of(context).accentColor,)
-                                  ),
+                                  if (member.email ==
+                                      RepositoryProvider.of<AuthRepository>(
+                                              context)
+                                          .authState
+                                          .email)
+                                    Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: Chip(
+                                          label: Text("You",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1
+                                                  .copyWith(
+                                                      color: Theme.of(context)
+                                                          .primaryColor)),
+                                          shape: StadiumBorder(
+                                              side: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .primaryColor)),
+                                          backgroundColor: Theme.of(context)
+                                              .scaffoldBackgroundColor,
+                                        )),
+                                  if (member.isAdmin)
+                                    Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: Chip(
+                                          label: Text("Admin",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1
+                                                  .copyWith(
+                                                      color: Theme.of(context)
+                                                          .accentColor)),
+                                          shape: StadiumBorder(
+                                              side: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .accentColor)),
+                                          backgroundColor: Theme.of(context)
+                                              .scaffoldBackgroundColor,
+                                        )),
                                 ],
                               )))
                         ],
