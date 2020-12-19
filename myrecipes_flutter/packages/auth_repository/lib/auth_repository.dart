@@ -2,6 +2,7 @@ library auth_repository;
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:auth_repository/jwt_util.dart';
 import 'package:auth_repository/models/login_result.dart';
 import 'package:auth_repository/models/models.dart';
@@ -26,7 +27,7 @@ class AuthRepository {
       headers: {
         'Content-type' : 'application/json',
       },
-      body: jsonEncode({"Email": email, "Password": password}),
+      body: jsonEncode({"email": email, "password": password}),
     );
     if (res.statusCode != 200) throw Exception("Could not login");
 
@@ -42,7 +43,7 @@ class AuthRepository {
       final jwtUtil = JwtUtil();
       var claims = jwtUtil.parseJwt(accessToken);
       var expiration = claims["exp"];
-      if(DateTime.now().isAfter(DateTime(expiration))){
+      if(DateTime.now().isAfter(DateTime.fromMillisecondsSinceEpoch(expiration * 1000))){
         _authSubject.sink.add(null);
       }
       var email = claims["sub"];
