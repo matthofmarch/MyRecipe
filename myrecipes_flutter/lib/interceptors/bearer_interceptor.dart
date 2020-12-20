@@ -1,6 +1,5 @@
 import 'package:auth_repository/auth_repository.dart';
 import 'package:http_interceptor/http_interceptor.dart';
-import 'package:rxdart/rxdart.dart';
 
 class BearerInterceptor implements InterceptorContract {
   AuthRepository _authRepository;
@@ -10,7 +9,10 @@ class BearerInterceptor implements InterceptorContract {
 
   @override
   Future<RequestData> interceptRequest({RequestData data}) async {
-    final accessToken = (await user).accessToken;
+    var accessToken = (await user).accessToken;
+    if(_authRepository.tokenExpired(accessToken))
+      await _authRepository.refreshAccessToken();
+    accessToken = (await user).accessToken;
     data.headers.addAll({"Authorization":"Bearer ${accessToken}"});
     return data;
   }
