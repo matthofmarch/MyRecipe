@@ -13,6 +13,7 @@ class RecipeRepository {
 
   RecipeRepository(this._client, this._baseUrl, this._authRepository) {}
 
+  // TODO pagging needs to be implemented
   Future<List<Recipe>> get() async {
     var url = "$_baseUrl/api/Recipes";
 

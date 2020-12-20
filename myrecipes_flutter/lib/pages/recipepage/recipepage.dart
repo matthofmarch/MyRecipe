@@ -6,9 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:myrecipes_flutter/pages/recipepage/cubit/recipepage_cubit.dart';
 import 'package:myrecipes_flutter/screens/addrecipe/addrecipe.dart';
+import 'package:myrecipes_flutter/views/recipeDetails/recipe_detail.dart';
 import 'package:recipe_repository/recipe_repository.dart';
 
-import 'RecipeCard.dart';
+import '../../views/recipeCard/RecipeCard.dart';
 
 class RecipePage extends StatelessWidget {
   @override
@@ -52,7 +53,13 @@ class RecipePage extends StatelessWidget {
 
                       return RecipeCard(
                         recipe: recipe,
-                        onClickCallback: () => print("Clicked recipe Card"),
+                        onClickCallback: () async {
+                          await Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => RecipeDetail(
+                              recipe: recipe,
+                            ),
+                          ));
+                        },
                       );
                     }),
                 floatingActionButton: FloatingActionButton(

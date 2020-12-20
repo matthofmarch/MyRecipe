@@ -57,7 +57,7 @@ class RecipeCard extends StatelessWidget {
                       SizedBox(
                         width: 4,
                       ),
-                      Text("${recipe.cookingTimeInMin} Minutes"),
+                      Text("${recipe.cookingTimeInMin} min"),
                     ],
                   ),
                   SizedBox(
