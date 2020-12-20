@@ -47,7 +47,7 @@ class AuthRepository {
       var expiration = claims["exp"];
       if (DateTime.now()
           .isAfter(DateTime.fromMillisecondsSinceEpoch(expiration * 1000))) {
-        refreshAccessToken();
+        _authSubject.sink.add(null);
         return;
       }
       var email = claims["sub"];
