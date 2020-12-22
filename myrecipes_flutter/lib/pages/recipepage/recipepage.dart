@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:myrecipes_flutter/pages/recipepage/cubit/recipepage_cubit.dart';
 import 'package:myrecipes_flutter/screens/addrecipe/addrecipe.dart';
+import 'package:myrecipes_flutter/theme.dart';
 import 'package:myrecipes_flutter/views/recipeDetails/recipe_detail.dart';
 import 'package:recipe_repository/recipe_repository.dart';
 
@@ -31,37 +32,70 @@ class RecipePage extends StatelessWidget {
               final recipes = state.recipes;
 
               return Scaffold(
-                appBar: AppBar(
-                  title: Text("Recipes"),
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  textTheme: Theme.of(context).textTheme,
-                  actions: [
-                    IconButton(
-                      icon: const Icon(Icons.filter_alt),
-                      onPressed: null,
+                // appBar: AppBar(
+                //   title: Text("Recipes"),
+                //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                //   textTheme: Theme.of(context).textTheme,
+                //   actions: [
+                //     IconButton(
+                //       icon: const Icon(Icons.filter_alt),
+                //       onPressed: null,
+                //     ),
+                //     IconButton(
+                //       icon: const Icon(Icons.search),
+                //       onPressed: null,
+                //     ),
+                //   ],
+                // ),
+                body: Column(
+                  children: [
+                    SizedBox(
+                      height: 50,
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.search),
-                      onPressed: null,
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                          color: Colors.white,
+                          boxShadow: shadowList),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(icon: Icon(Icons.search), onPressed: null),
+                          Text(
+                            "Search recipe",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          IconButton(
+                              icon: Icon(Icons.filter_alt), onPressed: null)
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.separated(
+                        itemCount: recipes.length,
+                        itemBuilder: (context, index) {
+                          final recipe = recipes[index];
+                          return RecipeCard(
+                            recipe: recipe,
+                            onClickCallback: () async {
+                              await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => RecipeDetail(
+                                    recipe: recipe,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 20,),
+                      ),
                     ),
                   ],
                 ),
-                body: ListView.builder(
-                    itemCount: recipes.length,
-                    itemBuilder: (context, index) {
-                      final recipe = recipes[index];
-
-                      return RecipeCard(
-                        recipe: recipe,
-                        onClickCallback: () async {
-                          await Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => RecipeDetail(
-                              recipe: recipe,
-                            ),
-                          ));
-                        },
-                      );
-                    }),
                 floatingActionButton: FloatingActionButton(
                   child: Icon(context.platformIcons.add),
                   onPressed: () async {
@@ -71,6 +105,7 @@ class RecipePage extends StatelessWidget {
                     BlocProvider.of<RecipepageCubit>(context).loadRecipes();
                   },
                 ),
+                backgroundColor: Colors.grey[200],
               );
             }
 

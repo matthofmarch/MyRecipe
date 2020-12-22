@@ -12,32 +12,32 @@ class RecipeDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          color: Colors.black,
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        title: Text("Details"),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        textTheme: Theme.of(context).textTheme,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: null,
-          ),
-          IconButton(
-            icon: const Icon(Icons.calendar_today),
-            onPressed: null,
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete_outline),
-            onPressed: null,
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   leading: IconButton(
+      //     icon: const Icon(Icons.arrow_back),
+      //     color: Colors.black,
+      //     onPressed: () {
+      //       Navigator.of(context).pop();
+      //     },
+      //   ),
+      //   title: Text("Details"),
+      //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      //   textTheme: Theme.of(context).textTheme,
+      //   actions: [
+      //     IconButton(
+      //       icon: const Icon(Icons.edit),
+      //       onPressed: null,
+      //     ),
+      //     IconButton(
+      //       icon: const Icon(Icons.calendar_today),
+      //       onPressed: null,
+      //     ),
+      //     IconButton(
+      //       icon: const Icon(Icons.delete_outline),
+      //       onPressed: null,
+      //     ),
+      //   ],
+      // ),
       body: Column(
         children: [
           RecipeCard(
