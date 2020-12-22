@@ -68,6 +68,7 @@ class RecipeDetail extends StatelessWidget {
                                 Radius.circular(20),
                               ),
                               image: DecorationImage(
+                                fit: BoxFit.cover,
                                 image: ExactAssetImage(
                                     "assets/placeholder-image.png"),
                               ),

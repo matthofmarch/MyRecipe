@@ -21,7 +21,8 @@ class RecipeCard extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 20),
         child: Row(
           children: [
-            Expanded(
+            AspectRatio(
+              aspectRatio: 1 / 1,
               child: Builder(
                 builder: (context) {
                   return recipe.image != null
@@ -52,6 +53,7 @@ class RecipeCard extends StatelessWidget {
                               Radius.circular(20),
                             ),
                             image: DecorationImage(
+                              fit: BoxFit.cover,
                               image: ExactAssetImage(
                                   "assets/placeholder-image.png"),
                             ),

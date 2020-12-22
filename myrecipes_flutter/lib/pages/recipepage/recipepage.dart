@@ -50,7 +50,7 @@ class RecipePage extends StatelessWidget {
                 body: Stack(
                   children: [
                     ListView.separated(
-                      padding: EdgeInsets.only(top: 130),
+                      padding: EdgeInsets.only(top: 130,bottom: 40),
                       itemCount: recipes.length,
                       itemBuilder: (context, index) {
                         final recipe = recipes[index];
