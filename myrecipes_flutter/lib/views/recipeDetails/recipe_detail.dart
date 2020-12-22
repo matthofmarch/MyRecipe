@@ -18,12 +18,20 @@ class RecipeDetail extends StatelessWidget {
       extendBodyBehindAppBar: true,
       appBar: PreferredSize(
         preferredSize: Size(double.infinity, 120),
-        child: Container (
+        child: Container(
           margin: EdgeInsets.only(top: 40, left: 10),
           child: Row(
-            children: [IconButton(icon: Icon(Icons.arrow_back, size: 30, color: Colors.white,), onPressed: () {
-              Navigator.of(context).pop();
-            }),],
+            children: [
+              IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+            ],
           ),
         ),
       ),
@@ -70,7 +78,7 @@ class RecipeDetail extends StatelessWidget {
               ),
               Expanded(
                 child: ListView(
-                  padding: EdgeInsets.only(top: 50),
+                  padding: EdgeInsets.symmetric(vertical: 50),
                   children: [
                     Container(
                       margin: EdgeInsets.only(top: 55),

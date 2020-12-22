@@ -156,9 +156,12 @@ class _MealCalendarState extends State<MealCalendar> {
                     borderRadius: BorderRadius.circular(8),
                     child: AspectRatio(
                       aspectRatio: 1,
-                      child: Image.network(
-                        meal.recipe.image,
-                        fit: BoxFit.fitHeight,
+                      child: Hero(
+                        tag: meal.recipe.id,
+                        child: Image.network(
+                          meal.recipe.image,
+                          fit: BoxFit.fitHeight,
+                        ),
                       ),
                     ),
                   ),
