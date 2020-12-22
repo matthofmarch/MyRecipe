@@ -47,15 +47,32 @@ class RecipePage extends StatelessWidget {
                 //     ),
                 //   ],
                 // ),
-                body: Column(
+                body: Stack(
                   children: [
-                    SizedBox(
-                      height: 50,
+                    ListView.separated(
+                      padding: EdgeInsets.only(top: 130),
+                      itemCount: recipes.length,
+                      itemBuilder: (context, index) {
+                        final recipe = recipes[index];
+                        return RecipeCard(
+                          recipe: recipe,
+                          onClickCallback: () async {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => RecipeDetail(
+                                  recipe: recipe,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 20,),
                     ),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       margin:
-                          EdgeInsets.symmetric(horizontal: 10),
+                      EdgeInsets.only(left: 10, right: 10, top: 50),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(30)),
                           color: Colors.white,
@@ -73,27 +90,6 @@ class RecipePage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: ListView.separated(
-                        itemCount: recipes.length,
-                        itemBuilder: (context, index) {
-                          final recipe = recipes[index];
-                          return RecipeCard(
-                            recipe: recipe,
-                            onClickCallback: () async {
-                              await Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => RecipeDetail(
-                                    recipe: recipe,
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 20,),
-                      ),
-                    ),
                   ],
                 ),
                 floatingActionButton: FloatingActionButton(
@@ -105,7 +101,6 @@ class RecipePage extends StatelessWidget {
                     BlocProvider.of<RecipepageCubit>(context).loadRecipes();
                   },
                 ),
-                backgroundColor: Colors.grey[200],
               );
             }
 

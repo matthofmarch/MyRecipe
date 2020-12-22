@@ -15,7 +15,7 @@ final theme = ThemeData(
   ),
   primaryColor: primary,
   accentColor: secondary,
-  scaffoldBackgroundColor: Colors.white,
+  scaffoldBackgroundColor: Colors.grey[50],
   dividerColor: Colors.grey,
   cardTheme: CardTheme(
     shape: RoundedRectangleBorder(

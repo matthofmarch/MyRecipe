@@ -25,23 +25,26 @@ class RecipeCard extends StatelessWidget {
               child: Builder(
                 builder: (context) {
                   return recipe.image != null
-                      ? CachedNetworkImage(
-                          imageUrl: recipe.image,
-                          fit: BoxFit.fitWidth,
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20),
+                      ? Hero(
+                        tag: recipe.id,
+                        child: CachedNetworkImage(
+                            imageUrl: recipe.image,
+                            fit: BoxFit.fitWidth,
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20),
+                                ),
+                                image: DecorationImage(
+                                    image: imageProvider, fit: BoxFit.cover),
                               ),
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.cover),
                             ),
+                            placeholder: (context, url) => Text("Loading"),
+                            errorWidget: (context, url, error) =>
+                                Text("Could not load image"),
                           ),
-                          placeholder: (context, url) => Text("Loading"),
-                          errorWidget: (context, url, error) =>
-                              Text("Could not load image"),
-                        )
+                      )
                       : Container(
                           height: 120,
                           decoration: BoxDecoration(
