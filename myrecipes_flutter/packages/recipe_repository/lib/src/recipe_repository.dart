@@ -40,10 +40,10 @@ class RecipeRepository {
       "ingredientNames": recipe.ingredientNames,
       "image": recipe.image
     }));
-    if (response.statusCode == 200) {
-      return recipe;
+    if (response.statusCode != 200) {
+      throw Exception("$addRecipeUrl got ${response.statusCode}");
     }
-    throw Exception("$addRecipeUrl got ${response.statusCode}");
+    return recipe;
   }
 
   //TODO Use HttpInterceptor asap

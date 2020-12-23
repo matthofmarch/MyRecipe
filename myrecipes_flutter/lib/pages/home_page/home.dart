@@ -11,18 +11,18 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-          children: [
-            MembershipsCard(),
-            SizedBox(
-              height: 8,
-            ),
-            _makeInviteCard(context),
-            SizedBox(
-              height: 8,
-            ),
-            _makeLogoutCard(context)
-          ],
-        );
+      children: [
+        MembershipsCard(),
+        SizedBox(
+          height: 8,
+        ),
+        _makeInviteCard(context),
+        SizedBox(
+          height: 8,
+        ),
+        _makeLogoutCard(context)
+      ],
+    );
   }
 
   void _showLogoutDialog(BuildContext context) => showDialog<void>(
@@ -57,30 +57,30 @@ class HomePage extends StatelessWidget {
     return InviteCodeCard();
   }
 
-  _makeLogoutCard(BuildContext context) => Card(
-        child: FlatButton(
-          onPressed: () {
-            _showLogoutDialog(context);
-          },
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Logout ",
-                textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    .copyWith(color: Colors.red),
-              ),
-              Icon(
-                Icons.logout,
-                color: Colors.red,
-              )
-            ],
+  _makeLogoutCard(BuildContext context) => GestureDetector(
+        onTap: () {
+          _showLogoutDialog(context);
+        },
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Logout ",
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      .copyWith(color: Colors.red),
+                ),
+                Icon(
+                  Icons.logout,
+                  color: Colors.red,
+                )
+              ],
+            ),
           ),
         ),
       );
 }
-

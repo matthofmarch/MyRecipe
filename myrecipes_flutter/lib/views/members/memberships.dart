@@ -32,32 +32,37 @@ class MembershipsCard extends StatelessWidget {
                   children: [
                   Text(
                   "Memberships",
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .headline6,
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                       fontWeight: FontWeight.w600
+                  ),
                 ),
                 Divider(),
-                Column(
-                  children: [
-                    ...group.members.map((member) =>
-                        ListTile(
-                            title: Text(member.email),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      ...group.members.map((member) =>
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                if (member.email == RepositoryProvider.of<AuthRepository>(context).authState.email)Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: Chip(label: Text("You"), backgroundColor: Theme.of(context).primaryColor,)
-                                ),
-                                if(member.isAdmin) Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: Chip(label: Text("Admin"), backgroundColor: Theme.of(context).accentColor,)
-                                ),
-                              ],
-                            )))
-                      ],
-                    )
+                                Text(member.email, style: Theme.of(context).textTheme.subtitle1,),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (member.email == RepositoryProvider.of<AuthRepository>(context).authState.email)Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: Chip(label: Text("You"), backgroundColor: Theme.of(context).primaryColor,)
+                                    ),
+                                    if(member.isAdmin) Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: Chip(label: Text("Admin"), backgroundColor: Theme.of(context).accentColor,)
+                                    ),
+                                  ],
+                                )
+                              ],))
+                        ],
+                      ),
+                )
                   ],
                 ),
               ),

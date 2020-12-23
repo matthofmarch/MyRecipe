@@ -18,5 +18,4 @@ class BearerInterceptor implements InterceptorContract {
   Future<ResponseData> interceptResponse({ResponseData data}) async {
     return data;
   }
-
 }

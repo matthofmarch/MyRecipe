@@ -44,7 +44,6 @@ class _ContentRootState extends State<ContentRoot> {
           appBar: AppBar(
             shape: SlimAppBarBorder(),
             toolbarHeight: kToolbarHeight,
-            backgroundColor: Theme.of(context).primaryColor,
             primary: true,
             centerTitle: true,
             title: Padding(
@@ -53,7 +52,7 @@ class _ContentRootState extends State<ContentRoot> {
             ),
           ),
           extendBodyBehindAppBar: true,
-          body: SafeArea(child: getDestinationWidget(_currentIndex)),
+          body: getDestinationWidget(_currentIndex),
           bottomNavigationBar: BottomNavigationBar(
             items: destinations.asMap().entries.map((e) =>
                BottomNavigationBarItem(
