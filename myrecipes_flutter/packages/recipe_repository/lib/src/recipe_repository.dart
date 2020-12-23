@@ -61,4 +61,14 @@ class RecipeRepository {
     }
     throw Exception("$imageUploadUrl got ${response.statusCode}");
   }
+
+  Future<bool> delete(String id) async {
+    var url = "$_baseUrl/api/Recipes";
+
+    final response = await _client.delete("$url/$id");
+    if (response.statusCode == 204) {
+      return true;
+    }
+    throw Exception("$url got ${response.statusCode}");
+  }
 }

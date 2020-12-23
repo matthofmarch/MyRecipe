@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:myrecipes_flutter/pages/recipepage/cubit/recipepage_cubit.dart';
 import 'package:myrecipes_flutter/screens/addrecipe/addrecipe.dart';
+import 'package:myrecipes_flutter/views/recipelist/recipelist.dart';
 import 'package:recipe_repository/recipe_repository.dart';
 
 class RecipePage extends StatelessWidget {
@@ -26,71 +27,7 @@ class RecipePage extends StatelessWidget {
               final recipes = state.recipes;
 
               return Scaffold(
-                body: ListView.builder(
-                    itemCount: recipes.length,
-                    itemBuilder: (context, index) {
-                      final recipe = recipes[index];
-
-                      return Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Card(
-                          child: Column(
-                            children: [
-                              if (recipe.image != null) Builder(builder: (context) {
-                                final image = CachedNetworkImage(
-                                    imageUrl: recipe.image,
-                                    fit: BoxFit.fitWidth,
-                                    placeholder: (context, url) => Text("When I grow up, I want to be an Image"),
-                                    errorWidget: (context, url, error) => Container(),
-                                );
-
-                                return image != null ?
-                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 4, left: 4, right: 4),
-                                    child: AspectRatio(
-                                        aspectRatio: 3 / 2,
-                                        child: image
-                                    ),
-                                  ):Text("Image not available");
-
-
-                                }),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8, right: 8, bottom: 8),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Flexible(
-                                        child: Text(recipe.name,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6,
-                                            maxLines: 2)),
-                                    Row(
-                                      children: [
-                                        Icon(PlatformIcons(context).clockSolid),
-                                        SizedBox(
-                                          width: 4,
-                                        ),
-                                        Text(
-                                            "${recipe.cookingTimeInMin} Minutes"),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
+                body: RecipeList(recipes),
                 floatingActionButton: FloatingActionButton(
                   child: Icon(context.platformIcons.add),
                   onPressed: () async {
