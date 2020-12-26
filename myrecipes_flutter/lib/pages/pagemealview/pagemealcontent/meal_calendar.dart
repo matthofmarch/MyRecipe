@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -13,7 +11,7 @@ int kPageIdentation = 1000;
 class MealCalendar extends StatefulWidget {
   final DateTime originalDate;
   final List<Meal> meals;
-  PageController controller =
+  final PageController controller =
       PageController(viewportFraction: 1 / 3, initialPage: kPageIdentation);
 
   MealCalendar(this.meals, this.originalDate);
@@ -30,9 +28,6 @@ class _MealCalendarState extends State<MealCalendar> {
     DateTime currentDate = widget.originalDate.add(Duration(days: _pageOffset));
     return Column(
       children: [
-        SizedBox(
-          height: 8,
-        ),
         TextButton(
           child: Text(DateFormat.yMMMMd().format(currentDate),
               style: Theme.of(context).textTheme.headline6),

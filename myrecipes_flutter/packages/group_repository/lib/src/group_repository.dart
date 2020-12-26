@@ -20,4 +20,15 @@ class GroupRepository{
     }
     throw Exception("$url got ${response.statusCode}");
   }
+
+  Future<String> getInviteCode() async{
+    var url = "$_baseUrl/api/InviteCode";
+
+    final response = await _client.post(url);
+    if (response.statusCode == 200) {
+      var jsonResult = jsonDecode(response.body);
+      return jsonResult["code"];
+    }
+    throw Exception("$url got ${response.statusCode}");
+  }
 }

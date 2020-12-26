@@ -11,8 +11,7 @@ class AuthGuard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AuthGuardCubit>(
-      create: (context) =>
-          AuthGuardCubit(RepositoryProvider.of<AuthRepository>(context)),
+      create: (context) => AuthGuardCubit(RepositoryProvider.of<AuthRepository>(context)),
       child: BlocBuilder<AuthGuardCubit, AuthGuardState>(
         builder: (context, state) {
           if(state is AuthGuardAuthenticated){

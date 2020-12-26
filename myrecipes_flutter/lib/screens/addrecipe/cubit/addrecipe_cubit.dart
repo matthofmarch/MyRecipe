@@ -32,7 +32,7 @@ class AddrecipeCubit extends Cubit<AddrecipeState> {
   Future<Recipe> submit(Recipe recipe, File image)async{
     emit(AddrecipeSubmitting(_ingredients, image: image));
     try{
-      var recipeResult = await _recipeRepository.addRecipe(recipe, image);
+      var recipeResult = await _recipeRepository.add(recipe, image);
       emit(AddrecipeSuccess(recipeResult));
       return recipeResult;
     }catch(e){

@@ -12,10 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  http_interceptor:
-    git:
-      url: https://github.com/januwA/http_interceptor.git
-      ref: master
+  http_interceptor: 0.3.3
   models:
     path: ../model
 

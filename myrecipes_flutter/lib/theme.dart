@@ -9,6 +9,7 @@ final theme = ThemeData(
   //primaryColorDark: const Color(0xFF0097A7),
   //primaryColorLight: const Color(0xFFB2EBF2),
   appBarTheme: AppBarTheme(
+    
   ),
   floatingActionButtonTheme: FloatingActionButtonThemeData(
     backgroundColor: primary,
@@ -20,8 +21,8 @@ final theme = ThemeData(
 
   cardTheme: CardTheme(
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10))
-    )
+      borderRadius: BorderRadius.all(Radius.circular(16))
+    ),
   ),
   //cardColor: Colors.brown.shade50,
   iconTheme: IconThemeData(color: primary),
@@ -31,5 +32,4 @@ final theme = ThemeData(
       borderRadius: BorderRadius.circular(8),
     ),
   ),
-  platform: TargetPlatform.android,
 );
