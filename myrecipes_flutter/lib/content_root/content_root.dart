@@ -1,15 +1,10 @@
 import 'package:auth_repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myrecipes_flutter/pages/home_page/home.dart';
-import 'package:myrecipes_flutter/pages/pagemealview/pagemealview.dart';
+import 'package:myrecipes_flutter/pages/home/home.dart';
+import 'package:myrecipes_flutter/pages/meals/meals.dart';
 import 'package:myrecipes_flutter/pages/recipepage/recipepage.dart';
-import '../appbarclipper.dart';
 import 'cubit/content_root_cubit.dart';
-
-const kToolbarHeight = 35.0;
-var kToolbarRelativeUpperHeight = 1/3;
-
 
 class Destination {
   const Destination(this.index, this.label, this.icon);
@@ -34,59 +29,38 @@ class ContentRoot extends StatefulWidget {
 class _ContentRootState extends State<ContentRoot> {
   int _currentIndex = 1;
 
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ContentRootCubit>(
       create: (context) =>
           ContentRootCubit(RepositoryProvider.of<AuthRepository>(context)),
-        child: Scaffold(
-          appBar: AppBar(
-            shape: SlimAppBarBorder(),
-            toolbarHeight: kToolbarHeight,
-            primary: true,
-            centerTitle: true,
-            title: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text("MyRecipes", style: Theme.of(context).textTheme.headline5.copyWith(color: Colors.white)),
-            ),
-          ),
-          extendBodyBehindAppBar: true,
-          body: getDestinationWidget(_currentIndex),
-          bottomNavigationBar: BottomNavigationBar(
-            items: destinations.asMap().entries.map((e) =>
-               BottomNavigationBarItem(
-                label: e.value.label,
-                icon: Icon(e.value.icon),
-              )).toList(),
-            currentIndex: _currentIndex,
-            onTap: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            }
-          ),
+      child: Scaffold(
+        body: getDestinationWidget(_currentIndex),
+        bottomNavigationBar: BottomNavigationBar(
+          items: destinations.asMap().entries.map((e) =>
+             BottomNavigationBarItem(
+              label: e.value.label,
+              icon: Icon(e.value.icon),
+            )).toList(),
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          }
         ),
+      ),
     );
   }
 
   Widget getDestinationWidget(int index) {
     switch (index) {
       case 0:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0).copyWith(top: 4+kToolbarHeight),
-          child: PageMealView(),
-        );
+        return MealsPage();
       case 1:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0).copyWith(top: kToolbarHeight*kToolbarRelativeUpperHeight),
-          child: RecipePage(),
-        );
+        return RecipePage();
       default:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0).copyWith(top: 4+kToolbarHeight),
-          child: HomePage(),
-        );
+        return HomePage();
     }
   }
 }

@@ -43,6 +43,7 @@ class App extends StatelessWidget {
                     create: (context) => IngredientRepository(httpClient,baseUrl))
               ],
               child: MaterialApp(
+                debugShowCheckedModeBanner: false,
                 theme: theme,
                 navigatorKey: key,
                 home: AuthGuard(),

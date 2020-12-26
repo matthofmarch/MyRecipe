@@ -3,11 +3,13 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:group_repository/group_repository.dart';
 import 'package:models/model.dart';
+import 'package:myrecipes_flutter/auth_guard/cubit/auth_guard_cubit.dart';
 import 'package:myrecipes_flutter/views/members/cubit/memberships_cubit.dart';
 
-class MembershipsCard extends StatelessWidget {
+class MembershipsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -24,46 +26,87 @@ class MembershipsCard extends StatelessWidget {
           }
           if (state is MembershipsSuccess) {
             final group = state.group as Group;
-            return Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                  Text(
-                  "Memberships",
-                  style: Theme.of(context).textTheme.subtitle1.copyWith(
-                       fontWeight: FontWeight.w600
-                  ),
-                ),
-                Divider(),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Card(
+                child: Container(
+                  margin: EdgeInsets.all(8),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ...group.members.map((member) =>
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(member.email, style: Theme.of(context).textTheme.subtitle1,),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    if (member.email == RepositoryProvider.of<AuthRepository>(context).authState.email)Padding(
-                                        padding: const EdgeInsets.all(2.0),
-                                        child: Chip(label: Text("You"), backgroundColor: Theme.of(context).primaryColor,)
+                      Text(
+                        "Members in " + group.name,
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Divider(),
+                      Column(
+                        children: [
+                          ...group.members.map(
+                            (member) => ListTile(
+                              leading: Icon(Icons.person),
+                              title: Text(member.email),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (member.email ==
+                                      RepositoryProvider.of<AuthRepository>(
+                                              context)
+                                          .authState
+                                          .email)
+                                    Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: Chip(
+                                        label: Text(
+                                          "You",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
+                                        ),
+                                        shape: StadiumBorder(
+                                          side: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        ),
+                                        backgroundColor: Theme.of(context)
+                                            .scaffoldBackgroundColor,
+                                      ),
                                     ),
-                                    if(member.isAdmin) Padding(
-                                        padding: const EdgeInsets.all(2.0),
-                                        child: Chip(label: Text("Admin"), backgroundColor: Theme.of(context).accentColor,)
+                                  if (member.isAdmin)
+                                    Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: Chip(
+                                        label: Text(
+                                          "Admin",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(
+                                                  color: Theme.of(context)
+                                                      .accentColor),
+                                        ),
+                                        shape: StadiumBorder(
+                                          side: BorderSide(
+                                              color: Theme.of(context)
+                                                  .accentColor),
+                                        ),
+                                        backgroundColor: Theme.of(context)
+                                            .scaffoldBackgroundColor,
+                                      ),
                                     ),
-                                  ],
-                                )
-                              ],))
+                                ],
+                              ),
+                            ),
+                          )
                         ],
                       ),
-                )
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );
