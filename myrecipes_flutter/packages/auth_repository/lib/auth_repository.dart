@@ -8,6 +8,8 @@ import 'package:auth_repository/models/models.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
+import 'dart:developer' as developer;
+
 
 const kAccessTokenName="access_token";
 const kRefreshTokenName="refresh_token";
@@ -40,7 +42,7 @@ class AuthRepository {
     await storage.write(key: kAccessTokenName, value: loginResult.token);
     await storage.write(key: kRefreshTokenName, value: loginResult.refreshToken);
 
-    checkAuthState();
+    checkAuthStateAsync();
   }
 
   Future<void> signup(String email, String password) async {
@@ -55,30 +57,29 @@ class AuthRepository {
     _authSubject.add(null);
   }
 
-  Future<void> checkAuthState() async {
-    try{
-      String accessToken = await storage.read(key: kAccessTokenName);
-      if(accessToken == null){
-        _authSubject.sink.add(null);
-        return;
-      }
-      final jwtUtil = JwtUtil();
-      var claims = jwtUtil.parseJwt(accessToken);
-
-      //Somehow the expiration gives seconds and not milliseconds since 1970
-      var expiration = DateTime.fromMillisecondsSinceEpoch(claims["exp"]*1000, isUtc: true);
-      if(DateTime.now().isAfter(expiration)){
-        tryRefresh();
-        return;
-        //Abandon: Refresh will call again when it has a new token
-      }
-
-      var user = getUserFromAccessToken(accessToken);
-      _authSubject.sink.add(user);
-    } catch(e){
-      print(e);
+  Future<void> checkAuthStateAsync() async {
+    developer.log("Checking auth state");
+    String accessToken = await storage.read(key: kAccessTokenName);
+    if(accessToken == null){
+      developer.log("No access token available");
       _authSubject.sink.add(null);
+      return;
     }
+    var claims = JwtUtil().parseJwt(accessToken);
+
+    //Somehow the expiration gives seconds and not milliseconds since 1970
+    var expiration = DateTime.fromMillisecondsSinceEpoch(claims["exp"]*1000, isUtc: true);
+    if(DateTime.now().isAfter(expiration)){
+      developer.log("Access token expired at $expiration, calling refresh");
+      refreshAsync();
+      return;
+    }
+
+    //Token validation (optional)
+
+    developer.log("Token looks great, user authenticated");
+    var user = getUserFromAccessToken(accessToken);
+    _authSubject.add(user);
   }
 
   User getUserFromAccessToken(String accessToken){
@@ -88,18 +89,21 @@ class AuthRepository {
     return User(email: email, accessToken: accessToken);
   }
 
-  Future<void> tryRefresh() async {
-    if(_currentlyRefreshing)
+  Future<void> refreshAsync() async {
+    if(_currentlyRefreshing){
+      developer.log("Refreshing already active, aborting");
       return;
+    }
 
     //Replace with mutex later
     _currentlyRefreshing = true;
+    developer.log("Refresh started");
     //Don't actually catch errors here, just ensure to remove the refreshing flag afterwards
     try{
-      var accessToken = await storage.read(key: kAccessTokenName);
-      var refreshToken = await storage.read(key: kRefreshTokenName);
+      String accessToken = await storage.read(key: kAccessTokenName);
+      String refreshToken = await storage.read(key: kRefreshTokenName);
       if(accessToken == null || refreshToken == null){
-        print("No tokens available");
+        developer.log("Not all tokens required for refresh available");
         return;
       }
 
@@ -111,27 +115,25 @@ class AuthRepository {
         body: jsonEncode({"token": accessToken, "refreshToken": refreshToken}),
       );
       if (res.statusCode != 200) {
-        print("Server returned ${res.statusCode}");
+        developer.log("When refreshing, Server returned ${res.statusCode}");
         _authSubject.value = null;
         return;
       }
 
       var loginResult = LoginResult.fromJson(jsonDecode(res.body));
+      developer.log("New access token: ${loginResult.token}");
       await storage.write(key: kAccessTokenName, value: loginResult.token);
+      developer.log("New refresh token: ${loginResult.refreshToken}");
       await storage.write(key: kRefreshTokenName, value: loginResult.refreshToken);
-      _currentlyRefreshing = false;
 
-      checkAuthState();
+      checkAuthStateAsync();
     }catch(e){
       throw e;
     }
     finally{
       _currentlyRefreshing = false;
+      developer.log("Refresh stopped");
     }
-  }
-
-  Future<void> tryOpenSession() async {
-    checkAuthState();
   }
 
   void dispose(){
