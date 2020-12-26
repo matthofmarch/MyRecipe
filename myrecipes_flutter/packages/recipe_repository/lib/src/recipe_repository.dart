@@ -13,7 +13,7 @@ class RecipeRepository {
 
   RecipeRepository(this._client, this._baseUrl, this._authRepository) {}
 
-  Future<List<Recipe>> all() async {
+  Future<List<Recipe>> get() async {
     var url = "$_baseUrl/api/Recipes";
 
     final response = await _client.get(url);
@@ -40,10 +40,10 @@ class RecipeRepository {
       "ingredientNames": recipe.ingredientNames,
       "image": recipe.image
     }));
-    if (response.statusCode != 200) {
-      throw Exception("$addRecipeUrl got ${response.statusCode}");
+    if (response.statusCode == 200) {
+      return recipe;
     }
-    return recipe;
+    throw Exception("$addRecipeUrl got ${response.statusCode}");
   }
 
   //TODO Use HttpInterceptor asap
@@ -60,6 +60,16 @@ class RecipeRepository {
       return jsonResult["uri"];
     }
     throw Exception("$imageUploadUrl got ${response.statusCode}");
+  }
+
+  Future<bool> delete(String id) async {
+    var url = "$_baseUrl/api/Recipes";
+
+    final response = await _client.delete("$url/$id");
+    if (response.statusCode == 204) {
+      return true;
+    }
+    throw Exception("$url got ${response.statusCode}");
   }
 
   Future<Recipe> single(String recipeId)async {

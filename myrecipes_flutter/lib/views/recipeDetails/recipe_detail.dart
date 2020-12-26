@@ -2,6 +2,7 @@ import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:models/model.dart';
 import 'package:myrecipes_flutter/theme.dart';
@@ -56,7 +57,6 @@ class RecipeDetail extends StatelessWidget {
                                       image: imageProvider, fit: BoxFit.cover),
                                 ),
                               ),
-                              placeholder: (context, url) => Text("Loading"),
                               errorWidget: (context, url, error) =>
                                   Text("Could not load image"),
                             ),
@@ -168,29 +168,32 @@ class RecipeDetail extends StatelessWidget {
           Align(
             alignment: Alignment.center,
             child: Container(
-              padding: EdgeInsets.all(20),
               height: 150,
-              margin: EdgeInsets.symmetric(horizontal: 30),
+              padding: EdgeInsets.all(30),
+              margin: EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
                   boxShadow: shadowList,
                   color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(30))),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    recipe.name,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(PlatformIcons(context).clockSolid),
-                      Text("${recipe.cookingTimeInMin} min"),
+                      Text(
+                        recipe.name,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                      Row(
+                        children: [
+                          Icon(PlatformIcons(context).clockSolid),
+                          Text("${recipe.cookingTimeInMin} min"),
+                        ],
+                      )
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
