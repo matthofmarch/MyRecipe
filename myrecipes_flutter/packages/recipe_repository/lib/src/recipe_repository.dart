@@ -71,4 +71,25 @@ class RecipeRepository {
     }
     throw Exception("$url got ${response.statusCode}");
   }
+
+  Future<Recipe> single(String recipeId)async {
+    var url = "$_baseUrl/api/Recipes/$recipeId";
+    final response = await _client.get(url);
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.body);
+      final recipe = Recipe.fromJson(body);
+      return recipe;
+    }
+    throw Exception("$url got ${response.statusCode}");
+  }
+
+  Future<Recipe> put(Recipe recipe) async{
+    final addRecipeUrl = "$_baseUrl/api/Recipes/${recipe.id}";
+    final response = await _client.put(addRecipeUrl, body: recipe.toJson());
+    if (response.statusCode == 204) {
+      //TODO actually retrieve updated recipe
+      return recipe;
+    }
+    throw Exception("$addRecipeUrl got ${response.statusCode}");
+  }
 }

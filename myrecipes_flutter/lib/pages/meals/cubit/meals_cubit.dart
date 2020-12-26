@@ -5,22 +5,22 @@ import 'package:meta/meta.dart';
 import 'package:models/model.dart';
 import 'dart:core';
 
-part 'pagemealview_state.dart';
+part 'meals_state.dart';
 
 
-class PagemealviewCubit extends Cubit<PagemealviewState> {
+class MealsCubit extends Cubit<MealsState> {
   final MealRepository _mealRepository;
 
-  PagemealviewCubit(this._mealRepository) : super(PagemealviewInitial());
+  MealsCubit(this._mealRepository) : super(MealsInitial());
 
   Future load() async{
-    emit(PagemealviewLoading());
+    emit(MealsLoading());
     try{
       var accepted = await _mealRepository.getAccepted();
-      emit(PagemealviewSuccess(accepted));
+      emit(MealsSuccess(accepted));
     }catch(e){
       print(e);
-      emit(PagemealviewFailure());
+      emit(MealsFailure());
     }
   }
 }

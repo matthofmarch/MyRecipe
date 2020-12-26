@@ -15,7 +15,8 @@ class LoginCubit extends Cubit<LoginState> {
     try{
       await _authRepository.login(email, password);
       emit(LoginSuccess());
-    } on Exception {
+    } catch(e) {
+      print(e);
       emit(LoginFailure());
     }
   }
