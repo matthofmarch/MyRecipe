@@ -34,14 +34,13 @@ class _RecipeListState extends State<RecipeList> {
                     if(res){
                       setState(() {
                         _recipes.removeAt(index);
-
                       });
                       Fluttertoast.showToast(
-                          msg: "This is Center Short Toast",
+                          msg: "Deleted Recipe",
                           toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
+                          gravity: ToastGravity.BOTTOM,
                           timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.red,
+                          backgroundColor: Theme.of(context).primaryColorLight,
                           textColor: Colors.white,
                           fontSize: 16.0
                       );

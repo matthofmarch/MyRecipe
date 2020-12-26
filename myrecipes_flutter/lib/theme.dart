@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 const primary = const Color(0xFF38A169);
 const secondary = const Color(0xFF5A67D8);
+const success = const Color(0xFF34D399);
 
 final theme = ThemeData(
   textTheme: GoogleFonts.robotoTextTheme(), //openSansTextTheme(),
@@ -17,7 +18,8 @@ final theme = ThemeData(
   accentColor: secondary,
   scaffoldBackgroundColor: Colors.brown[50],
   dividerColor: Colors.grey,
-
+  // Success color
+  primaryColorLight: success,
   cardTheme: CardTheme(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(10))
