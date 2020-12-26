@@ -7,6 +7,7 @@ import 'package:models/models/recipe.dart';
 import 'package:myrecipes_flutter/content_root/content_root.dart' as root;
 import 'package:myrecipes_flutter/pages/recipepage/cubit/recipepage_cubit.dart';
 import 'package:myrecipes_flutter/screens/addrecipe/addrecipe.dart';
+import 'package:myrecipes_flutter/screens/update_recipe/update_recipe.dart';
 import 'package:recipe_repository/recipe_repository.dart';
 
 const kCardContentSpacing = 8.0;
@@ -29,7 +30,6 @@ class RecipePage extends StatelessWidget {
                   child: Center(child: CircularProgressIndicator()));
             }
             if (state is RecipepageSuccess) {
-
               return _makeRecipeList(context, state);
             }
 
@@ -66,7 +66,7 @@ class RecipePage extends StatelessWidget {
 
   Widget _makeRecipeCard(BuildContext context, Recipe recipe) => FlatButton(
         onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => Container())),
+              .push(MaterialPageRoute(builder: (context) => UpdateRecipe(recipe))),
         padding: EdgeInsets.all(0),
         child: Card(
           child: Padding(

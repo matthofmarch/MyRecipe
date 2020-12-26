@@ -15,7 +15,7 @@ class AuthGuardCubit extends Cubit<AuthGuardState> {
            ? AuthGuardUnauthenticated()
            : AuthGuardAuthenticated(u))
      });
-     _authRepository.tryOpenSession();
+     _authRepository.checkAuthStateAsync();
   }
 
   StreamSubscription<User> _userSubscription;
