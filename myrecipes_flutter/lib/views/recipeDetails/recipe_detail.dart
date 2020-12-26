@@ -168,6 +168,7 @@ class RecipeDetail extends StatelessWidget {
           Align(
             alignment: Alignment.center,
             child: Container(
+              height: 150,
               padding: EdgeInsets.all(30),
               margin: EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
@@ -193,8 +194,6 @@ class RecipeDetail extends StatelessWidget {
                       )
                     ],
                   ),
-
-
                 ],
               ),
             ),
