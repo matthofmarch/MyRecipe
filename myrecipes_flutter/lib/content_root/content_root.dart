@@ -1,16 +1,9 @@
 import 'package:auth_repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:group_repository/group_repository.dart';
-import 'package:http_interceptor/http_client_with_interceptor.dart';
-import 'package:myrecipes_flutter/interceptors/bearer_interceptor.dart';
-import 'package:myrecipes_flutter/pages/home_page/home.dart';
-import 'package:myrecipes_flutter/pages/pagemealview/pagemealview.dart';
+import 'package:myrecipes_flutter/pages/home/home.dart';
+import 'package:myrecipes_flutter/pages/meals/meals.dart';
 import 'package:myrecipes_flutter/pages/recipepage/recipepage.dart';
-import 'package:meal_repository/meal_repository.dart';
-import 'package:recipe_repository/recipe_repository.dart';
-import '../appbarclipper.dart';
 import 'cubit/content_root_cubit.dart';
 
 class Destination {
@@ -63,7 +56,7 @@ class _ContentRootState extends State<ContentRoot> {
   Widget getDestinationWidget(int index) {
     switch (index) {
       case 0:
-        return PageMealView();
+        return MealsPage();
       case 1:
         return RecipePage();
       default:

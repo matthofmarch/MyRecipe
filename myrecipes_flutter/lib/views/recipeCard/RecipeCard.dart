@@ -38,7 +38,8 @@ class RecipeCard extends StatelessWidget {
                                   Radius.circular(20),
                                 ),
                                 image: DecorationImage(
-                                    image: imageProvider, fit: BoxFit.cover),
+                                    image: imageProvider,
+                                    fit: BoxFit.cover),
                               ),
                             ),
                             placeholder: (context, url) => Text("Loading"),

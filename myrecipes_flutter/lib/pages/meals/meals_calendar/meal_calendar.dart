@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -14,7 +12,7 @@ int kPageIdentation = 1000;
 class MealCalendar extends StatefulWidget {
   final DateTime originalDate;
   final List<Meal> meals;
-  PageController controller =
+  final controller =
       PageController(viewportFraction: 1 / 3, initialPage: kPageIdentation);
 
   MealCalendar(this.meals, this.originalDate);
