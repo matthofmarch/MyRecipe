@@ -25,7 +25,7 @@ class RecipeRepository {
     throw Exception("$url got ${response.statusCode}");
   }
 
-  Future<Recipe> addRecipe(Recipe recipe, File image) async {
+  Future<Recipe> add(Recipe recipe, File image) async {
     final addRecipeUrl = "$_baseUrl/api/Recipes";
 
     if (image != null) {

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:myrecipes_flutter/pages/recipepage/cubit/recipepage_cubit.dart';
 import 'package:myrecipes_flutter/screens/addrecipe/addrecipe.dart';
+import 'package:myrecipes_flutter/views/recipelist/recipelist.dart';
 import 'package:recipe_repository/recipe_repository.dart';
 
 class RecipePage extends StatelessWidget {

@@ -29,10 +29,8 @@ dependencies:
   flutter_platform_widgets: 0.72.0
   google_fonts: ^1.1.0
 
-  http_interceptor:
-    git:
-      url: https://github.com/januwA/http_interceptor.git
-      ref: master
+  http_interceptor: 0.3.3
+
   rxdart: 0.24.1
   intl: 0.16.1
   image_cropper: 1.3.1
@@ -41,6 +39,7 @@ dependencies:
 
   flutter_svg: 0.19.1
   badges: 1.1.4
+  fluttertoast: 7.1.6
   image_picker: 0.6.7+14
 
 
