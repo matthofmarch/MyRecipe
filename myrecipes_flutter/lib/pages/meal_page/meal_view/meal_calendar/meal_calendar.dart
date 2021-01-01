@@ -131,10 +131,7 @@ class MealCalendar extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           VoteSummary(
-                            meal.votes.where((element) => element.voteIsPositive).length,
-                            meal.votes.where((element) => !element.voteIsPositive).length,
-                            upvoteCallback:(){},
-                            downvoteCallback:(){}
+                            meal
                           ),
                           SizedBox(width: 8,),
                           Expanded(

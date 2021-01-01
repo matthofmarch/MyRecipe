@@ -45,18 +45,18 @@ class RecipeCard extends StatelessWidget {
                           ),
                       )
                       : Container(
-                          height: 120,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(20),
-                            ),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: ExactAssetImage(
-                                  "assets/placeholder-image.png"),
-                            ),
-                          ),
-                        );
+                    height: 120,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: ExactAssetImage(
+                            "assets/placeholder-image.png"),
+                      ),
+                    ),
+                  );
                 },
               ),
             ),

@@ -30,7 +30,6 @@ final theme = ThemeData(
       borderRadius: BorderRadius.circular(8),
     ),
   ),
-  platform: TargetPlatform.iOS
 );
 
 List<BoxShadow> shadowList = [
