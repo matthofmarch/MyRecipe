@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:myrecipes_flutter/pages/home/invite_card.dart';
+import 'package:myrecipes_flutter/pages/home_page/invite_card.dart';
 import 'package:myrecipes_flutter/views/members/memberships.dart';
+
+import 'invite_card.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key key}) : super(key: key);

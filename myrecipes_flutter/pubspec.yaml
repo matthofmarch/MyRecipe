@@ -42,7 +42,6 @@ dependencies:
   fluttertoast: 7.1.6
   image_picker: 0.6.7+14
 
-
   auth_repository:
     path: packages/auth_repository
   meal_repository:

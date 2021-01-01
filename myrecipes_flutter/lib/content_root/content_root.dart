@@ -1,8 +1,8 @@
 import 'package:auth_repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myrecipes_flutter/pages/home/home.dart';
-import 'package:myrecipes_flutter/pages/meals/meals.dart';
+import 'package:myrecipes_flutter/pages/home_page/home_page.dart';
+import 'package:myrecipes_flutter/pages/meal_page/meal_page.dart';
 import 'package:myrecipes_flutter/pages/recipepage/recipepage.dart';
 import 'cubit/content_root_cubit.dart';
 
@@ -56,7 +56,7 @@ class _ContentRootState extends State<ContentRoot> {
   Widget getDestinationWidget(int index) {
     switch (index) {
       case 0:
-        return MealsPage();
+        return MealPage();
       case 1:
         return RecipePage();
       default:

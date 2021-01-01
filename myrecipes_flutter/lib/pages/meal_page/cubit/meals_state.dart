@@ -15,10 +15,10 @@ class MealsLoading extends MealsState {
 }
 
 class MealsFailure extends MealsState {}
-class MealsSuccess extends MealsState {
+class MealsInteractable extends MealsState {
   final List<Meal> meals;
 
-  const MealsSuccess(this.meals);
+  const MealsInteractable(this.meals);
 
   @override
   List<Object> get props => [meals];
