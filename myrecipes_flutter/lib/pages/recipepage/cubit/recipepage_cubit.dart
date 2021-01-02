@@ -8,16 +8,21 @@ part 'recipepage_state.dart';
 
 class RecipepageCubit extends Cubit<RecipepageState> {
   final RecipeRepository _recipeRepository;
+  List<Recipe> _recipes;
 
   RecipepageCubit(this._recipeRepository) : super(RecipepageInitial());
 
   Future loadRecipes() async{
     emit(RecipepageProgress());
     try{
-      final recipes = await _recipeRepository.get();
-      emit(RecipepageSuccess(recipes));
+      _recipes = await _recipeRepository.get();
+      emit(RecipepageSuccess(_recipes));
     }catch(e){
       emit(RecipepageFailure());
     }
+  }
+
+  Future filter(String query) async{
+    emit(RecipepageSuccess(_recipes.where((element) => element.name.toLowerCase().contains(query.toLowerCase())).toList()));
   }
 }

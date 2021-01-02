@@ -6,6 +6,8 @@ import 'package:group_repository/group_repository.dart';
 import 'package:models/model.dart';
 import 'package:myrecipes_flutter/views/members/cubit/memberships_cubit.dart';
 
+const kChipDistance = 2.0;
+
 class MembershipsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -56,27 +58,23 @@ class MembershipsView extends StatelessWidget {
         leading: Icon(Icons.person),
         title: Text(member.email),
         trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-          if (member.email ==
-              RepositoryProvider.of<AuthRepository>(context).authState.email)
-            Padding(
-              padding: const EdgeInsets.all(4.0),
+          if (member.email == RepositoryProvider.of<AuthRepository>(context).authState.email)Padding(
+              padding: const EdgeInsets.all(kChipDistance),
               child: Chip(
                 label: Text(
                   "You",
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1
-                      .copyWith(color: Theme.of(context).primaryColor),
+                      .copyWith(color: Colors.green),
                 ),
                 shape: StadiumBorder(
                   side: BorderSide(color: Theme.of(context).primaryColor),
                 ),
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               ),
             ),
-          if (member.isAdmin)
-            Padding(
-              padding: const EdgeInsets.all(2.0),
+          if (member.isAdmin)Padding(
+              padding: const EdgeInsets.all(kChipDistance),
               child: Chip(
                 label: Text(
                   "Admin",
@@ -88,7 +86,6 @@ class MembershipsView extends StatelessWidget {
                 shape: StadiumBorder(
                   side: BorderSide(color: Theme.of(context).accentColor),
                 ),
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               ),
             )
         ]));

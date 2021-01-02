@@ -98,6 +98,7 @@ class MealCalendar extends StatelessWidget {
         );
       },
       child: Card(
+        color: meal.accepted ? Colors.white : Colors.grey[300],
         margin: EdgeInsets.all(4),
         key: Key("meal-calendar-card_${meal.mealId}"),
         shadowColor: Theme.of(context).shadowColor,
@@ -117,7 +118,7 @@ class MealCalendar extends StatelessWidget {
                       tag: meal.recipe.id,
                       child: Image.network(
                         meal.recipe.image,
-                        fit: BoxFit.fitHeight,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),

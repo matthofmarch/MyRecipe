@@ -70,9 +70,13 @@ class MealView extends StatelessWidget {
                   BlocProvider.of<MealViewCubit>(context).currentDate =
                       pickedDate;
               },
-              child: Text(
-                DateFormat.yMEd().format(state.currentDate),
-                style: Theme.of(context).textTheme.headline6,
+              child: Row(
+                children: [
+                  Icon(Icons.calendar_today_outlined),
+                  Text(
+                    DateFormat.yMEd().format(state.currentDate),
+                  ),
+                ],
               ),
             ),
           ),

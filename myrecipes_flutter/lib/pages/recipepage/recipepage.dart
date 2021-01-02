@@ -9,6 +9,8 @@ import 'package:myrecipes_flutter/views/recipelist/recipelist.dart';
 import 'package:recipe_repository/recipe_repository.dart';
 
 class RecipePage extends StatelessWidget {
+  final _searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -36,6 +38,42 @@ class RecipePage extends StatelessWidget {
                     ));
                     BlocProvider.of<RecipepageCubit>(context).loadRecipes();
                   },
+                ),
+                extendBodyBehindAppBar: true,
+                appBar: PreferredSize(
+                  preferredSize: Size.fromHeight(110),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0).copyWith(bottom: 0),
+                    child: Column(
+                      children: [
+                        Flexible(
+                          child: PlatformTextField(
+                            onChanged: (value) => BlocProvider.of<RecipepageCubit>(context).filter(_searchController.text),
+                            controller: _searchController,
+                            material: (context, platform) => MaterialTextFieldData(
+                              decoration:
+                              InputDecoration(
+                                contentPadding: EdgeInsets.all(8),
+                                fillColor: Colors.white,
+                                  filled: true,
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                                  suffixIcon: GestureDetector(onTap: () => BlocProvider.of<RecipepageCubit>(context).filter(_searchController.text),child: Icon(Icons.search)),
+                                  focusColor: Theme.of(context).colorScheme.surface
+                              ),
+                            ),
+                          ),
+                        ),
+                        Row(
+                            children: ["Bio", "Vegan", "Gluten-free"]
+                                .map((e) => Padding(
+                              padding:
+                              const EdgeInsets.symmetric(horizontal: 2.0),
+                              child: Chip(label: Text(e)),
+                            ))
+                                .toList())
+                      ],
+                    ),
+                  ),
                 ),
               );
             }

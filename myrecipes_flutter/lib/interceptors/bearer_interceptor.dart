@@ -9,7 +9,7 @@ class BearerInterceptor implements InterceptorContract {
 
   @override
   Future<RequestData> interceptRequest({RequestData data}) async {
-    final accessToken = (await user).accessToken;
+    final accessToken = (await user)?.accessToken;
     data.headers.addAll({"Authorization":"Bearer $accessToken"});
     return data;
   }
