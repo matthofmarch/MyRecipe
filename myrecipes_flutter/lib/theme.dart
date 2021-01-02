@@ -20,7 +20,7 @@ final theme = ThemeData(
   dividerColor: Colors.grey,
   cardTheme: CardTheme(
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(16))
+      borderRadius: BorderRadius.all(Radius.circular(10))
     ),
   ),
   //cardColor: Colors.brown.shade50,

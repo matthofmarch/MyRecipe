@@ -100,6 +100,7 @@ class AuthRepository {
     developer.log("Refresh started");
     //Don't actually catch errors here, just ensure to remove the refreshing flag afterwards
     try{
+      _authSubject.value = null;
       String accessToken = await storage.read(key: kAccessTokenName);
       String refreshToken = await storage.read(key: kRefreshTokenName);
       if(accessToken == null || refreshToken == null){
@@ -116,7 +117,6 @@ class AuthRepository {
       );
       if (res.statusCode != 200) {
         developer.log("When refreshing, Server returned ${res.statusCode}");
-        _authSubject.value = null;
         return;
       }
 

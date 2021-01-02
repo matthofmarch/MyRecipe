@@ -10,14 +10,15 @@ part 'meals_state.dart';
 
 class MealsCubit extends Cubit<MealsState> {
   final MealRepository _mealRepository;
+  List<Meal> _meals;
 
   MealsCubit(this._mealRepository) : super(MealsInitial());
 
-  Future load() async{
+  Future<void> load() async{
     emit(MealsLoading());
     try{
-      var accepted = await _mealRepository.getAccepted();
-      emit(MealsSuccess(accepted));
+      _meals = await _mealRepository.getAccepted();
+      emit(MealsInteractable(_meals));
     }catch(e){
       print(e);
       emit(MealsFailure());

@@ -21,4 +21,14 @@ class MealRepository{
     }
     throw Exception("$url got ${response.statusCode}");
   }
+
+  Future<void> vote(String mealId, bool isPositive) async {
+    var url = "$_baseUrl/api/MealVote";
+
+    final response = await _client.post(url, body: jsonEncode({"mealId": mealId, "voteEnum": isPositive ? "Approved" : "Rejected"}));
+    if(response.statusCode == 200){
+      return;
+    }
+    throw Exception("$url got ${response.statusCode}");
+  }
 }

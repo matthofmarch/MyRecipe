@@ -7,15 +7,12 @@ import '../../theme.dart';
 
 class RecipeCard extends StatelessWidget {
   final Recipe recipe;
-  final Function onClickCallback;
 
-  RecipeCard({this.recipe, this.onClickCallback});
+  RecipeCard(this.recipe);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onClickCallback,
-      child: Container(
+      return Container(
         height: 120,
         decoration: BoxDecoration(boxShadow: shadowList),
         margin: EdgeInsets.symmetric(horizontal: 20),
@@ -48,18 +45,18 @@ class RecipeCard extends StatelessWidget {
                           ),
                       )
                       : Container(
-                          height: 120,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(20),
-                            ),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: ExactAssetImage(
-                                  "assets/placeholder-image.png"),
-                            ),
-                          ),
-                        );
+                    height: 120,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: ExactAssetImage(
+                            "assets/placeholder-image.png"),
+                      ),
+                    ),
+                  );
                 },
               ),
             ),
@@ -93,7 +90,6 @@ class RecipeCard extends StatelessWidget {
             )
           ],
         ),
-      ),
     );
   }
 }

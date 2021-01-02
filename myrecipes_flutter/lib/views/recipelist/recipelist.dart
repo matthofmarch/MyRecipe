@@ -53,18 +53,17 @@ class _RecipeListState extends State<RecipeList> {
                     }
                   } catch (e) {}
                 },
-                child: RecipeCard(
-                  recipe: recipe,
-                  onClickCallback: () async {
-                    await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => RecipeDetail(
-                          recipe: recipe,
+                child: GestureDetector(
+                    onTap: () async {
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => RecipeDetail(
+                            recipe: recipe,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ));
+                      );
+                    },
+                    child: RecipeCard(recipe)));
           },
           separatorBuilder: (BuildContext context, int index) => const SizedBox(
             height: 20,
