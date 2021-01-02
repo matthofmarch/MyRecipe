@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meal_repository/meal_repository.dart';
 import 'package:models/model.dart';

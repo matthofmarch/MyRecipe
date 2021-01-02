@@ -13,11 +13,13 @@ import 'package:myrecipes_flutter/views/recipeDetails/recipe_detail.dart';
 int kPageIndentation = 1000;
 
 class MealCalendar extends StatelessWidget {
-  final controller = PageController(viewportFraction: 1 / 3, initialPage: kPageIndentation);
+  final controller =
+      PageController(viewportFraction: 1 / 3, initialPage: kPageIndentation);
   List<Meal> meals;
   DateTime viewInitialDate;
 
-  MealCalendar(List<Meal> meals, DateTime initialDate, {Key key}):super(key: key){
+  MealCalendar(List<Meal> meals, DateTime initialDate, {Key key})
+      : super(key: key) {
     this.meals = meals;
     viewInitialDate = initialDate;
   }
@@ -25,60 +27,61 @@ class MealCalendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageView.custom(
-        controller: controller,
-        onPageChanged: (newPageIndex) {
-          BlocProvider.of<MealViewCubit>(context).currentDateSilent = viewInitialDate.add(Duration(days: newPageIndex - kPageIndentation));
-        },
-        childrenDelegate: SliverChildBuilderDelegate(
-      //make one column
-      (BuildContext context, int index) {
-        final indentedIndex = index - kPageIndentation;
-        DateTime columnDate =
-            viewInitialDate.add(Duration(days: indentedIndex));
-
-        return Container(
-          decoration: BoxDecoration(
-              border: Border(
-                  right: BorderSide(
-                      width: 1,
-                      color: Theme.of(context).dividerColor))),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 16),
-                child: Badge(
-                  child: Chip(
-                    label: PlatformText(
-                      DateFormat("E, d.").format(columnDate),
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .copyWith(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                    ),
-                    shape: StadiumBorder(
-                      side: BorderSide(
-                          color: Theme.of(context).primaryColor),
-                    ),
-                    backgroundColor:
-                        Theme.of(context).primaryColor.withOpacity(0.1),
-                    elevation: 5,
-                  ),
-                  position: BadgePosition.topEnd(top: 5.0, end: 5.0),
-                  badgeColor: Colors.red,
-                ),
-              ),
-              ...meals
-                  .where((m) => mealOnCurrentDay(m, columnDate))
-                  .map((m) => _mealCard(context, m))
-            ],
-          ),
-        );
+      controller: controller,
+      onPageChanged: (newPageIndex) {
+        BlocProvider.of<MealViewCubit>(context).currentDateSilent =
+            viewInitialDate
+                .add(Duration(days: newPageIndex - kPageIndentation));
       },
-        ),
-        pageSnapping: true,
-      );
+      childrenDelegate: SliverChildBuilderDelegate(
+        //make one column
+        (BuildContext context, int index) {
+          final indentedIndex = index - kPageIndentation;
+          DateTime columnDate =
+              viewInitialDate.add(Duration(days: indentedIndex));
+
+          return Container(
+            decoration: BoxDecoration(
+                border: Border(
+                    right: BorderSide(
+                        width: 1, color: Theme.of(context).dividerColor))),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 16),
+                  child: Badge(
+                    child: Chip(
+                      label: PlatformText(
+                        DateFormat("E, d.").format(columnDate),
+                        style: Theme.of(context).textTheme.bodyText1.copyWith(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                      ),
+                      shape: StadiumBorder(
+                        side: BorderSide(color: Theme.of(context).primaryColor),
+                      ),
+                      backgroundColor:
+                          Theme.of(context).primaryColor.withOpacity(0.1),
+                      elevation: 5,
+                    ),
+                    position: BadgePosition.topEnd(top: 5.0, end: 5.0),
+                    badgeColor: Colors.red,
+                  ),
+                ),
+                Flexible(
+                  child: ListView(
+                    children: meals
+                        .where((m) => mealOnCurrentDay(m, columnDate))
+                        .map((m) => _mealCard(context, m)).toList(),
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+      ),
+      pageSnapping: true,
+    );
   }
 
   mealOnCurrentDay(Meal meal, DateTime date) =>
@@ -86,7 +89,7 @@ class MealCalendar extends StatelessWidget {
       meal.date.isBefore(
           DateTime(date.year, date.month, date.day).add(Duration(days: 1)));
 
-  _mealCard(BuildContext context, Meal meal) {
+  Widget _mealCard(BuildContext context, Meal meal) {
     return GestureDetector(
       onTap: () async {
         await Navigator.of(context).push(
@@ -103,7 +106,8 @@ class MealCalendar extends StatelessWidget {
         key: Key("meal-calendar-card_${meal.mealId}"),
         shadowColor: Theme.of(context).shadowColor,
         elevation: 2,
-        child: AspectRatio(//Make all cards have the same height
+        child: AspectRatio(
+          //Make all cards have the same height
           aspectRatio: 3 / 5,
           child: Padding(
             padding: const EdgeInsets.all(4.0),
@@ -131,10 +135,10 @@ class MealCalendar extends StatelessWidget {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          VoteSummary(
-                            meal
+                          VoteSummary(meal),
+                          SizedBox(
+                            width: 8,
                           ),
-                          SizedBox(width: 8,),
                           Expanded(
                             child: Text(
                               "${meal.recipe.name}",
