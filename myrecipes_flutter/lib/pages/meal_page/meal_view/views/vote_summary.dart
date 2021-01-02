@@ -48,6 +48,10 @@ class VoteSummaryState extends State<VoteSummary>{
                         positiveVotes++;
                       else if(userVote == true)
                         positiveVotes--;
+                      else if(userVote == false){
+                        positiveVotes++;
+                        negativeVotes--;
+                      }
 
                       userVote = userVote == null ? true :
                       userVote ? null : true;
@@ -68,6 +72,10 @@ class VoteSummaryState extends State<VoteSummary>{
                         negativeVotes++;
                       else if(userVote == false)
                         negativeVotes--;
+                      else if(userVote == true){
+                        negativeVotes++;
+                        positiveVotes--;
+                      }
 
                       userVote = userVote == null ? false :
                       !userVote ? null : false;
