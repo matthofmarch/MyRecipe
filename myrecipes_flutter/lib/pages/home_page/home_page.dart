@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:myrecipes_flutter/pages/home_page/invite_card.dart';
+import 'package:myrecipes_flutter/views/appbar/CustomDefaultAppBar.dart';
 import 'package:myrecipes_flutter/views/members/memberships.dart';
 
 import 'invite_card.dart';
@@ -14,11 +15,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PlatformScaffold(
-        appBar: PlatformAppBar(
-          title: Text("Household"),
-        ),
-        iosContentPadding: true,
+    return Scaffold(
+        appBar: CustomDefaultAppBar(title:Text("Household")),
         body: ListView(
           children: [
             SizedBox(
@@ -46,15 +44,15 @@ class HomePage extends StatelessWidget {
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
-                              .copyWith(color: Colors.red),
+                              .copyWith(color: Theme.of(context).colorScheme.error),
                         ),
                         Icon(
                           Icons.logout,
-                          color: Colors.red,
+                          color: Theme.of(context).colorScheme.error,
                         )
                       ],
                     ),
-                    borderSide: BorderSide(color: Colors.red, width: 1.5),
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.error, width: 1.5),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25)),
                   ),
@@ -89,10 +87,8 @@ class HomePage extends StatelessWidget {
                   "Logout",
                   style: Theme.of(context)
                       .textTheme
-                      .bodyText1
-                      .copyWith(color: Colors.white),
-                ),
-                color: Colors.red,
+                      .bodyText1),
+                color: Theme.of(context).colorScheme.onError,
               ),
             ],
           );

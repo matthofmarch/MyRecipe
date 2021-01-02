@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meal_repository/meal_repository.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/meal_view.dart';
+import 'dart:developer' as dev;
 
 import 'cubit/meals_cubit.dart';
 import 'meal_view/meal_calendar/meal_calendar.dart';
@@ -34,6 +35,7 @@ class MealPage extends StatelessWidget {
               return Center(child: CircularProgressIndicator());
             }
             if (state is MealsInteractable) {
+              print(Theme.of(context).brightness);
               return MealView(state.meals);
             }
             return Container();

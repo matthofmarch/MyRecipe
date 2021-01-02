@@ -33,8 +33,8 @@ class VoteSummaryState extends State<VoteSummary>{
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Theme.of(context).colorScheme.surface.withAlpha(0xA0),
       margin: EdgeInsets.all(0),
-      color: Colors.grey[100],
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

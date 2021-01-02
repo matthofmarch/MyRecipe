@@ -11,6 +11,8 @@ import 'package:models/model.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/cubit/meal_view_cubit.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/meal_calendar/meal_calendar.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/meal_list/meal_list.dart';
+import 'package:myrecipes_flutter/views/appbar/CustomDefaultAppBar.dart';
+import 'package:myrecipes_flutter/views/util/custom_platform_datepicker_sheet.dart';
 
 class MealView extends StatelessWidget {
   List<Meal> meals;
@@ -18,53 +20,16 @@ class MealView extends StatelessWidget {
   MealView(this.meals);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext rootContext) {
     return BlocProvider<MealViewCubit>(
       create: (context) => MealViewCubit(),
       child: Scaffold(
-        appBar: AppBar(
+        appBar: CustomDefaultAppBar(
           title: BlocBuilder<MealViewCubit, MealViewState>(
             builder: (context, state) => GestureDetector(
               onTap: () async {
-                DateTime pickedDate;
-                if (Theme.of(context).platform == TargetPlatform.android) {
-                  pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: state.currentDate,
-                      lastDate: DateTime(2100),
-                      firstDate: DateTime(2020));
-                } else if (Theme.of(context).platform == TargetPlatform.iOS) {
-                  pickedDate = await showDialog(
-                      context: context,
-                      builder: (context) {
-                        DateTime dateTime = state.currentDate;
-                        return SimpleDialog(
-                          title: Text("Select date", textAlign: TextAlign.center,),
-                          titlePadding: EdgeInsets.all(8),
-                            contentPadding: EdgeInsets.all(8),
-                            children: [
-                              ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  maxHeight: 200,
-                                  maxWidth: 400
-                                ),
-
-                                child: StatefulBuilder(
-                                  builder: (context, setState) => CupertinoDatePicker(
-                                    mode: CupertinoDatePickerMode.date,
-                                    onDateTimeChanged: (DateTime value) {
-                                      setState(() {
-                                        dateTime = value;
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ),
-                              FlatButton(onPressed: () => Navigator.of(context).pop(dateTime), child: Text("Ok"),)
-                            ],
-                        );
-                      });
-                }
+                print(Theme.of(context).brightness);
+                DateTime pickedDate = await showPlatformModalSheet(context: rootContext, builder: (context) => CustomPlatformDatePickerSheet());
 
                 if (pickedDate != null)
                   BlocProvider.of<MealViewCubit>(context).currentDate =

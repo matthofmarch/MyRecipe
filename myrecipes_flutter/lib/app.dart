@@ -12,6 +12,7 @@ import 'package:myrecipes_flutter/interceptors/jsoncontent_interceptor.dart';
 import 'package:myrecipes_flutter/retry_policy/expired_token_retry_policy.dart';
 import 'package:myrecipes_flutter/splash/splash.dart';
 import 'package:myrecipes_flutter/theme.dart';
+
 import 'package:recipe_repository/recipe_repository.dart';
 import 'auth_guard/auth_guard.dart';
 import 'interceptors/bearer_interceptor.dart';
@@ -49,10 +50,10 @@ class App extends StatelessWidget {
                 RepositoryProvider(
                     create: (context) => IngredientRepository(httpClient,baseUrl))
               ],
-              child: PlatformApp(
+              child: MaterialApp(
                 debugShowCheckedModeBanner: false,
-                material: (context, platform) => MaterialAppData(theme: theme),
-                cupertino: (context, platform) => CupertinoAppData(theme: MaterialBasedCupertinoThemeData(materialTheme: theme)),
+                theme: lightTheme,
+                darkTheme: darkTheme,
                 navigatorKey: key,
                 home: AuthGuard(),
                 onGenerateRoute: (_) => SplashPage.route(),

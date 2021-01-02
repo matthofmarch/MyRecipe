@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -9,7 +10,6 @@ final colorScheme = ColorScheme(
   secondaryVariant: const Color(0xFF4a5f00),
   onSecondary: const Color(0xFF000000),
   background: Colors.grey[300],
-
   surface: Color(0xFF808080),
   onBackground: Colors.white,
   error: Colors.redAccent,
@@ -18,27 +18,27 @@ final colorScheme = ColorScheme(
   brightness: Brightness.light,
 );
 
-final theme = ThemeData(
-  textTheme: GoogleFonts.robotoTextTheme(), //openSansTextTheme(),
-  colorScheme: colorScheme,
+get lightTheme => themes[0];
 
-  appBarTheme: AppBarTheme(
-    color: colorScheme.primary
-  ),
-  dividerColor: Colors.grey,
-  cardTheme: CardTheme(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10))
-    ),
-  ),  //cardColor: Colors.brown.shade50,
-  inputDecorationTheme: InputDecorationTheme(
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
-    ),
-  ),
-  platform: TargetPlatform.android
-);
+get darkTheme => themes[1];
 
-List<BoxShadow> shadowList = [
-  BoxShadow(color: Colors.grey[300], blurRadius: 30, offset: Offset(0,30))
-];
+final themes = [ThemeData.light(), ThemeData.dark()]
+    .map((t) => t.copyWith(
+        colorScheme: colorScheme,
+        primaryColor: colorScheme.primary,
+        accentColor: colorScheme.secondary,
+        //openSansTextTheme(),
+        cardTheme: CardTheme(
+          color: t.scaffoldBackgroundColor.withOpacity(0.8),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10))),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8), gapPadding: 8),
+        ),
+
+        platform: TargetPlatform.iOS))
+    .toList();
+
+//List<BoxShadow> shadowList = [BoxShadow(blurRadius: 30, offset: Offset(0, 30))];

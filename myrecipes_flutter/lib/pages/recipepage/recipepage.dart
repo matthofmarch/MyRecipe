@@ -6,6 +6,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:myrecipes_flutter/pages/recipepage/cubit/recipepage_cubit.dart';
 import 'package:myrecipes_flutter/screens/addrecipe/addrecipe.dart';
 import 'package:myrecipes_flutter/views/recipelist/recipelist.dart';
+import 'dart:developer' as dev;
 import 'package:recipe_repository/recipe_repository.dart';
 
 class RecipePage extends StatelessWidget {
@@ -27,7 +28,6 @@ class RecipePage extends StatelessWidget {
             }
             if (state is RecipepageSuccess) {
               final recipes = state.recipes;
-
               return Scaffold(
                 body: RecipeList(recipes),
                 floatingActionButton: FloatingActionButton(
@@ -43,27 +43,37 @@ class RecipePage extends StatelessWidget {
                 appBar: PreferredSize(
                   preferredSize: Size.fromHeight(98),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    padding: const EdgeInsets.symmetric(vertical: 6),
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: PlatformTextField(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: TextField(
                             onChanged: (value) => BlocProvider.of<RecipepageCubit>(context).filter(_searchController.text),
                             controller: _searchController,
-                            material: (context, platform) => MaterialTextFieldData(
+                            decoration: InputDecoration(
+                                hintText: "Search recipes",
+                                contentPadding: EdgeInsets.all(6),
+                                fillColor: Theme.of(context).dialogBackgroundColor,
+                                filled: true,
+                                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                                suffixIcon: GestureDetector(onTap: () => BlocProvider.of<RecipepageCubit>(context).filter(_searchController.text),child: Icon(Icons.search)),
+                                focusColor: Theme.of(context).colorScheme.surface
+                            ),
+                          ),
+                            /*material: (context, platform) => MaterialTextFieldData(
                               decoration:
                               InputDecoration(
                                 hintText: "Search recipes",
                                 contentPadding: EdgeInsets.all(6),
-                                fillColor: Colors.white,
+                                  fillColor: Theme.of(context).colorScheme.surface,
                                   filled: true,
                                   border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
-                                  suffixIcon: GestureDetector(onTap: () => BlocProvider.of<RecipepageCubit>(context).filter(_searchController.text),child: Icon(Icons.search)),
+                                  suffixIcon: GestureDetector(onTap: () => BlocProvider.of<RecipepageCubit>(context).filter(_searchController.text),child: Icon(Icons.search, color: Theme.of(context).scaffoldBackgroundColor,)),
                                   focusColor: Theme.of(context).colorScheme.surface
                               ),
                             ),
-                          ),
+                          ),*/
                         ),
                         SizedBox(height: 4,),
                         Flexible(
@@ -75,7 +85,7 @@ class RecipePage extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
                                     child: Row(
                                       children: [
-                                        Icon(Icons.eco, color: Theme.of(context).colorScheme.primary,),
+                                        Icon(Icons.eco),
                                         Text(e),
                                       ],
                                     ),

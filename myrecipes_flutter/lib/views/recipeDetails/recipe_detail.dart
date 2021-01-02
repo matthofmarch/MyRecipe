@@ -27,7 +27,7 @@ class RecipeDetail extends StatelessWidget {
                   icon: Icon(
                     Icons.arrow_back,
                     size: 30,
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -99,7 +99,6 @@ class RecipeDetail extends StatelessWidget {
                             ],
                           ),
                           Divider(
-                            color: Colors.black,
                             indent: 35,
                           ),
                           SizedBox(
@@ -131,7 +130,6 @@ class RecipeDetail extends StatelessWidget {
                             ],
                           ),
                           Divider(
-                            color: Colors.black,
                             indent: 35,
                           ),
                           SizedBox(
@@ -142,7 +140,7 @@ class RecipeDetail extends StatelessWidget {
                               return Row(
                                 children: [
                                   Badge(
-                                    badgeColor: Colors.black,
+                                    badgeColor: Theme.of(context).textTheme.subtitle1.color,
                                     elevation: 0,
                                   ),
                                   SizedBox(
@@ -172,8 +170,7 @@ class RecipeDetail extends StatelessWidget {
               padding: EdgeInsets.all(30),
               margin: EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
-                  boxShadow: shadowList,
-                  color: Colors.white,
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.all(Radius.circular(30))),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,

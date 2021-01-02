@@ -124,13 +124,11 @@ class UpdateRecipe extends StatelessWidget {
                 children: [
                   Flexible(
                     flex: 2,
-                    child: PlatformTextField(
+                    child: TextFormField(
                       controller: _nameController,
                       onChanged:(value) =>  BlocProvider.of<UpdateRecipeCubit>(context).name = value,
-                      material: (context, platform) => MaterialTextFieldData(
-                          decoration: InputDecoration(labelText: "Name")),
-                      cupertino: (context, platform) =>
-                          CupertinoTextFieldData(placeholder: "Name"),
+                      decoration: new InputDecoration(
+                          hintText: "Name"),
                     ),
                   ),
                   SizedBox(
@@ -138,16 +136,12 @@ class UpdateRecipe extends StatelessWidget {
                   ),
                   Flexible(
                     flex: 1,
-                    child: PlatformTextField(
+                    child: TextFormField(
                       controller: _cookingTimeInMinController,
                       onChanged:(value) =>  BlocProvider.of<UpdateRecipeCubit>(context).cookingTimeInMin = int.parse(value),
                       keyboardType: TextInputType.number,
-                      material: (context, platform) => MaterialTextFieldData(
-                          decoration:
-                              InputDecoration(labelText: "Cooking time")),
-                      cupertino: (context, platform) => CupertinoTextFieldData(
-                        placeholder: "Cooking time",
-                      ),
+                      decoration: new InputDecoration(
+                          hintText: "Duration"),
                     ),
                   ),
                 ],
@@ -155,16 +149,12 @@ class UpdateRecipe extends StatelessWidget {
               SizedBox(
                 height: 8,
               ),
-              PlatformTextField(
+              TextFormField(
                 controller: _descriptionController,
                 minLines: 1,
                 onChanged:(value) =>  BlocProvider.of<UpdateRecipeCubit>(context).description = value,
-
-                material: (context, platform) => MaterialTextFieldData(
-                    decoration: InputDecoration(labelText: "Description")),
-                cupertino: (context, platform) => CupertinoTextFieldData(
-                  placeholder: "Description",
-                ),
+                decoration: new InputDecoration(
+                    hintText: "Description"),
               ),
             ],
           ),

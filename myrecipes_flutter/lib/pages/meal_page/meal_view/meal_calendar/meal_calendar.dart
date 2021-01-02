@@ -48,13 +48,11 @@ class MealCalendar extends StatelessWidget {
             child: Stack(
               alignment: AlignmentDirectional.topCenter,
               children: [
-                Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.only(top: 40),
-                    children: meals
-                        .where((m) => mealOnCurrentDay(m, columnDate))
-                        .map((m) => _mealCard(context, m)).toList(),
-                  ),
+                ListView(
+                  padding: EdgeInsets.only(top: 44),
+                  children: meals
+                      .where((m) => mealOnCurrentDay(m, columnDate))
+                      .map((m) => _mealCard(context, m)).toList(),
                 ),
                 Badge(
                   child: Chip(
@@ -68,11 +66,11 @@ class MealCalendar extends StatelessWidget {
                       side: BorderSide(color: Theme.of(context).colorScheme.primary),
                     ),
                     backgroundColor:
-                    Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    Theme.of(context).colorScheme.primary.withOpacity(0.2),
                     elevation: 5,
                   ),
                   position: BadgePosition.topEnd(top: 5.0, end: 5.0),
-                  badgeColor: Colors.red,
+                  badgeColor: Theme.of(context).colorScheme.secondary,
                 ),
               ],
             ),
@@ -100,8 +98,8 @@ class MealCalendar extends StatelessWidget {
         );
       },
       child: Card(
-        color: meal.accepted ? Colors.white : Colors.grey[300],
         margin: EdgeInsets.all(4),
+        color: meal.accepted ? Theme.of(context).cardColor : Theme.of(context).cardColor.withAlpha(0x10),
         key: Key("meal-calendar-card_${meal.mealId}"),
         shadowColor: Theme.of(context).shadowColor,
         elevation: 2,

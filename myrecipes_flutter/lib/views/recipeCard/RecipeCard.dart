@@ -10,86 +10,64 @@ class RecipeCard extends StatelessWidget {
 
   RecipeCard(this.recipe);
 
+  Widget _makeDecoratedImage(
+          BuildContext context, ImageProvider imageProvider) =>
+      Container(
+          decoration: BoxDecoration(
+        image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+        borderRadius: BorderRadius.all(
+          Radius.circular(8),
+        ),
+      ));
+
   @override
   Widget build(BuildContext context) {
-      return Container(
-        height: 120,
-        decoration: BoxDecoration(boxShadow: shadowList),
-        margin: EdgeInsets.symmetric(horizontal: 20),
+    return Container(
+      height: 120,
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      child: Card(
         child: Row(
           children: [
             AspectRatio(
-              aspectRatio: 1 / 1,
-              child: Builder(
-                builder: (context) {
-                  return recipe.image != null
-                      ? Hero(
-                        tag: recipe.id,
-                        child: CachedNetworkImage(
-                            imageUrl: recipe.image,
-                            fit: BoxFit.fitWidth,
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(20),
-                                ),
-                                image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover),
-                              ),
-                            ),
-                            placeholder: (context, url) => Text("Loading"),
-                            errorWidget: (context, url, error) =>
-                                Text("Could not load image"),
-                          ),
+              aspectRatio: 1,
+              child: Hero(
+                tag: recipe.id,
+                child: recipe.image != null
+                    ? CachedNetworkImage(
+                        imageUrl: recipe.image,
+                        fit: BoxFit.fitWidth,
+                        imageBuilder: (context, imageProvider) =>
+                            _makeDecoratedImage(context, imageProvider),
+                        placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                        errorWidget: (context, url, error) =>
+                            Text("Could not load image"),
                       )
-                      : Container(
-                    height: 120,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: ExactAssetImage(
-                            "assets/placeholder-image.png"),
-                      ),
-                    ),
-                  );
-                },
+                    : _makeDecoratedImage(
+                        context, AssetImage("assets/placeholder-image.png")),
               ),
             ),
             Expanded(
-              child: Container(
-                height: 95,
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(20),
-                        bottomRight: Radius.circular(20)),
-                    color: Colors.white),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      recipe.name,
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(PlatformIcons(context).clockSolid),
-                        Text("${recipe.cookingTimeInMin} min"),
-                      ],
-                    ),
-                  ],
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    recipe.name,
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Icon(PlatformIcons(context).clockSolid),
+                      Text("${recipe.cookingTimeInMin} min"),
+                    ],
+                  ),
+                ],
               ),
-            )
+            ),
           ],
         ),
+      ),
     );
   }
 }
