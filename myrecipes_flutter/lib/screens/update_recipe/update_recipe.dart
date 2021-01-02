@@ -42,17 +42,20 @@ class UpdateRecipe extends StatelessWidget {
           );
         }
         if (state is UpdateRecipeInteraction) {
+          _nameController.text = state.name;
+          _descriptionController.text = state.description;
+          _cookingTimeInMinController.text = state.cookingTimeInMin.toString();
           return _makeRecipeInteraction(context, state);
         }
         if (state is UpdateRecipeSuccess) {
           Future.delayed(
-              Duration(milliseconds: 500), () => Navigator.of(context).pop());
+              Duration(milliseconds: 500), () => Navigator.of(context).pop(state.recipe));
           return Center(child: Icon(context.platformIcons.checkMark));
         }
         if (state is UpdateRecipeFailure) {
           Future.delayed(
-              Duration(milliseconds: 500), () => Navigator.of(context).pop());
-          return Center(child: Icon(context.platformIcons.error));
+              Duration(milliseconds: 500), () => Navigator.of(context).pop(null));
+          return Center(child: Icon(context.platformIcons.error, color: Theme.of(context).errorColor,));
         }
         return null;
       }),
@@ -123,6 +126,7 @@ class UpdateRecipe extends StatelessWidget {
                     flex: 2,
                     child: PlatformTextField(
                       controller: _nameController,
+                      onChanged:(value) =>  BlocProvider.of<UpdateRecipeCubit>(context).name = value,
                       material: (context, platform) => MaterialTextFieldData(
                           decoration: InputDecoration(labelText: "Name")),
                       cupertino: (context, platform) =>
@@ -136,6 +140,7 @@ class UpdateRecipe extends StatelessWidget {
                     flex: 1,
                     child: PlatformTextField(
                       controller: _cookingTimeInMinController,
+                      onChanged:(value) =>  BlocProvider.of<UpdateRecipeCubit>(context).cookingTimeInMin = int.parse(value),
                       keyboardType: TextInputType.number,
                       material: (context, platform) => MaterialTextFieldData(
                           decoration:
@@ -153,6 +158,8 @@ class UpdateRecipe extends StatelessWidget {
               PlatformTextField(
                 controller: _descriptionController,
                 minLines: 1,
+                onChanged:(value) =>  BlocProvider.of<UpdateRecipeCubit>(context).description = value,
+
                 material: (context, platform) => MaterialTextFieldData(
                     decoration: InputDecoration(labelText: "Description")),
                 cupertino: (context, platform) => CupertinoTextFieldData(
@@ -235,7 +242,7 @@ class UpdateRecipe extends StatelessWidget {
               .path;
         }
         BlocProvider.of<UpdateRecipeCubit>(context)
-            .selectedImage(File(pickedPath));
+            .selectedImage = File(pickedPath);
       },
       child: Row(
         children: [
