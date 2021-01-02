@@ -14,13 +14,12 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
+    return PlatformScaffold(
+        appBar: PlatformAppBar(
           title: Text("Household"),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          textTheme: Theme.of(context).textTheme,
         ),
-        body: Column(
+        iosContentPadding: true,
+        body: ListView(
           children: [
             SizedBox(
               height: 8,

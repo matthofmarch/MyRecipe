@@ -1,7 +1,9 @@
 import 'package:auth_repository/auth_repository.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:group_repository/group_repository.dart';
 import 'package:http_interceptor/http_client_with_interceptor.dart';
 import 'package:ingredient_repository/ingredient_repository.dart';
@@ -47,9 +49,10 @@ class App extends StatelessWidget {
                 RepositoryProvider(
                     create: (context) => IngredientRepository(httpClient,baseUrl))
               ],
-              child: MaterialApp(
+              child: PlatformApp(
                 debugShowCheckedModeBanner: false,
-                theme: theme,
+                material: (context, platform) => MaterialAppData(theme: theme),
+                cupertino: (context, platform) => CupertinoAppData(theme: MaterialBasedCupertinoThemeData(materialTheme: theme)),
                 navigatorKey: key,
                 home: AuthGuard(),
                 onGenerateRoute: (_) => SplashPage.route(),

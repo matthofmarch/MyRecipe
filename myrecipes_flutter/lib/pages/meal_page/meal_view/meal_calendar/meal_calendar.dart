@@ -45,36 +45,35 @@ class MealCalendar extends StatelessWidget {
                 border: Border(
                     right: BorderSide(
                         width: 1, color: Theme.of(context).dividerColor))),
-            child: Column(
+            child: Stack(
+              alignment: AlignmentDirectional.topCenter,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 16),
-                  child: Badge(
-                    child: Chip(
-                      label: PlatformText(
-                        DateFormat("E, d.").format(columnDate),
-                        style: Theme.of(context).textTheme.bodyText1.copyWith(
-                              color: Theme.of(context).primaryColor,
-                            ),
-                      ),
-                      shape: StadiumBorder(
-                        side: BorderSide(color: Theme.of(context).primaryColor),
-                      ),
-                      backgroundColor:
-                          Theme.of(context).primaryColor.withOpacity(0.1),
-                      elevation: 5,
-                    ),
-                    position: BadgePosition.topEnd(top: 5.0, end: 5.0),
-                    badgeColor: Colors.red,
-                  ),
-                ),
-                Flexible(
+                Expanded(
                   child: ListView(
+                    padding: EdgeInsets.only(top: 40),
                     children: meals
                         .where((m) => mealOnCurrentDay(m, columnDate))
                         .map((m) => _mealCard(context, m)).toList(),
                   ),
-                )
+                ),
+                Badge(
+                  child: Chip(
+                    label: Text(
+                      DateFormat("E, d.").format(columnDate),
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    shape: StadiumBorder(
+                      side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                    ),
+                    backgroundColor:
+                    Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    elevation: 5,
+                  ),
+                  position: BadgePosition.topEnd(top: 5.0, end: 5.0),
+                  badgeColor: Colors.red,
+                ),
               ],
             ),
           );

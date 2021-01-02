@@ -107,7 +107,7 @@ class _RecipeListState extends State<RecipeList> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.calendar_today_outlined),
-                  PlatformText("Plan"),
+                  Text("Plan"),
                 ],
               ),
             ),
@@ -131,7 +131,7 @@ class _RecipeListState extends State<RecipeList> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(context.platformIcons.pen),
-                    PlatformText("Edit")
+                    Text("Edit")
                   ],
                 )),
             PlatformButton(
@@ -170,7 +170,7 @@ class _RecipeListState extends State<RecipeList> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(context.platformIcons.delete),
-                  PlatformText("Delete")
+                  Text("Delete")
                 ],
               ),
             )

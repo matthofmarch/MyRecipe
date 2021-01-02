@@ -220,7 +220,7 @@ class UpdateRecipe extends StatelessWidget {
         children: [
           Icon(
             context.platformIcons.collections,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).colorScheme.primary,
           ),
           Text(
             " Gallery",
@@ -248,7 +248,7 @@ class UpdateRecipe extends StatelessWidget {
         children: [
           Icon(
             context.platformIcons.photoCamera,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).colorScheme.primary,
           ),
           Text(
             " Camera",

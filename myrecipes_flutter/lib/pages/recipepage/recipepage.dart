@@ -41,19 +41,21 @@ class RecipePage extends StatelessWidget {
                 ),
                 extendBodyBehindAppBar: true,
                 appBar: PreferredSize(
-                  preferredSize: Size.fromHeight(110),
+                  preferredSize: Size.fromHeight(98),
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0).copyWith(bottom: 0),
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Column(
                       children: [
-                        Flexible(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: PlatformTextField(
                             onChanged: (value) => BlocProvider.of<RecipepageCubit>(context).filter(_searchController.text),
                             controller: _searchController,
                             material: (context, platform) => MaterialTextFieldData(
                               decoration:
                               InputDecoration(
-                                contentPadding: EdgeInsets.all(8),
+                                hintText: "Search recipes",
+                                contentPadding: EdgeInsets.all(6),
                                 fillColor: Colors.white,
                                   filled: true,
                                   border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -63,14 +65,23 @@ class RecipePage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Row(
-                            children: ["Bio", "Vegan", "Gluten-free"]
-                                .map((e) => Padding(
-                              padding:
-                              const EdgeInsets.symmetric(horizontal: 2.0),
-                              child: Chip(label: Text(e)),
-                            ))
-                                .toList())
+                        SizedBox(height: 4,),
+                        Flexible(
+                          child: ListView(
+                            padding: EdgeInsets.all(0),
+                            scrollDirection: Axis.horizontal,
+                              children: ["Bio", "Vegan", "Gluten-free", "Keto", "Mischkost"]
+                                  .map((e) => Card(child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.eco, color: Theme.of(context).colorScheme.primary,),
+                                        Text(e),
+                                      ],
+                                    ),
+                                  )))
+                                  .toList()),
+                        )
                       ],
                     ),
                   ),

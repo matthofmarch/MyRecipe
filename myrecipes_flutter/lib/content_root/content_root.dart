@@ -37,10 +37,11 @@ class _ContentRootState extends State<ContentRoot> {
       child: Scaffold(
         body: getDestinationWidget(_currentIndex),
         bottomNavigationBar: BottomNavigationBar(
+          fixedColor: Theme.of(context).colorScheme.onSurface,
           items: destinations.asMap().entries.map((e) =>
              BottomNavigationBarItem(
               label: e.value.label,
-              icon: Icon(e.value.icon),
+              icon: Icon(e.value.icon, color: Theme.of(context).colorScheme.primary,),
             )).toList(),
           currentIndex: _currentIndex,
           onTap: (index) {

@@ -27,10 +27,10 @@ class CustomPlatformDatePickerSheetState extends State<CustomPlatformDatePickerS
   @override
   Widget build(BuildContext context) {
     final setDateButton = PlatformButton(
-      child: PlatformText("Ok"),
+      child: Text("Ok"),
       onPressed: () => Navigator.of(context).pop(dateTime),
     );
-    final title = PlatformText("Plan Meal");
+    final title = Text("Plan Meal");
     return Theme.of(context).platform == TargetPlatform.iOS
         ? CupertinoActionSheet(
       title: title,
