@@ -83,11 +83,14 @@ class RecipeRepository {
     throw Exception("$url got ${response.statusCode}");
   }
 
-  Future<Recipe> put(Recipe recipe) async{
+  Future<Recipe> put(Recipe recipe, {File image}) async{
+    if (image != null) {
+      recipe = recipe.copyWith(image: await uploadImage(image));
+    }
+
     final addRecipeUrl = "$_baseUrl/api/Recipes/${recipe.id}";
     final response = await _client.put(addRecipeUrl, body: recipe.toJson());
     if (response.statusCode == 204) {
-      //TODO actually retrieve updated recipe
       return recipe;
     }
     throw Exception("$addRecipeUrl got ${response.statusCode}");

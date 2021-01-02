@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:models/model.dart';
+import 'package:myrecipes_flutter/screens/update_recipe/update_recipe.dart';
 import 'package:myrecipes_flutter/views/recipeCard/RecipeCard.dart';
 import 'package:myrecipes_flutter/views/recipeDetails/recipe_detail.dart';
 import 'package:recipe_repository/recipe_repository.dart';
@@ -28,30 +32,87 @@ class _RecipeListState extends State<RecipeList> {
     return Stack(
       children: [
         ListView.separated(
-          padding: EdgeInsets.only(top: 130, bottom: 40),
+          padding: EdgeInsets.only(top: 130),
           itemCount: _recipes.length,
           itemBuilder: (context, index) {
             final recipe = _recipes[index];
             return GestureDetector(
                 onLongPress: () async {
-                  try {
-                    final res =
-                        await RepositoryProvider.of<RecipeRepository>(context)
-                            .delete(recipe.id);
-                    if (res) {
-                      setState(() {
-                        _recipes.removeAt(index);
+                  await showPlatformModalSheet(
+                      context: context,
+                      builder: (context) {
+                        var popupContent = [
+                          PlatformButton(
+                              materialFlat: (context, platform) =>
+                                  MaterialFlatButtonData(),
+                              onPressed: () async {
+                                final update = await Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) => UpdateRecipe(recipe)));
+
+                                if(update != null) setState(() {
+                                    _recipes.removeWhere(
+                                            (element) => element.id == update.id);
+                                    _recipes.add(update);
+                                  });
+                                Navigator.of(context).pop();
+
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(context.platformIcons.pen),
+                                  PlatformText("Edit")
+                                ],
+                              )),
+                          PlatformButton(
+                            materialFlat: (context, platform) =>
+                                MaterialFlatButtonData(),
+                            onPressed: () async {
+                              try {
+                                final res = await RepositoryProvider.of<
+                                        RecipeRepository>(context)
+                                    .delete(recipe.id);
+                                if (res) {
+                                  setState(() {
+                                    _recipes.removeAt(index);
+                                  });
+                                  Fluttertoast.showToast(
+                                      msg: "Deleted Recipe",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor:
+                                          Theme.of(context).primaryColorLight,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                }
+                              } catch (e) {}
+                              Navigator.of(context).pop();
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(context.platformIcons.delete),
+                                PlatformText("Delete")
+                              ],
+                            ),
+                          ),
+                        ];
+
+                        switch (Theme.of(context).platform) {
+                          case TargetPlatform.iOS:
+                            return CupertinoActionSheet(
+                              actions: popupContent,
+                            );
+                            break;
+                          default:
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: popupContent,
+                            );
+                            break;
+                        }
                       });
-                      Fluttertoast.showToast(
-                          msg: "Deleted Recipe",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Theme.of(context).primaryColorLight,
-                          textColor: Colors.white,
-                          fontSize: 16.0);
-                    }
-                  } catch (e) {}
                 },
                 child: GestureDetector(
                     onTap: () async {

@@ -30,6 +30,7 @@ final theme = ThemeData(
       borderRadius: BorderRadius.circular(8),
     ),
   ),
+  platform: TargetPlatform.android
 );
 
 List<BoxShadow> shadowList = [
