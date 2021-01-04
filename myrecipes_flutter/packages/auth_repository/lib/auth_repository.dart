@@ -46,7 +46,10 @@ class AuthRepository {
   }
 
   Future<void> signup(String email, String password) async {
-    var res = await http.post("$_baseUrl/api/Auth/register", body: {email, password});
+    var requestBody = jsonEncode({"email": email, "password": password});
+    var res = await http.post("$_baseUrl/api/Auth/register", body: requestBody,       headers: {
+      'Content-type' : 'application/json',
+    },);
     if(res.statusCode != 200)
       throw Exception("Could not sign up");
   }
@@ -75,8 +78,6 @@ class AuthRepository {
       return;
     }
 
-    //Token validation (optional)
-
     developer.log("Token looks great, user authenticated");
     var user = getUserFromAccessToken(accessToken);
     _authSubject.add(user);
@@ -86,7 +87,8 @@ class AuthRepository {
     final jwtUtil = JwtUtil();
     var claims = jwtUtil.parseJwt(accessToken);
     var email = claims["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"];
-    return User(email: email, accessToken: accessToken);
+    var role = claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+    return User(email: email, accessToken: accessToken, isAdmin: role=="Admin");
   }
 
   Future<void> refreshAsync() async {

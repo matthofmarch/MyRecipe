@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:auth_repository/auth_repository.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/model.dart';
+import 'package:myrecipes_flutter/auth_guard/auth_guard.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/cubit/meal_view_cubit.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/views/vote_summary.dart';
 import 'package:myrecipes_flutter/views/recipeDetails/recipe_detail.dart';
@@ -29,7 +32,10 @@ class MealCalendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageView.custom(
-      controller: PageController(viewportFraction: 0.94 / ((MediaQuery.of(context).size.width ~/ 320)*2+1), initialPage: kPageIndentation),
+      controller: PageController(
+          viewportFraction:
+              0.94 / ((MediaQuery.of(context).size.width ~/ 320) * 2 + 1),
+          initialPage: kPageIndentation),
       onPageChanged: (newPageIndex) {
         BlocProvider.of<MealViewCubit>(context).currentDateSilent =
             viewInitialDate
@@ -41,40 +47,35 @@ class MealCalendar extends StatelessWidget {
           DateTime columnDate =
               viewInitialDate.add(Duration(days: indentedIndex));
 
-          return Container(
-            decoration: BoxDecoration(
-                border: Border(
-                    right: BorderSide(
-                        width: 1, color: Theme.of(context).dividerColor))),
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                ListView(
-                  padding: EdgeInsets.only(top: 44),
-                  children: meals
-                      .where((m) => mealOnCurrentDay(m, columnDate))
-                      .map((m) => _mealCard(context, m)).toList(),
-                ),
-                Badge(
-                  child: Chip(
-                    label: Text(
-                      DateFormat("E, d.").format(columnDate),
-                      style: Theme.of(context).textTheme.bodyText1.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+          return Row(
+            children: [
+              VerticalDivider(
+                indent: 20,
+                endIndent: 20,
+                width: 0, //Else one will see more of the most-left column than the one on the right
+              ),
+              Expanded(
+                child: Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    Builder(
+                      builder: (context) {
+                        final mealsForDay = meals
+                            .where((m) => mealOnCurrentDay(m, columnDate))
+                            .map((m) => _mealCard(context, m))
+                            .toList();
+
+                        return ListView(
+                          padding: EdgeInsets.only(top: 44),
+                          children: mealsForDay.isNotEmpty ? mealsForDay : [Text("No meals", textAlign: TextAlign.center,)]
+                        );
+                      }
                     ),
-                    shape: StadiumBorder(
-                      side: BorderSide(color: Theme.of(context).colorScheme.primary),
-                    ),
-                    backgroundColor:
-                    Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                    elevation: 5,
-                  ),
-                  position: BadgePosition.topEnd(top: 5.0, end: 5.0),
-                  badgeColor: Theme.of(context).colorScheme.secondary,
+                    _makeDateBadge(context, columnDate)
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         },
       ),
@@ -99,42 +100,136 @@ class MealCalendar extends StatelessWidget {
         );
       },
       onLongPress: () async {
-        await showPlatformModalSheet(context: context, builder: (context) {
-
-          var title = Text("Meal Actions", style: Theme.of(context).textTheme.subtitle1,);
-          var mealActions = [
-            PlatformButton(
-                materialFlat: (context, platform) => MaterialFlatButtonData(),
-                onPressed: () async {
-                  //Navigator.of(context).pop();
-                },
-                child: Row(
+        showBarModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Meal Actions",
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                ),
+                SizedBox(height: 8,),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(context.platformIcons.pen),
-                    Text("Vote up")
-                  ],
-                )),
-          ];
+                  children: [Icon(context.platformIcons.pen), Text("Delete")],
+                ),
+                SizedBox(height: 8,),
+                if(RepositoryProvider.of<AuthRepository>(context).authState.isAdmin)
+                PlatformButton(
+                  onPressed: () {},
+                  materialFlat: (context, platform) => MaterialFlatButtonData(),
+                  color: Colors.green,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [Icon(context.platformIcons.checkMark), Text("Accept")],
+                  ),
+                )
+              ],
+            );
+          },
+        );
+        return;
+        await showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context) {
+              var title = Text(
+                "Meal Actions",
+                style: Theme.of(context).textTheme.subtitle1,
+              );
+              var mealActions = [
+                PlatformButton(
+                    materialFlat: (context, platform) =>
+                        MaterialFlatButtonData(),
+                    onPressed: () async {
+                      //Navigator.of(context).pop();
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(context.platformIcons.pen),
+                        Text("Vote up")
+                      ],
+                    )),
+              ];
 
-          var platformActionSheet = Platform.isIOS
-              ? CupertinoActionSheet(title:title, actions: [...mealActions],)
-              : Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: title,
-              ),
-              Divider(),
-              ...mealActions],
-          );
+              var platformActionSheet = Platform.isIOS
+                  ? CupertinoActionSheet(
+                      title: title,
+                      actions: [...mealActions],
+                    )
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: title,
+                        ),
+                        Divider(),
+                        ...mealActions
+                      ],
+                    );
+              return ModalBottomSheet(
+                  onClosing: () {}, child: platformActionSheet);
 
-          return BottomSheet(onClosing: (){}, builder: (context) => platformActionSheet,);
-        },);
+              return BottomSheet(
+                onClosing: () {},
+                builder: (context) => platformActionSheet,
+              );
+            });
+
+        await showPlatformModalSheet(
+          context: context,
+          builder: (context) {
+            var title = Text(
+              "Meal Actions",
+              style: Theme.of(context).textTheme.subtitle1,
+            );
+            var mealActions = [
+              PlatformButton(
+                  materialFlat: (context, platform) => MaterialFlatButtonData(),
+                  onPressed: () async {
+                    //Navigator.of(context).pop();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(context.platformIcons.pen),
+                      Text("Vote up")
+                    ],
+                  )),
+            ];
+
+            var platformActionSheet = Platform.isIOS
+                ? CupertinoActionSheet(
+                    title: title,
+                    actions: [...mealActions],
+                  )
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: title,
+                      ),
+                      Divider(),
+                      ...mealActions
+                    ],
+                  );
+
+            return BottomSheet(
+              onClosing: () {},
+              builder: (context) => platformActionSheet,
+            );
+          },
+        );
       },
       child: AspectRatio(
-        aspectRatio: 2/3,
+        aspectRatio: 2 / 3,
         child: Card(
           margin: EdgeInsets.all(4),
           //color: meal.accepted ? Theme.of(context).cardColor : Theme.of(context).cardColor.withAlpha(0x10),
@@ -171,7 +266,8 @@ class MealCalendar extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text("Proposed by jfd",style: Theme.of(context).textTheme.caption),
+                                Text("Proposed by jfd",
+                                    style: Theme.of(context).textTheme.caption),
                                 Text(
                                   "${meal.recipe.name}",
                                   softWrap: true,
@@ -181,7 +277,6 @@ class MealCalendar extends StatelessWidget {
                                 ),
                               ],
                             )
-
                           ],
                         ),
                       ],
@@ -193,6 +288,26 @@ class MealCalendar extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  _makeDateBadge(BuildContext context, DateTime columnDate) {
+    return Badge(
+      child: Chip(
+        label: Text(
+          DateFormat("E, d.").format(columnDate),
+          style: Theme.of(context).textTheme.bodyText1.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+        ),
+        shape: StadiumBorder(
+          side: BorderSide(color: Theme.of(context).colorScheme.primary),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+        elevation: 5,
+      ),
+      position: BadgePosition.topEnd(top: 5.0, end: 5.0),
+      badgeColor: Theme.of(context).colorScheme.secondary,
     );
   }
 }

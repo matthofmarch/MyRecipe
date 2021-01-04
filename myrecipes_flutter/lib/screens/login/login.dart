@@ -24,7 +24,7 @@ class Login extends StatelessWidget {
           if(state is LoginProgress){
             return Center(child: CircularProgressIndicator());
           }
-          return PlatformScaffold(
+          return Scaffold(
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -36,9 +36,11 @@ class Login extends StatelessWidget {
                             color: Theme.of(context).colorScheme.primary,
                             width: 100,
                             height: 100)),
-                    Text(
-                      "MyRecipes",
-                      style: Theme.of(context).textTheme.headline4,
+                    Flexible(
+                      child: Text(
+                        "MyRecipes",
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
                     ),
                     Card(
                       elevation: 0,

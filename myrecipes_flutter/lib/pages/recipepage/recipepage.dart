@@ -52,59 +52,67 @@ class RecipePage extends StatelessWidget {
                                   .filter(_searchController.text),
                           controller: _searchController,
                           decoration: InputDecoration(
-                              hintText: "Search recipes",
-                              fillColor: Theme.of(context).scaffoldBackgroundColor,
-                              filled: true,
-                              border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(32))),
-                              suffixIcon: GestureDetector(
-                                  onTap: () =>
-                                      BlocProvider.of<RecipepageCubit>(context)
-                                          .filter(_searchController.text),
-                                  child: Icon(Icons.search)),),
+                            hintText: "Search recipes",
+                            fillColor: Theme
+                                .of(context)
+                                .scaffoldBackgroundColor,
+                            filled: true,
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(32))),
+                            suffixIcon: GestureDetector(
+                                onTap: () =>
+                                    BlocProvider.of<RecipepageCubit>(context)
+                                        .filter(_searchController.text),
+                                child: Icon(Icons.search)),),
                         ),
                       ),
                     ),
-                    SliverPersistentHeader(
-                      delegate: _SliverAppBarDelegate(
-                        PreferredSize(
-                          preferredSize: Size.fromHeight(40),
-                          child: ListView(
-                              padding: EdgeInsets.all(0),
-                              scrollDirection: Axis.horizontal,
-                              children: [
-                                "Bio",
-                                "Vegan",
-                                "Gluten-free",
-                                "Keto",
-                                "Mischkost"
-                              ]
-                                  .map((e) => Card(
-                                          child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.eco),
-                                            Text(e),
-                                          ],
-                                        ),
-                                      )))
-                                  .toList()),
-                        ),
-                      ),
-                      pinned: true,
-                    ),
+                    _makeTagHeader(context),
                     RecipeList(recipes)
                   ],
                 ),
               );
             }
-
-            return Container();
+            return null;
           },
         ));
   }
+
+  _makeTagHeader(BuildContext context) {
+    return SliverPersistentHeader(
+      delegate: _SliverAppBarDelegate(
+        PreferredSize(
+          preferredSize: Size.fromHeight(40),
+          child: ListView(
+              padding: EdgeInsets.all(0),
+              scrollDirection: Axis.horizontal,
+              children: [
+                "Bio",
+                "Vegan",
+                "Gluten-free",
+                "Keto",
+                "Mischkost"
+              ]
+                  .map((e) =>
+                  Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 2),
+                        child: Row(
+                          children: [
+                            Icon(Icons.eco),
+                            Text(e),
+                          ],
+                        ),
+                      )))
+                  .toList()),
+        ),
+      ),
+      pinned: true,
+    );
+  }
+
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
@@ -119,8 +127,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => _tabBar.preferredSize.height;
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(BuildContext context, double shrinkOffset,
+      bool overlapsContent) {
     return new Container(
       child: _tabBar,
     );

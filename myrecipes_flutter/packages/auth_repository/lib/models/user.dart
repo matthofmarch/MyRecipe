@@ -10,14 +10,16 @@ class User extends Equatable {
   /// {@macro user}
   const User({
     @required this.email,
-    @required this.accessToken
+    @required this.accessToken, this.isAdmin
   })  : assert(email != null),
-        assert(accessToken != null);
+        assert(accessToken != null),
+        assert(isAdmin != null);
 
   /// The current user's email address.
   final String email;
   final String accessToken;
+  final bool isAdmin;
 
   @override
-  List<Object> get props => [email, accessToken];
+  List<Object> get props => [email, accessToken, isAdmin];
 }
