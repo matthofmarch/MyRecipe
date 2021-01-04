@@ -8,7 +8,6 @@ abstract class SignupState extends Equatable {
   const SignupState();
 }
 class SignupInitial extends SignupState {}
-
 class SignupInteraction extends SignupState {
   String previousEmail ;
   SignupInteraction(this.previousEmail);
@@ -18,7 +17,6 @@ class SignupInteraction extends SignupState {
 }
 
 class SignupProgress extends SignupState {}
-
 class SignUpSuccess extends SignupState {}
 
 class SignUpFailure extends SignupState {
