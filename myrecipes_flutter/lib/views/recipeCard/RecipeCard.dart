@@ -22,40 +22,61 @@ class RecipeCard extends StatelessWidget {
             child: AspectRatio(
               aspectRatio: 1,
               child: Hero(
-                tag: recipe.id,
-                child: CustomAbrounding.image(NetworkOrDefaultImage(recipe.image))
-              ),
+                  tag: recipe.id,
+                  child: CustomAbrounding.image(
+                      NetworkOrDefaultImage(recipe.image))),
             ),
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("By Andi Gyptra", maxLines: 1, overflow: TextOverflow.ellipsis,style: Theme.of(context).textTheme.caption,),
-                        SizedBox(width: 16,),
-                        Row(children: [
-                          Icon(PlatformIcons(context).clockSolid, size: 16,),
-                          SizedBox(width: 4,),
-                          Text("${recipe.cookingTimeInMin} min", style: Theme.of(context).textTheme.overline,),
-                        ],)
-
-                      ],
-                    ),
-                    Text(
+              padding: const EdgeInsets.all(4.0),
+              child: Column(
+                children: [
+                  Flexible(
+                    child: Text(
                       recipe.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.subtitle1,
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 8,),
+                  Flexible(
+                    child: Row(
+                      children: [
+                        Flexible(
+                          flex: 2,
+                          child: Row(
+                            children: [
+                              Icon(PlatformIcons(context).clockSolid, size: 14,),
+                              SizedBox(
+                                width: 1,
+                              ),
+                              Flexible(
+                                child: Text(
+                                  "${recipe.cookingTimeInMin} min",
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  style: Theme.of(context).textTheme.overline,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 8,),
+                        Flexible(
+                          flex: 2,
+                          child: Text(
+                            "<Username>",
+                            maxLines: 1,
+                            overflow: TextOverflow.clip,
+                            style: Theme.of(context).textTheme.caption,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

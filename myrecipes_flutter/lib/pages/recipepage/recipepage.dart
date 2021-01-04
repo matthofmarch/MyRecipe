@@ -42,39 +42,34 @@ class RecipePage extends StatelessWidget {
                 body: CustomScrollView(
                   slivers: [
                     SliverAppBar(
-                      //expandedHeight: 80,
                       floating: true,
                       backgroundColor: Colors.transparent,
-                      flexibleSpace: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: TextField(
+                      flexibleSpace: Container(
+                        margin: const EdgeInsets.all(4.0),
+                        child: TextFormField(
                           onChanged: (value) =>
                               BlocProvider.of<RecipepageCubit>(context)
                                   .filter(_searchController.text),
                           controller: _searchController,
                           decoration: InputDecoration(
                               hintText: "Search recipes",
-                              contentPadding: EdgeInsets.all(6),
-                              fillColor:
-                                  Theme.of(context).dialogBackgroundColor,
+                              fillColor: Theme.of(context).scaffoldBackgroundColor,
                               filled: true,
                               border: OutlineInputBorder(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
+                                      BorderRadius.all(Radius.circular(32))),
                               suffixIcon: GestureDetector(
                                   onTap: () =>
                                       BlocProvider.of<RecipepageCubit>(context)
                                           .filter(_searchController.text),
-                                  child: Icon(Icons.search)),
-                              focusColor:
-                                  Theme.of(context).colorScheme.surface),
+                                  child: Icon(Icons.search)),),
                         ),
                       ),
                     ),
                     SliverPersistentHeader(
                       delegate: _SliverAppBarDelegate(
                         PreferredSize(
-                          preferredSize: Size.fromHeight(45),
+                          preferredSize: Size.fromHeight(40),
                           child: ListView(
                               padding: EdgeInsets.all(0),
                               scrollDirection: Axis.horizontal,
@@ -87,7 +82,7 @@ class RecipePage extends StatelessWidget {
                               ]
                                   .map((e) => Card(
                                           child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
                                         child: Row(
                                           children: [
                                             Icon(Icons.eco),

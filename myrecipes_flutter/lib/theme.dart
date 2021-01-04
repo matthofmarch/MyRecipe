@@ -32,7 +32,7 @@ final themes = [ThemeData.light(), ThemeData.dark()]
                   borderRadius: BorderRadius.all(Radius.circular(10)))),
           inputDecorationTheme: t.inputDecorationTheme.copyWith(
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8), gapPadding: 8),
+                borderRadius: BorderRadius.circular(8)),
           ),
         ))
     .toList();

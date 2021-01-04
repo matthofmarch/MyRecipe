@@ -67,7 +67,7 @@ class UpdateRecipe extends StatelessWidget {
   Widget _makeRecipeInteraction(
       BuildContext context, UpdateRecipeInteraction state) {
     return Scaffold(
-      appBar: CustomDefaultAppBar(),
+      appBar: CustomDefaultAppBar(title: Text("Update Recipe"),),
       body: _makeForm(context, state),
       floatingActionButton: FloatingActionButton(
         child: Icon(context.platformIcons.checkMark),
@@ -84,17 +84,21 @@ class UpdateRecipe extends StatelessWidget {
 
   _makeForm(BuildContext context, UpdateRecipeInteraction state) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.all(8.0),
       child: ListView(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+
+              _makeInformationCard(context, state),
               SizedBox(
                 height: 8,
               ),
-              _makeInformationCard(context, state),
               _makeImageCard(context, state),
+              SizedBox(
+                height: 8,
+              ),
               _makeIngredientsCard(context, state)
             ],
           ),
@@ -122,7 +126,7 @@ class UpdateRecipe extends StatelessWidget {
                       controller: _nameController,
                       onChanged:(value) =>  BlocProvider.of<UpdateRecipeCubit>(context).name = value,
                       decoration: new InputDecoration(
-                          hintText: "Name"),
+                          labelText: "Name"),
                     ),
                   ),
                   SizedBox(
@@ -135,7 +139,7 @@ class UpdateRecipe extends StatelessWidget {
                       onChanged:(value) =>  BlocProvider.of<UpdateRecipeCubit>(context).cookingTimeInMin = int.parse(value),
                       keyboardType: TextInputType.number,
                       decoration: new InputDecoration(
-                          hintText: "Duration"),
+                          labelText: "Duration"),
                     ),
                   ),
                 ],
@@ -145,10 +149,9 @@ class UpdateRecipe extends StatelessWidget {
               ),
               TextFormField(
                 controller: _descriptionController,
-                minLines: 1,
                 onChanged:(value) =>  BlocProvider.of<UpdateRecipeCubit>(context).description = value,
                 decoration: new InputDecoration(
-                    hintText: "Description"),
+                    labelText: "Description"),
               ),
             ],
           ),

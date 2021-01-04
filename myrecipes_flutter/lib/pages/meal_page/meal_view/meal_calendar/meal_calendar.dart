@@ -1,11 +1,13 @@
+import 'dart:io';
+
 import 'package:badges/badges.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:models/model.dart';
-import 'package:myrecipes_flutter/pages/meal_page/cubit/meals_cubit.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/cubit/meal_view_cubit.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/views/vote_summary.dart';
 import 'package:myrecipes_flutter/views/recipeDetails/recipe_detail.dart';
@@ -34,7 +36,6 @@ class MealCalendar extends StatelessWidget {
                 .add(Duration(days: newPageIndex - kPageIndentation));
       },
       childrenDelegate: SliverChildBuilderDelegate(
-        //make one column
         (BuildContext context, int index) {
           final indentedIndex = index - kPageIndentation;
           DateTime columnDate =
@@ -46,7 +47,7 @@ class MealCalendar extends StatelessWidget {
                     right: BorderSide(
                         width: 1, color: Theme.of(context).dividerColor))),
             child: Stack(
-              alignment: AlignmentDirectional.topCenter,
+              alignment: Alignment.topCenter,
               children: [
                 ListView(
                   padding: EdgeInsets.only(top: 44),
@@ -97,13 +98,48 @@ class MealCalendar extends StatelessWidget {
           ),
         );
       },
+      onLongPress: () async {
+        await showPlatformModalSheet(context: context, builder: (context) {
+
+          var title = Text("Meal Actions", style: Theme.of(context).textTheme.subtitle1,);
+          var mealActions = [
+            PlatformButton(
+                materialFlat: (context, platform) => MaterialFlatButtonData(),
+                onPressed: () async {
+                  //Navigator.of(context).pop();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(context.platformIcons.pen),
+                    Text("Vote up")
+                  ],
+                )),
+          ];
+
+          var platformActionSheet = Platform.isIOS
+              ? CupertinoActionSheet(title:title, actions: [...mealActions],)
+              : Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: title,
+              ),
+              Divider(),
+              ...mealActions],
+          );
+
+          return BottomSheet(onClosing: (){}, builder: (context) => platformActionSheet,);
+        },);
+      },
       child: AspectRatio(
         aspectRatio: 2/3,
         child: Card(
           margin: EdgeInsets.all(4),
           //color: meal.accepted ? Theme.of(context).cardColor : Theme.of(context).cardColor.withAlpha(0x10),
           key: Key("meal-calendar-card_${meal.mealId}"),
-          shadowColor: Theme.of(context).shadowColor,
+          shadowColor: meal.accepted ? Colors.green : Colors.red,
           elevation: 4,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
