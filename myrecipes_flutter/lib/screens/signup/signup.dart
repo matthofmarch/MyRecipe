@@ -1,56 +1,75 @@
 import 'package:auth_repository/auth_repository.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:myrecipes_flutter/screens/signup/cubit/signup_cubit.dart';
 
 class Signup extends StatelessWidget {
-  final _emailController = TextEditingController()..text = "";
-  final _passwordController = TextEditingController()..text = "";
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SignupCubit>(
         create: (_) => SignupCubit(RepositoryProvider.of(context)),
-            child:
-            BlocBuilder<SignupCubit, SignupState>(
-                builder: (context, state) => Scaffold(
-            appBar: AppBar(),
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(children: [
-                    PlatformTextField(
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      material: (context, platform) => MaterialTextFieldData(
-                          decoration: InputDecoration(labelText: "Email")),
-                      cupertino: (context, platform) =>
-                          CupertinoTextFieldData(placeholder: "Email"),
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    PlatformTextField(
-                      controller: _passwordController,
-                      obscureText: true,
-                      material: (context, platform) => MaterialTextFieldData(
-                          decoration: InputDecoration(labelText: "Password")),
-                      cupertino: (context, platform) =>
-                          CupertinoTextFieldData(placeholder: "Password"),
-                    ),
-                  ]),
+        child: BlocBuilder<SignupCubit, SignupState>(builder: (context, state) {
+          if (state is SignupInitial) {
+            BlocProvider.of<SignupCubit>(context).load();
+            return Container();
+          }
+          if (state is SignupInteraction) return _makeInteraction(context,state);
+          if (state is SignupProgress)
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          if (state is SignUpSuccess) {
+            Future.delayed(
+                Duration(milliseconds: 500), () => Navigator.of(context).pop());
+            return Center(child: Icon(context.platformIcons.checkMark));
+          }
+          if (state is SignUpFailure) {
+            Future.delayed(Duration(milliseconds: 500), ()=> BlocProvider.of<SignupCubit>(context).load(previousEmail: state.previousEmail));
+            return Center(
+                child: Icon(
+              context.platformIcons.error,
+              color: Theme.of(context).errorColor,
+            ));
+          }
+          return null;
+        }));
+  }
+
+  _makeInteraction(BuildContext context, SignupInteraction state) {
+    final _emailController = TextEditingController(text: state.previousEmail);
+    final _passwordController = TextEditingController();
+    return Scaffold(
+        appBar: AppBar(),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(children: [
+                TextFormField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(labelText: "Email"),
                 ),
-                FlatButton(
-                    onPressed: () => BlocProvider.of<SignupCubit>(context)
-                        .signup(
-                            _emailController.text, _passwordController.text),
-                    child: Text("Sign Up")),
-              ],
-            ))));
+                SizedBox(
+                  height: 16,
+                ),
+                TextFormField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(labelText: "Password"),
+                ),
+              ]),
+            ),
+            FlatButton(
+                onPressed: () => BlocProvider.of<SignupCubit>(context)
+                    .signup(_emailController.text, _passwordController.text),
+                child: Text("Sign Up")),
+          ],
+        ));
   }
 }

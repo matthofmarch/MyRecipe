@@ -24,7 +24,7 @@ class Login extends StatelessWidget {
           if(state is LoginProgress){
             return Center(child: CircularProgressIndicator());
           }
-          return PlatformScaffold(
+          return Scaffold(
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -33,12 +33,14 @@ class Login extends StatelessWidget {
                   children: [
                     Flexible(
                         child: SvgPicture.asset("assets/MyRecipe_Logo.svg",
-                            color: Theme.of(context).primaryColor,
+                            color: Theme.of(context).colorScheme.primary,
                             width: 100,
                             height: 100)),
-                    PlatformText(
-                      "MyRecipes",
-                      style: Theme.of(context).textTheme.headline4,
+                    Flexible(
+                      child: Text(
+                        "MyRecipes",
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
                     ),
                     Card(
                       elevation: 0,
@@ -47,11 +49,11 @@ class Login extends StatelessWidget {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              PlatformText(
+                              Text(
                                 "Welcome back,",
                                 style: Theme.of(context).textTheme.overline,
                               ),
-                              PlatformText(
+                              Text(
                                 "Log In!",
                                 style: Theme.of(context).textTheme.headline5,
                               ),
@@ -103,7 +105,7 @@ class Login extends StatelessWidget {
                           ],
                         ),
                         borderSide: BorderSide(
-                            color: Theme.of(context).primaryColor, width: 1.5),
+                            color: Theme.of(context).colorScheme.primary, width: 1.5),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25)),
                       ),

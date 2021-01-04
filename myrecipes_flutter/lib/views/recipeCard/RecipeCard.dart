@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:models/model.dart';
+import 'package:myrecipes_flutter/views/util/NetworkOrDefaultImage.dart';
+import 'package:myrecipes_flutter/views/util/RoundedImage.dart';
 
 import '../../theme.dart';
 
@@ -12,84 +14,74 @@ class RecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      return Container(
-        height: 120,
-        decoration: BoxDecoration(boxShadow: shadowList),
-        margin: EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          children: [
-            AspectRatio(
-              aspectRatio: 1 / 1,
-              child: Builder(
-                builder: (context) {
-                  return recipe.image != null
-                      ? Hero(
-                        tag: recipe.id,
-                        child: CachedNetworkImage(
-                            imageUrl: recipe.image,
-                            fit: BoxFit.fitWidth,
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(20),
-                                ),
-                                image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover),
-                              ),
-                            ),
-                            placeholder: (context, url) => Text("Loading"),
-                            errorWidget: (context, url, error) =>
-                                Text("Could not load image"),
-                          ),
-                      )
-                      : Container(
-                    height: 120,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: ExactAssetImage(
-                            "assets/placeholder-image.png"),
-                      ),
-                    ),
-                  );
-                },
-              ),
+    return Card(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Hero(
+                  tag: recipe.id,
+                  child: CustomAbrounding.image(
+                      NetworkOrDefaultImage(recipe.image))),
             ),
-            Expanded(
-              child: Container(
-                height: 95,
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(20),
-                        bottomRight: Radius.circular(20)),
-                    color: Colors.white),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Column(
+                children: [
+                  Flexible(
+                    child: Text(
                       recipe.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.subtitle1,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                  SizedBox(height: 8,),
+                  Flexible(
+                    child: Row(
                       children: [
-                        Icon(PlatformIcons(context).clockSolid),
-                        Text("${recipe.cookingTimeInMin} min"),
+                        Flexible(
+                          flex: 2,
+                          child: Row(
+                            children: [
+                              Icon(PlatformIcons(context).clockSolid, size: 14,),
+                              SizedBox(
+                                width: 1,
+                              ),
+                              Flexible(
+                                child: Text(
+                                  "${recipe.cookingTimeInMin} min",
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  style: Theme.of(context).textTheme.overline,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 8,),
+                        Flexible(
+                          flex: 2,
+                          child: Text(
+                            "<Username>",
+                            maxLines: 1,
+                            overflow: TextOverflow.clip,
+                            style: Theme.of(context).textTheme.caption,
+                          ),
+                        ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            )
-          ],
-        ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

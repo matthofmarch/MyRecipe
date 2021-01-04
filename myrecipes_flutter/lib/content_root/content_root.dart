@@ -37,6 +37,7 @@ class _ContentRootState extends State<ContentRoot> {
       child: Scaffold(
         body: getDestinationWidget(_currentIndex),
         bottomNavigationBar: BottomNavigationBar(
+          fixedColor: Theme.of(context).colorScheme.primary,
           items: destinations.asMap().entries.map((e) =>
              BottomNavigationBarItem(
               label: e.value.label,

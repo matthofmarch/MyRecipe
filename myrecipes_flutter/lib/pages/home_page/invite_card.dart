@@ -56,7 +56,7 @@ class InviteCodeCardState extends State<InviteCodeCard> {
                         alignment: Alignment.center,
                         children: [
                           Icon(Icons.remove_red_eye),
-                          if(_showInviteCode) Icon(Icons.close, color: Colors.red, size: 32,)
+                          if(_showInviteCode) Icon(Icons.close, color: Theme.of(context).colorScheme.error, size: 32,)
                         ],
                       )
                     ],

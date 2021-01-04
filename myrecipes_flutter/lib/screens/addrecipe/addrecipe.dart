@@ -32,11 +32,6 @@ class AddRecipe extends StatelessWidget {
           BlocProvider.of<AddrecipeCubit>(context).reload();
           return Container(child: Center(child: CircularProgressIndicator()));
         }
-        if (state is AddrecipeSuccess) {
-          Navigator.of(context).pop();
-          return Container();
-        }
-
         if (state is AddrecipeInteraction) {
           return Stack(
             children: [
@@ -67,8 +62,19 @@ class AddRecipe extends StatelessWidget {
             ],
           );
         }
+        if (state is AddrecipeSuccess) {
+          Future.delayed(
+              Duration(milliseconds: 500), () => Navigator.of(context).pop(state.recipe));
+          return Center(child: Icon(context.platformIcons.checkMark));
+        }
+        if (state is AddrecipeFailure) {
+          Future.delayed(
+              Duration(milliseconds: 500), () => Navigator.of(context).pop(null));
+          return Center(child: Icon(context.platformIcons.error, color: Theme.of(context).errorColor,));
+        }
         return null;
-      }),
+          }
+          ),
     );
   }
 
@@ -202,7 +208,7 @@ class AddRecipe extends StatelessWidget {
         children: [
           Icon(
             context.platformIcons.collections,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).colorScheme.primary,
           ),
           Text(
             " Gallery",
@@ -218,8 +224,8 @@ class AddRecipe extends StatelessWidget {
       onPressed: () async {
         var pickedPath = (await picker.getImage(
             source: ImageSource.camera,
-            maxWidth: 1920,
-            maxHeight: 1280))
+            maxWidth: 1024,
+            maxHeight: 1024))
             .path;
 
         if (pickedPath != null && !kIsWeb) {
@@ -238,7 +244,7 @@ class AddRecipe extends StatelessWidget {
         children: [
           Icon(
             context.platformIcons.photoCamera,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).colorScheme.primary,
           ),
           Text(
             " Camera",

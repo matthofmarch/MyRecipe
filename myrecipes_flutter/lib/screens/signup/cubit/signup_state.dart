@@ -7,18 +7,23 @@ abstract class SignupState extends Equatable {
 
   const SignupState();
 }
-
 class SignupInitial extends SignupState {}
+class SignupInteraction extends SignupState {
+  String previousEmail ;
+  SignupInteraction(this.previousEmail);
+
+  @override
+  List<Object> get props =>[previousEmail];
+}
 
 class SignupProgress extends SignupState {}
-
 class SignUpSuccess extends SignupState {}
 
 class SignUpFailure extends SignupState {
-  final String _errorMessage;
+  final String previousEmail;
 
-  const SignUpFailure(this._errorMessage);
+  const SignUpFailure(this.previousEmail);
 
   @override
-  List<Object> get props => [_errorMessage];
+  List<Object> get props => [previousEmail];
 }

@@ -11,6 +11,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ingredient_repository/ingredient_repository.dart';
 import 'package:models/model.dart';
 import 'package:myrecipes_flutter/screens/update_recipe/cubit/update_recipe_cubit.dart';
+import 'package:myrecipes_flutter/views/appbar/CustomDefaultAppBar.dart';
+import 'package:myrecipes_flutter/views/util/RoundedImage.dart';
 import 'package:recipe_repository/recipe_repository.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 
@@ -65,10 +67,7 @@ class UpdateRecipe extends StatelessWidget {
   Widget _makeRecipeInteraction(
       BuildContext context, UpdateRecipeInteraction state) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("MyRecipes"),
-        toolbarHeight: 40,
-      ),
+      appBar: CustomDefaultAppBar(title: Text("Update Recipe"),),
       body: _makeForm(context, state),
       floatingActionButton: FloatingActionButton(
         child: Icon(context.platformIcons.checkMark),
@@ -85,22 +84,21 @@ class UpdateRecipe extends StatelessWidget {
 
   _makeForm(BuildContext context, UpdateRecipeInteraction state) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.all(8.0),
       child: ListView(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 8),
-              Text(
-                "Add a recipe",
-                style: Theme.of(context).textTheme.headline5,
-              ),
+
+              _makeInformationCard(context, state),
               SizedBox(
                 height: 8,
               ),
-              _makeInformationCard(context, state),
               _makeImageCard(context, state),
+              SizedBox(
+                height: 8,
+              ),
               _makeIngredientsCard(context, state)
             ],
           ),
@@ -124,13 +122,11 @@ class UpdateRecipe extends StatelessWidget {
                 children: [
                   Flexible(
                     flex: 2,
-                    child: PlatformTextField(
+                    child: TextFormField(
                       controller: _nameController,
                       onChanged:(value) =>  BlocProvider.of<UpdateRecipeCubit>(context).name = value,
-                      material: (context, platform) => MaterialTextFieldData(
-                          decoration: InputDecoration(labelText: "Name")),
-                      cupertino: (context, platform) =>
-                          CupertinoTextFieldData(placeholder: "Name"),
+                      decoration: new InputDecoration(
+                          labelText: "Name"),
                     ),
                   ),
                   SizedBox(
@@ -138,16 +134,12 @@ class UpdateRecipe extends StatelessWidget {
                   ),
                   Flexible(
                     flex: 1,
-                    child: PlatformTextField(
+                    child: TextFormField(
                       controller: _cookingTimeInMinController,
                       onChanged:(value) =>  BlocProvider.of<UpdateRecipeCubit>(context).cookingTimeInMin = int.parse(value),
                       keyboardType: TextInputType.number,
-                      material: (context, platform) => MaterialTextFieldData(
-                          decoration:
-                              InputDecoration(labelText: "Cooking time")),
-                      cupertino: (context, platform) => CupertinoTextFieldData(
-                        placeholder: "Cooking time",
-                      ),
+                      decoration: new InputDecoration(
+                          labelText: "Duration"),
                     ),
                   ),
                 ],
@@ -155,16 +147,11 @@ class UpdateRecipe extends StatelessWidget {
               SizedBox(
                 height: 8,
               ),
-              PlatformTextField(
+              TextFormField(
                 controller: _descriptionController,
-                minLines: 1,
                 onChanged:(value) =>  BlocProvider.of<UpdateRecipeCubit>(context).description = value,
-
-                material: (context, platform) => MaterialTextFieldData(
-                    decoration: InputDecoration(labelText: "Description")),
-                cupertino: (context, platform) => CupertinoTextFieldData(
-                  placeholder: "Description",
-                ),
+                decoration: new InputDecoration(
+                    labelText: "Description"),
               ),
             ],
           ),
@@ -194,9 +181,10 @@ class UpdateRecipe extends StatelessWidget {
                 _makeGalleryButton(context)
               ],
             ),
-            ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                child: image ?? Text("No Image selected")),
+            CustomAbrounding.image(image),
+            // ClipRRect(
+            //     borderRadius: BorderRadius.all(Radius.circular(20)),
+            //     child: image ?? Text("No Image selected")),
           ],
         ),
       ),
@@ -220,7 +208,7 @@ class UpdateRecipe extends StatelessWidget {
         children: [
           Icon(
             context.platformIcons.collections,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).colorScheme.primary,
           ),
           Text(
             " Gallery",
@@ -248,7 +236,7 @@ class UpdateRecipe extends StatelessWidget {
         children: [
           Icon(
             context.platformIcons.photoCamera,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).colorScheme.primary,
           ),
           Text(
             " Camera",
