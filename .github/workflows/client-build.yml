@@ -35,7 +35,7 @@ jobs:
       - run: flutter pub get
       - run: flutter test
         continue-on-error: true
-      - run: flutter build apk --verbose --no-tree-shake-icons
+      - run: flutter build apk --verbose --no-tree-shake-icons --release
         
       - uses: actions/upload-artifact@v1
         with:
