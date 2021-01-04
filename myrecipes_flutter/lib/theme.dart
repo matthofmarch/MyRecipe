@@ -24,21 +24,15 @@ get darkTheme => themes[1];
 
 final themes = [ThemeData.light(), ThemeData.dark()]
     .map((t) => t.copyWith(
-        colorScheme: colorScheme,
-        primaryColor: colorScheme.primary,
-        accentColor: colorScheme.secondary,
-        //openSansTextTheme(),
-        cardTheme: CardTheme(
-          color: t.scaffoldBackgroundColor.withOpacity(0.8),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10))),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8), gapPadding: 8),
-        ),
-
-        platform: TargetPlatform.iOS))
+          colorScheme: colorScheme,
+          primaryColor: colorScheme.primary,
+          accentColor: colorScheme.secondary,
+          cardTheme: t.cardTheme.copyWith(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)))),
+          inputDecorationTheme: t.inputDecorationTheme.copyWith(
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8), gapPadding: 8),
+          ),
+        ))
     .toList();
-
-//List<BoxShadow> shadowList = [BoxShadow(blurRadius: 30, offset: Offset(0, 30))];

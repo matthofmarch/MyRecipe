@@ -11,6 +11,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ingredient_repository/ingredient_repository.dart';
 import 'package:models/model.dart';
 import 'package:myrecipes_flutter/screens/update_recipe/cubit/update_recipe_cubit.dart';
+import 'package:myrecipes_flutter/views/appbar/CustomDefaultAppBar.dart';
+import 'package:myrecipes_flutter/views/util/RoundedImage.dart';
 import 'package:recipe_repository/recipe_repository.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 
@@ -65,10 +67,7 @@ class UpdateRecipe extends StatelessWidget {
   Widget _makeRecipeInteraction(
       BuildContext context, UpdateRecipeInteraction state) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("MyRecipes"),
-        toolbarHeight: 40,
-      ),
+      appBar: CustomDefaultAppBar(),
       body: _makeForm(context, state),
       floatingActionButton: FloatingActionButton(
         child: Icon(context.platformIcons.checkMark),
@@ -91,11 +90,6 @@ class UpdateRecipe extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 8),
-              Text(
-                "Add a recipe",
-                style: Theme.of(context).textTheme.headline5,
-              ),
               SizedBox(
                 height: 8,
               ),
@@ -184,9 +178,10 @@ class UpdateRecipe extends StatelessWidget {
                 _makeGalleryButton(context)
               ],
             ),
-            ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                child: image ?? Text("No Image selected")),
+            CustomAbrounding.image(image),
+            // ClipRRect(
+            //     borderRadius: BorderRadius.all(Radius.circular(20)),
+            //     child: image ?? Text("No Image selected")),
           ],
         ),
       ),

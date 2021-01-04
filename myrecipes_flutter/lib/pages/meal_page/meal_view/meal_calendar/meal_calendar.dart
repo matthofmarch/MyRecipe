@@ -9,12 +9,12 @@ import 'package:myrecipes_flutter/pages/meal_page/cubit/meals_cubit.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/cubit/meal_view_cubit.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/views/vote_summary.dart';
 import 'package:myrecipes_flutter/views/recipeDetails/recipe_detail.dart';
+import 'package:myrecipes_flutter/views/util/NetworkOrDefaultImage.dart';
+import 'package:myrecipes_flutter/views/util/RoundedImage.dart';
 
 int kPageIndentation = 1000;
 
 class MealCalendar extends StatelessWidget {
-  final controller =
-      PageController(viewportFraction: 1 / 3, initialPage: kPageIndentation);
   List<Meal> meals;
   DateTime viewInitialDate;
 
@@ -27,7 +27,7 @@ class MealCalendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageView.custom(
-      controller: controller,
+      controller: PageController(viewportFraction: 0.94 / ((MediaQuery.of(context).size.width ~/ 320)*2+1), initialPage: kPageIndentation),
       onPageChanged: (newPageIndex) {
         BlocProvider.of<MealViewCubit>(context).currentDateSilent =
             viewInitialDate
@@ -97,61 +97,63 @@ class MealCalendar extends StatelessWidget {
           ),
         );
       },
-      child: Card(
-        margin: EdgeInsets.all(4),
-        color: meal.accepted ? Theme.of(context).cardColor : Theme.of(context).cardColor.withAlpha(0x10),
-        key: Key("meal-calendar-card_${meal.mealId}"),
-        shadowColor: Theme.of(context).shadowColor,
-        elevation: 2,
-        child: AspectRatio(
-          //Make all cards have the same height
-          aspectRatio: 3 / 5,
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Hero(
-                      tag: meal.recipe.id,
-                      child: Image.network(
-                        meal.recipe.image,
-                        fit: BoxFit.cover,
-                      ),
+      child: AspectRatio(
+        aspectRatio: 2/3,
+        child: Card(
+          margin: EdgeInsets.all(4),
+          //color: meal.accepted ? Theme.of(context).cardColor : Theme.of(context).cardColor.withAlpha(0x10),
+          key: Key("meal-calendar-card_${meal.mealId}"),
+          shadowColor: Theme.of(context).shadowColor,
+          elevation: 4,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(2),
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: CustomAbrounding.image(
+                    NetworkOrDefaultImage(meal.recipe.image),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            VoteSummary(meal),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text("Proposed by jfd",style: Theme.of(context).textTheme.caption),
+                                Text(
+                                  "${meal.recipe.name}",
+                                  softWrap: true,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.subtitle1,
+                                ),
+                              ],
+                            )
+
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                SizedBox(height: 8),
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          VoteSummary(meal),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Expanded(
-                            child: Text(
-                              "${meal.recipe.name}",
-                              softWrap: true,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.subtitle1,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+              )
+            ],
           ),
         ),
       ),

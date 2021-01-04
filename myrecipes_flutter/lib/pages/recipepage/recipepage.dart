@@ -24,12 +24,12 @@ class RecipePage extends StatelessWidget {
               return Container();
             }
             if (state is RecipepageProgress) {
-              return Container(child: Center(child: CircularProgressIndicator()));
+              return Container(
+                  child: Center(child: CircularProgressIndicator()));
             }
             if (state is RecipepageSuccess) {
               final recipes = state.recipes;
               return Scaffold(
-                body: RecipeList(recipes),
                 floatingActionButton: FloatingActionButton(
                   child: Icon(context.platformIcons.add),
                   onPressed: () async {
@@ -39,62 +39,69 @@ class RecipePage extends StatelessWidget {
                     BlocProvider.of<RecipepageCubit>(context).loadRecipes();
                   },
                 ),
-                extendBodyBehindAppBar: true,
-                appBar: PreferredSize(
-                  preferredSize: Size.fromHeight(98),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6),
-                          child: TextField(
-                            onChanged: (value) => BlocProvider.of<RecipepageCubit>(context).filter(_searchController.text),
-                            controller: _searchController,
-                            decoration: InputDecoration(
-                                hintText: "Search recipes",
-                                contentPadding: EdgeInsets.all(6),
-                                fillColor: Theme.of(context).dialogBackgroundColor,
-                                filled: true,
-                                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
-                                suffixIcon: GestureDetector(onTap: () => BlocProvider.of<RecipepageCubit>(context).filter(_searchController.text),child: Icon(Icons.search)),
-                                focusColor: Theme.of(context).colorScheme.surface
-                            ),
-                          ),
-                            /*material: (context, platform) => MaterialTextFieldData(
-                              decoration:
-                              InputDecoration(
-                                hintText: "Search recipes",
-                                contentPadding: EdgeInsets.all(6),
-                                  fillColor: Theme.of(context).colorScheme.surface,
-                                  filled: true,
-                                  border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
-                                  suffixIcon: GestureDetector(onTap: () => BlocProvider.of<RecipepageCubit>(context).filter(_searchController.text),child: Icon(Icons.search, color: Theme.of(context).scaffoldBackgroundColor,)),
-                                  focusColor: Theme.of(context).colorScheme.surface
-                              ),
-                            ),
-                          ),*/
+                body: CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      //expandedHeight: 80,
+                      floating: true,
+                      backgroundColor: Colors.transparent,
+                      flexibleSpace: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: TextField(
+                          onChanged: (value) =>
+                              BlocProvider.of<RecipepageCubit>(context)
+                                  .filter(_searchController.text),
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                              hintText: "Search recipes",
+                              contentPadding: EdgeInsets.all(6),
+                              fillColor:
+                                  Theme.of(context).dialogBackgroundColor,
+                              filled: true,
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                              suffixIcon: GestureDetector(
+                                  onTap: () =>
+                                      BlocProvider.of<RecipepageCubit>(context)
+                                          .filter(_searchController.text),
+                                  child: Icon(Icons.search)),
+                              focusColor:
+                                  Theme.of(context).colorScheme.surface),
                         ),
-                        SizedBox(height: 4,),
-                        Flexible(
-                          child: ListView(
-                            padding: EdgeInsets.all(0),
-                            scrollDirection: Axis.horizontal,
-                              children: ["Bio", "Vegan", "Gluten-free", "Keto", "Mischkost"]
-                                  .map((e) => Card(child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.eco),
-                                        Text(e),
-                                      ],
-                                    ),
-                                  )))
-                                  .toList()),
-                        )
-                      ],
+                      ),
                     ),
-                  ),
+                    SliverPersistentHeader(
+                      delegate: _SliverAppBarDelegate(
+                        PreferredSize(
+                          preferredSize: Size.fromHeight(45),
+                          child: ListView(
+                              padding: EdgeInsets.all(0),
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                "Bio",
+                                "Vegan",
+                                "Gluten-free",
+                                "Keto",
+                                "Mischkost"
+                              ]
+                                  .map((e) => Card(
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.eco),
+                                            Text(e),
+                                          ],
+                                        ),
+                                      )))
+                                  .toList()),
+                        ),
+                      ),
+                      pinned: true,
+                    ),
+                    RecipeList(recipes)
+                  ],
                 ),
               );
             }
@@ -102,5 +109,30 @@ class RecipePage extends StatelessWidget {
             return Container();
           },
         ));
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate(this._tabBar);
+
+  final PreferredSize _tabBar;
+
+  @override
+  double get minExtent => _tabBar.preferredSize.height;
+
+  @override
+  double get maxExtent => _tabBar.preferredSize.height;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return new Container(
+      child: _tabBar,
+    );
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return false;
   }
 }

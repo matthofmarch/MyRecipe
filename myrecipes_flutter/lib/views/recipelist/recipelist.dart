@@ -32,41 +32,38 @@ class _RecipeListState extends State<RecipeList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: () async{ await BlocProvider.of<RecipepageCubit>(context).loadRecipes();},
-        child: ListView.separated(
-          itemCount: widget.recipes.length,
-          itemBuilder: (context, index) {
-            final recipe = widget.recipes[index];
-            return GestureDetector(
-                onLongPress: () async {
-                  await _showRecipeOperationsBottomSheet(context, index);
-                },
-                onTap: () async {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          RecipeDetail(
-                            recipe: recipe,
-                          ),
-                    ),
-                  );
-                },
-                child: RecipeCard(recipe));
-          },
-          separatorBuilder: (BuildContext context, int index) =>
-          const SizedBox(
-            height: 10,
-          ),
-        ),
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        childAspectRatio: 3/4,
+        crossAxisCount: MediaQuery.of(context).size.width ~/ 160,
       ),
-    );
+      delegate: SliverChildBuilderDelegate(
+    (context, index) {
+        final recipe = widget.recipes[index];
+        return GestureDetector(
+            onLongPress: () async {
+              await _showRecipeOperationsBottomSheet(context, index);
+            },
+            onTap: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) =>
+                      RecipeDetail(
+                        recipe: recipe,
+                      ),
+                ),
+              );
+            },
+            child: RecipeCard(recipe));
+      },
+      childCount: widget.recipes.length
+    ),
+      );
   }
 
-  _showRecipeOperationsBottomSheet(BuildContext ctx, int index) async {
+  _showRecipeOperationsBottomSheet(BuildContext parentContext, int index) async {
     return showPlatformModalSheet(
-        context: ctx,
+        context: parentContext,
         builder: (context) {
           var popupContent = [
             PlatformButton(
@@ -79,26 +76,10 @@ class _RecipeListState extends State<RecipeList> {
                   try {
                     await RepositoryProvider.of<MealRepository>(context)
                         .propose(widget.recipes[index].id, dateTime);
-                    //Scaffold.of(ctx).showSnackBar(SnackBar(content: Text("fslkdfkl")));
-                    FToast()
-                      ..init(ctx).showToast(
-                          msg: "Meal planned",
-                          toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.CENTER_RIGHT,
-                          backgroundColor:
-                          Theme
-                              .of(context)
-                              .colorScheme
-                              .primary);
+                    Scaffold.of(parentContext).showSnackBar(SnackBar(content: Text("Planned meal")));
+
                   } catch (e) {
-                    Fluttertoast.showToast(
-                        msg: "Could not plan meal",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.TOP_RIGHT,
-                        backgroundColor: Theme
-                            .of(context)
-                            .colorScheme
-                            .error);
+                    Scaffold.of(parentContext).showSnackBar(SnackBar(content: Text("Could not plan meal"),backgroundColor: Theme.of(context).errorColor,));
                   }
                   Navigator.of(context).pop();
                 }
@@ -145,24 +126,10 @@ class _RecipeListState extends State<RecipeList> {
                     setState(() {
                       widget.recipes.removeAt(index);
                     });
-                    Fluttertoast.showToast(
-                        msg: "Deleted Recipe",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.TOP_RIGHT,
-                        backgroundColor: Theme
-                            .of(context)
-                            .colorScheme
-                            .primary);
+                    Scaffold.of(parentContext).showSnackBar(SnackBar(content: Text("Deleted Recipe"),));
                   }
                 } catch (e) {
-                  Fluttertoast.showToast(
-                      msg: "Could not delete Recipe",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.TOP_RIGHT,
-                      backgroundColor: Theme
-                          .of(context)
-                          .colorScheme
-                          .error);
+                  Scaffold.of(parentContext).showSnackBar(SnackBar(content: Text("Could not delete Recipe"),backgroundColor: Theme.of(context).errorColor,));
                 }
                 Navigator.of(context).pop();
               },
