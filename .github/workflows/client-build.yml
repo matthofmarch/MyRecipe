@@ -43,9 +43,13 @@ jobs:
       - run: echo $KEY_JKS > android/key.jks.base64.txt
       - run: echo $KEY_JKS > key.jks #remove later
       - run: openssl base64 -in android/key.jks.base64.txt -out android/key.jks -d
+        
       - run: sha256sum android/key.jks #remove later
-      - run: sha256sum $KEY_PASSWORD #remove later
-      - run: sha256sum $ALIAS_PASSWORD
+      - run: echo $KEY_PASSWORD > KEY_PASSWORD #remove later
+      - run: sha256sum KEY_PASSWORD #remove later
+      - run: echo $ALIAS_PASSWORD > ALIAS_PASSWORD #remove later
+      - run: sha256sum ALIAS_PASSWORD
+        
       - run: flutter build apk --release --no-tree-shake-icons --verbose
         
       - uses: actions/upload-artifact@v1
