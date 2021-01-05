@@ -41,7 +41,7 @@ jobs:
         continue-on-error: true
       - run: echo $KEY_JKS > android/key-base64
       - run: openssl base64 -in android/key-base64 -out android/key.jks -d
-      - run: flutter build apk --no-tree-shake-icons --release --debug --stacktrace
+      - run: flutter build apk --no-tree-shake-icons --release --debug
         
       - uses: actions/upload-artifact@v1
         with:
