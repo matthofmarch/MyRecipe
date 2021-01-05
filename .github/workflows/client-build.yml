@@ -41,15 +41,11 @@ jobs:
       - run: flutter pub get
       - run: flutter test
         continue-on-error: true
-      - run: echo $KEY_JKS > android/key.jks.base64.txt
-      - run: echo $KEY_JKS > key.jks #remove later
-      - run: openssl base64 -in android/key.jks.base64.txt -out android/key.jks -d
-        
-      - run: sha256sum android/key.jks #remove later
-      - run: echo $KEY_PASSWORD > KEY_PASSWORD #remove later
-      - run: sha256sum KEY_PASSWORD #remove later
-      - run: echo $ALIAS_PASSWORD > ALIAS_PASSWORD #remove later
-      - run: sha256sum ALIAS_PASSWORD
+      - run: echo $KEY_JKS > android/key.jks #.base64.txt
+      - run: echo $KEY_JKS > key.jks #.base64.txt
+
+      #- run: openssl base64 -in android/key.jks.base64.txt -out android/key.jks -d
+      
         
       - run: flutter build apk --release --no-tree-shake-icons --verbose
         
