@@ -64,9 +64,10 @@ jobs:
       - run: flutter pub get
       - run: flutter test
         continue-on-error: true
-      - run: echo $KEY_JKS > android/key-base64
-      - run: openssl base64 -in android/key-base64 -out android/key.jks -d
-      - run: cat android/key.jks
+      - run: echo $KEY_JKS > android/key.jks.base64.txt
+      - run: echo $KEY_JKS > key.jks
+      - run: openssl base64 -in android/key.jks.base64.txt -out android/key.jks -d
+      - run: sha256sum key.jks
       - run: flutter build apk --no-tree-shake-icons --release --verbose
         
       - uses: actions/upload-artifact@v1
