@@ -6,7 +6,7 @@ import 'package:equatable/equatable.dart';
 import '../model.dart';
 import 'vote.dart';
 
-class Meal extends Equatable {
+class Meal with EquatableMixin {
   final String mealId;
   final String initiatorName;
   final Recipe recipe;
@@ -62,7 +62,6 @@ class Meal extends Equatable {
       accepted: map['accepted'],
       votes: List<Vote>.from(map['votes']?.map((x) => Vote.fromMap(x))),
     );
-
   }
 
   String toJson() => json.encode(toMap());

@@ -10,17 +10,17 @@ class SignupCubit extends Cubit<SignupState> {
 
   SignupCubit(this._authRepository) : super(SignupInitial());
 
-  void load({previousEmail=""}){
+  Future<void> load({previousEmail=""}) async{
     emit(SignupInteraction(previousEmail));
   }
 
-  void signup(String email, String password) async {
+  Future<void> signup(String email, String password) async {
     emit(SignupProgress());
     try {
       await _authRepository.signup(email, password);
       emit(SignUpSuccess());
       await _authRepository.login(email, password);
-    }catch(e){
+    }on Exception catch(e){
       print(e);
       emit(SignUpFailure(email));
     }

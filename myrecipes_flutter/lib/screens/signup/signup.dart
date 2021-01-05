@@ -10,13 +10,16 @@ class Signup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SignupCubit>(
-        create: (_) => SignupCubit(RepositoryProvider.of(context)),
-        child: BlocBuilder<SignupCubit, SignupState>(builder: (context, state) {
+        create: (context) => SignupCubit(RepositoryProvider.of(context)),
+        child: BlocBuilder<SignupCubit, SignupState>(
+            builder: (context, state) {
           if (state is SignupInitial) {
-            BlocProvider.of<SignupCubit>(context).load();
+            Future.delayed(Duration(milliseconds: 0), () => BlocProvider.of<SignupCubit>(context).load());
             return Container();
           }
-          if (state is SignupInteraction) return _makeInteraction(context,state);
+          if (state is SignupInteraction) {
+            return _makeInteraction(context,state);
+          }
           if (state is SignupProgress)
             return Center(
               child: CircularProgressIndicator(),

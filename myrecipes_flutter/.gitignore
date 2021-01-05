@@ -42,3 +42,4 @@ app.*.map.json
 
 #Keystores
 *.jks
+*.p12

@@ -1,6 +1,8 @@
 import 'dart:convert';
 
-class Vote {
+import 'package:equatable/equatable.dart';
+
+class Vote with EquatableMixin{
   final String username;
   final bool voteIsPositive;
   Vote({
@@ -39,18 +41,5 @@ class Vote {
   factory Vote.fromJson(String source) => Vote.fromMap(json.decode(source));
 
   @override
-  String toString() =>
-      'Vote(username: $username, voteIsPositive: $voteIsPositive)';
-
-  @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
-
-    return o is Vote &&
-        o.username == username &&
-        o.voteIsPositive == voteIsPositive;
-  }
-
-  @override
-  int get hashCode => username.hashCode ^ voteIsPositive.hashCode;
+  List<Object> get props => [username, voteIsPositive];
 }
