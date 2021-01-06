@@ -9,33 +9,34 @@ part 'household_guard_state.dart';
 class HouseholdGuardCubit extends Cubit<HouseholdGuardState> {
   GroupRepository _groupRepository;
 
-  //TODO: Eventually listen on user behaviour subject
   HouseholdGuardCubit(this._groupRepository) : super(HouseholdGuardInitial());
 
   Future<void> checkHouseholdState()async{
     try{
       var group = await _groupRepository.getGroupForUser();
       emit(HouseholdGuardInGroup());
-    }catch(e){
-      emit(HouseholdGuardCreateOrJoin());
+    } catch(e){
+      emit(HouseholdGuardCreateOrJoin(errorMessage: e.toString()));
     }
   }
 
   Future<void> createHousehold(String name) async {
-    try{await _groupRepository.create(name);}
-    catch(e){
+    try{
+      await _groupRepository.create(name);
+      checkHouseholdState();
+    } catch(e){
       log(e.toString());
+      emit(HouseholdGuardCreateOrJoin(errorMessage: e.toString()));
     }
-    checkHouseholdState();
   }
 
   Future<void> joinWithCode(String inviteCode) async {
     try{
       await _groupRepository.joinWithInviteCode(inviteCode);
+      checkHouseholdState();
     }catch(e){
       log(e.toString());
+      emit(HouseholdGuardCreateOrJoin(errorMessage: e.toString()));
     }
-    checkHouseholdState();
-
-  }
+ }
 }
