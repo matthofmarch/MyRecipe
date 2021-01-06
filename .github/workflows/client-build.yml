@@ -46,7 +46,7 @@ jobs:
       - run: flutter test
         continue-on-error: true
       - run: echo $KEY_JKS > key.jks.base64.txt
-      - run: openssl base64 -in key.jks.base64.txt -out android/key.jks -d          
+      - run: openssl base64 -in key.jks.base64.txt -out android/app/key.jks -d          
       - name: Create key.properties
         run: |
           echo storeFile=key.jks > android/key.properties
