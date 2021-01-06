@@ -47,7 +47,7 @@ jobs:
       - run: openssl base64 -in key.jks.base64.txt -out android/key.jks -d          
       - name: Create key.properties
         run: |
-          echo storeFile=../key.jks > android/key.properties
+          echo storeFile=key.jks > android/key.properties
           echo storePassword=$KEY_PASSWORD >> android/key.properties
           echo keyPassword=$ALIAS_PASSWORD >> android/key.properties
           echo keyAlias=release >> android/key.properties
