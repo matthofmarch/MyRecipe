@@ -21,7 +21,7 @@ jobs:
     env:
       KEY_P12: ${{ secrets.KEY_P12 }}
       KEY_JKS: ${{ secrets.KEY_JKS }}
-      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
       ALIAS_PASSWORD: ${{ secrets.ALIAS_PASSWORD }}
     defaults:
       run:
@@ -46,15 +46,17 @@ jobs:
       - run: flutter test
         continue-on-error: true
       - run: echo $KEY_JKS > key.jks.base64.txt
-      - run: openssl base64 -in key.jks.base64.txt -out android/app/key.jks -d          
+      - run: openssl base64 -in key.jks.base64.txt -out android/app/key.jks -d
+      - name: Check keystore
+        run: sha256sum android/app/key.jks
       - name: Create key.properties
         run: |
           echo storeFile=key.jks > android/key.properties
-          echo storePassword=$KEY_PASSWORD >> android/key.properties
+          echo storePassword=$KEYSTORE_PASSWORD >> android/key.properties
           echo keyPassword=$ALIAS_PASSWORD >> android/key.properties
           echo keyAlias=release >> android/key.properties
-      #- name: Build Android App Bundle
-       # run: flutter build appbundle
+      - name: Check keys
+        run: sha256sum android/app/key.jks
       - name: Build APK
         run: flutter build apk --release --no-tree-shake-icons --verbose
         
