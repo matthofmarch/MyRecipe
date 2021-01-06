@@ -51,12 +51,12 @@ jobs:
         run: sha256sum android/app/key.jks
       - name: Create key.properties
         run: |
-          echo storeFile=key.jks > android/key.properties
-          echo storePassword=$KEYSTORE_PASSWORD >> android/key.properties
+          echo storePassword=$KEYSTORE_PASSWORD > android/key.properties
           echo keyPassword=$ALIAS_PASSWORD >> android/key.properties
           echo keyAlias=release >> android/key.properties
+          echo storeFile=key.jks >> android/key.properties
       - name: Check keys
-        run: sha256sum android/app/key.jks
+        run: sha256sum android/key.properties
       - name: Build APK
         run: flutter build apk --release --no-tree-shake-icons --verbose
         
