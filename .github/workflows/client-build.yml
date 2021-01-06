@@ -63,6 +63,12 @@ jobs:
         with:
           name: release-apk
           path: myrecipes_flutter/build/app/outputs/flutter-apk/app-release.apk
+          
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
         
       - name: Create Release
         id: create_release
@@ -71,8 +77,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ steps.tag_version.outputs.new_tag }}
+          release_name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ github.event.head_commit.message }}
           draft: false
           prerelease: true
