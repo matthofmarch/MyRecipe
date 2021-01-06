@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:group_repository/src/group_repository.dart';
@@ -15,7 +15,9 @@ class HouseholdGuardCubit extends Cubit<HouseholdGuardState> {
     try{
       var group = await _groupRepository.getGroupForUser();
       emit(HouseholdGuardInGroup());
+      log("Household fetched successfully");
     } catch(e){
+      log(e.toString());
       emit(HouseholdGuardCreateOrJoin(errorMessage: e.toString()));
     }
   }
@@ -25,8 +27,8 @@ class HouseholdGuardCubit extends Cubit<HouseholdGuardState> {
       await _groupRepository.create(name);
       checkHouseholdState();
     } catch(e){
-      log(e.toString());
-      emit(HouseholdGuardCreateOrJoin(errorMessage: e.toString()));
+      log(e);
+      emit(HouseholdGuardCreateOrJoin(errorMessage: "Could not create household: "+e.toString()));
     }
   }
 
