@@ -22,34 +22,59 @@ class HouseholdGuard extends StatelessWidget {
           }
           if(state is HouseholdGuardCreateOrJoin){
             final householdNameController = TextEditingController();
+            final householdInviteCodeController = TextEditingController();
+
             return Scaffold(
-              body: Column(
-                children: [
-                  TextFormField(
-                    controller: householdNameController,
-                    decoration: InputDecoration(labelText: "Name of your Household"),
-                  ),
-                  PlatformButton(
-                    materialFlat: (context, platform) => MaterialFlatButtonData(),
-                    onPressed: () async {
-                      await BlocProvider.of<HouseholdGuardCubit>(context).createHousehold(householdNameController.text);
-                    },
-                    child: Text("Create Household"),
-                  ),
+              body: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Create or join household", style: Theme.of(context).textTheme.headline6, ),
+                    SizedBox(height: 32,),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                controller: householdNameController,
+                                decoration: InputDecoration(labelText: "Name"),
+                              ),
+                              PlatformButton(
+                                material: (context, platform) => MaterialRaisedButtonData(color: Theme.of(context).primaryColor),
+                                onPressed: () async {
+                                  await BlocProvider.of<HouseholdGuardCubit>(context).createHousehold(householdNameController.text);
+                                },
+                                child: Text("Create Household"),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 16,),
+                        Flexible(
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                controller: householdInviteCodeController,
+                                decoration: InputDecoration(labelText: "Invite Code"),
+                              ),
+                              PlatformButton(
+                                material: (context, platform) => MaterialRaisedButtonData(color: Theme.of(context).primaryColor),
+                                onPressed: () async {
+                                  await BlocProvider.of<HouseholdGuardCubit>(context).joinWithCode(householdInviteCodeController.text);
+                                },
+                                child: Text("Join Household"),
+                              ),
+                            ],
+                          ),
+                        ),
 
-                  TextFormField(
-                    controller: householdNameController,
-                    decoration: InputDecoration(labelText: "Code of another household"),
-                  ),
-                  PlatformButton(
-                    materialFlat: (context, platform) => MaterialFlatButtonData(),
-                    onPressed: () async {
-                      await BlocProvider.of<HouseholdGuardCubit>(context).joinWithCode(householdNameController.text);
-                    },
-                    child: Text("Create Household"),
-                  ),
 
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             );
           }
