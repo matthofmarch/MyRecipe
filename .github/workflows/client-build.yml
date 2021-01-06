@@ -45,7 +45,7 @@ jobs:
       - run: flutter pub get
       - run: flutter test
         continue-on-error: true
-      - run: echo $KEY_JKS > key.jks.base64.txt
+      - run: echo "${{ secrets.KEY_JKS }}" > key.jks.base64.txt
       - run: openssl base64 -in key.jks.base64.txt -out android/app/key.jks -d
       - name: Check keystore
         run: sha256sum android/app/key.jks && cat android/app/key.jks
