@@ -58,7 +58,32 @@ jobs:
       - name: Build APK
         run: flutter build apk --release --no-tree-shake-icons --verbose
         
-      - uses: actions/upload-artifact@v1
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
         with:
           name: release-apk
           path: myrecipes_flutter/build/app/outputs/flutter-apk/app-release.apk
+        
+      - name: Create Release
+        id: create_release
+        if: ${{ github.event_name == 'push' }}
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: ${{ github.event.head_commit.message }}
+          draft: false
+          prerelease: true
+      - name: Upload Release Asset
+        if: ${{ github.event_name == 'push' }}
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: build/app/outputs/flutter-apk/app.apk
+          asset_name: MyRecipe.zip
+          asset_content_type: application/zip
