@@ -26,6 +26,4 @@ class AuthGuardCubit extends Cubit<AuthGuardState> {
     _authRepository.dispose();
     return super.close();
   }
-
-
 }

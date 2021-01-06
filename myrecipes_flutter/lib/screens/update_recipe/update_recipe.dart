@@ -219,6 +219,7 @@ class UpdateRecipe extends StatelessWidget {
 
   _makeCameraButton(BuildContext context) => TextButton(
       onPressed: () async {
+
         var pickedPath = (await picker.getImage(
                 source: ImageSource.camera, maxWidth: 1920, maxHeight: 1280))
             .path;

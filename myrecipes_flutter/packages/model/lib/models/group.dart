@@ -1,10 +1,8 @@
 import 'dart:convert';
-
-import 'package:collection/collection.dart';
-
+import 'package:equatable/equatable.dart';
 import 'member.dart';
 
-class Group {
+class Group with EquatableMixin{
   final String name;
   final List<Member> members;
   Group({
@@ -43,16 +41,6 @@ class Group {
   factory Group.fromJson(String source) => Group.fromMap(json.decode(source));
 
   @override
-  String toString() => 'Group(name: $name, members: $members)';
+  List<Object> get props => [name, members];
 
-  @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
-    final listEquals = const DeepCollectionEquality().equals;
-
-    return o is Group && o.name == name && listEquals(o.members, members);
-  }
-
-  @override
-  int get hashCode => name.hashCode ^ members.hashCode;
 }

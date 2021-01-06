@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 
-class Recipe {
+class Recipe with EquatableMixin{
   final String id;
   final String name;
   final String description;
@@ -71,33 +72,5 @@ class Recipe {
   factory Recipe.fromJson(String source) => Recipe.fromMap(json.decode(source));
 
   @override
-  String toString() {
-    return 'Recipe(id: $id, name: $name, description: $description, cookingTimeInMin: $cookingTimeInMin, ingredientNames: $ingredientNames, image: $image, addToGroupPool: $addToGroupPool)';
-  }
-
-  @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
-    final listEquals = const DeepCollectionEquality().equals;
-
-    return o is Recipe &&
-        o.id == id &&
-        o.name == name &&
-        o.description == description &&
-        o.cookingTimeInMin == cookingTimeInMin &&
-        listEquals(o.ingredientNames, ingredientNames) &&
-        o.image == image &&
-        o.addToGroupPool == addToGroupPool;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        name.hashCode ^
-        description.hashCode ^
-        cookingTimeInMin.hashCode ^
-        ingredientNames.hashCode ^
-        image.hashCode ^
-        addToGroupPool.hashCode;
-  }
+  List<Object> get props => [id, name, description, cookingTimeInMin, ingredientNames, image, addToGroupPool];
 }

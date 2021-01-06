@@ -31,4 +31,35 @@ class GroupRepository{
     }
     throw Exception("$url got ${response.statusCode}");
   }
+
+  Future<String> joinWithInviteCode(String inviteCode) async{
+    var url = "$_baseUrl/api/InviteCode/acceptInviteCode?inviteCode=${inviteCode}";
+
+    final response = await _client.get(url, headers: {"accept": "*/*"});
+    if (response.statusCode == 200) {
+      var jsonResult = jsonDecode(response.body);
+      return jsonResult["code"];
+    }
+    throw Exception("$url got ${response.statusCode}");
+  }
+
+  Future<Group> getGroupForUser() async{
+    var url = "$_baseUrl/api/Group/getGroupForUser";
+
+    final response = await _client.get(url);
+    if (response.statusCode == 200) {
+      return Group.fromJson(response.body);
+    }
+    throw Exception("$url got ${response.statusCode}");
+  }
+
+  Future<void> create(String name) async{
+    var url = "$_baseUrl/api/Group";
+    var requestBody = jsonEncode({"name": name});
+    final response = await _client.post(url, body: requestBody);
+    if (response.statusCode == 201) {
+      return;
+    }
+    throw Exception("$url got ${response.statusCode}");
+  }
 }

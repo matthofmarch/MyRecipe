@@ -19,8 +19,9 @@ jobs:
         
   build:
     env:
+      KEY_P12: ${{ secrets.KEY_P12 }}
       KEY_JKS: ${{ secrets.KEY_JKS }}
-      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
       ALIAS_PASSWORD: ${{ secrets.ALIAS_PASSWORD }}
     defaults:
       run:
@@ -31,20 +32,31 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:      
       - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
+      - name: Setup Java
+        uses: actions/setup-java@v1
         with:
-          java-version: '12.x'
-
+          java-version: '15'
+        
       - uses: subosito/flutter-action@v1
         with:
-          channel: 'stable'
+          channel: 'beta'
+      - run: flutter upgrade
+      - run: flutter doctor
       - run: flutter pub get
       - run: flutter test
         continue-on-error: true
-      - run: echo $KEY_JKS > key.jks.base64.txt
-      - run: openssl base64 -in key.jks.base64.txt -out android/key.jks -d
-      
-      - run: flutter build apk --release --no-tree-shake-icons --verbose
+      - run: echo "${{ secrets.KEY_JKS }}" > key.jks.base64.txt
+      - run: openssl base64 -in key.jks.base64.txt -out android/app/key.jks -d
+      - name: Check keystore
+        run: sha256sum android/app/key.jks
+      - name: Create key.properties
+        run: |
+          echo storePassword=$KEYSTORE_PASSWORD > android/key.properties
+          echo keyPassword=$ALIAS_PASSWORD >> android/key.properties
+          echo keyAlias=release >> android/key.properties
+          echo storeFile=key.jks >> android/key.properties
+      - name: Build APK
+        run: flutter build apk --release --no-tree-shake-icons --verbose
         
       - uses: actions/upload-artifact@v1
         with:

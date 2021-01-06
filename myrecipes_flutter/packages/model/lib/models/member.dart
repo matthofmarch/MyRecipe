@@ -1,6 +1,8 @@
 import 'dart:convert';
 
-class Member {
+import 'package:equatable/equatable.dart';
+
+class Member with EquatableMixin{
   final String email;
   final bool isAdmin;
   Member({
@@ -39,15 +41,8 @@ class Member {
   factory Member.fromJson(String source) => Member.fromMap(json.decode(source));
 
   @override
-  String toString() => 'Member(email: $email, isAdmin: $isAdmin)';
+  // TODO: implement props
+  List<Object> get props => [email, isAdmin];
 
-  @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
 
-    return o is Member && o.email == email && o.isAdmin == isAdmin;
-  }
-
-  @override
-  int get hashCode => email.hashCode ^ isAdmin.hashCode;
 }
