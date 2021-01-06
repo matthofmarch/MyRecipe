@@ -5,10 +5,11 @@ import 'dart:convert';
 import 'package:auth_repository/jwt_util.dart';
 import 'package:auth_repository/models/login_result.dart';
 import 'package:auth_repository/models/models.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
 import 'dart:developer' as developer;
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 const kAccessTokenName="access_token";
@@ -16,7 +17,8 @@ const kRefreshTokenName="refresh_token";
 
 
 class AuthRepository {
-  final storage = FlutterSecureStorage();
+  Future<SharedPreferences> get sharedPreferences => SharedPreferences.getInstance();
+  //final storage = FlutterSecureStorage();
   var _baseUrl;
   bool _currentlyRefreshing = false;
 
@@ -39,8 +41,9 @@ class AuthRepository {
       throw Exception("Could not login");
 
     var loginResult = LoginResult.fromJson(jsonDecode(res.body));
-    await storage.write(key: kAccessTokenName, value: loginResult.token);
-    await storage.write(key: kRefreshTokenName, value: loginResult.refreshToken);
+    final storage = await sharedPreferences;
+    await storage.setString(kAccessTokenName, loginResult.token);
+    await storage.setString(kRefreshTokenName, loginResult.refreshToken);
 
     checkAuthStateAsync();
   }
@@ -55,14 +58,16 @@ class AuthRepository {
   }
 
   Future<void> logout() async{
-    await storage.delete(key: kAccessTokenName);
-    await storage.delete(key: kRefreshTokenName);
+    final storage = await sharedPreferences;
+    await storage.remove( kAccessTokenName);
+    await storage.remove(kRefreshTokenName);
     _authSubject.add(null);
   }
 
   Future<void> checkAuthStateAsync() async {
     developer.log("Checking auth state");
-    String accessToken = await storage.read(key: kAccessTokenName);
+    final storage = await sharedPreferences;
+    String accessToken = storage.getString(kAccessTokenName);
     if(accessToken == null){
       developer.log("No access token available");
       _authSubject.sink.add(null);
@@ -103,8 +108,9 @@ class AuthRepository {
     //Don't actually catch errors here, just ensure to remove the refreshing flag afterwards
     try{
       _authSubject.value = null;
-      String accessToken = await storage.read(key: kAccessTokenName);
-      String refreshToken = await storage.read(key: kRefreshTokenName);
+      final storage = await sharedPreferences;
+      String accessToken = storage.getString(kAccessTokenName);
+      String refreshToken = storage.getString(kRefreshTokenName);
       if(accessToken == null || refreshToken == null){
         developer.log("Not all tokens required for refresh available");
         return;
@@ -124,9 +130,9 @@ class AuthRepository {
 
       var loginResult = LoginResult.fromJson(jsonDecode(res.body));
       developer.log("New access token: ${loginResult.token}");
-      await storage.write(key: kAccessTokenName, value: loginResult.token);
+      await storage.setString(kAccessTokenName, loginResult.token);
       developer.log("New refresh token: ${loginResult.refreshToken}");
-      await storage.write(key: kRefreshTokenName, value: loginResult.refreshToken);
+      await storage.setString(kRefreshTokenName, loginResult.refreshToken);
 
       checkAuthStateAsync();
     }catch(e){
