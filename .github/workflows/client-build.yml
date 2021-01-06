@@ -35,19 +35,19 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v1
         with:
-          java-version: '12.x'
+          java-version: '15'
         
       - uses: subosito/flutter-action@v1
         with:
-          channel: 'stable'
+          channel: 'beta'
       - run: flutter pub get
       - run: flutter test
         continue-on-error: true
-      - run: echo $KEY_P12 > key.jks.base64.txt
+      - run: echo $KEY_JKS > key.jks.base64.txt
       - run: openssl base64 -in key.jks.base64.txt -out android/key.jks -d          
       - name: Create key.properties
         run: |
-          echo storeFile=../key.jks > android/key.properties
+          echo storeFile=key.jks > android/key.properties
           echo storePassword=$KEY_PASSWORD >> android/key.properties
           echo keyPassword=$ALIAS_PASSWORD >> android/key.properties
           echo keyAlias=release >> android/key.properties
