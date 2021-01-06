@@ -39,7 +39,7 @@ jobs:
         
       - uses: subosito/flutter-action@v1
         with:
-          channel: 'stable'
+          channel: 'beta'
       - run: flutter pub get
       - run: flutter test
         continue-on-error: true
