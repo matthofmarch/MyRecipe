@@ -43,7 +43,8 @@ dependencies:
   fluttertoast: 7.1.6
   image_picker: 0.6.7+17
 
-  #flutter_plugin_android_lifecycle: 1.0.11
+  device_info: 1.0.0
+#flutter_plugin_android_lifecycle: 1.0.11
 
   auth_repository:
     path: packages/auth_repository
@@ -64,10 +65,28 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
 
+environment_config:
+  path: env_config.dart
+  fields:
+    ENV:
+      env_var: APP_ENV
+      default: 'development'
+      dotenv: true
+
+    API_URL:
+      env_var: API_URL
+      const: false
+      default: "${Platform.isAndroid ? 'https://10.0.2.2:5000' : 'https://localhost:5000'}"
+
+  imports:
+    - dart:io
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: "^0.8.0"
+  environment_config: 2.2.5
+
 
 flutter_icons:
   android: true

@@ -43,3 +43,5 @@ app.*.map.json
 #Keystores
 *.jks
 *.p12
+/.env
+/lib/env_config.dart

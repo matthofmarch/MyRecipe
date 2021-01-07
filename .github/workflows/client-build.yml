@@ -43,6 +43,7 @@ jobs:
       - run: flutter upgrade
       - run: flutter doctor
       - run: flutter pub get
+      - run: flutter pub run environment_config:generate --API_URL=https://vm133.htl-leonding.ac.at --ENV=production
       - run: flutter test
         continue-on-error: true
       - run: echo "${{ secrets.KEY_JKS }}" > key.jks.base64.txt
