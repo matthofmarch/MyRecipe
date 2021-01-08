@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:models/model.dart';
+import 'package:models/models/user_recipe.dart';
 import 'package:myrecipes_flutter/views/util/NetworkOrDefaultImage.dart';
 import 'package:myrecipes_flutter/views/util/RoundedImage.dart';
 
@@ -64,10 +65,11 @@ class RecipeCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 8,),
-                        Flexible(
+                        if(recipe is UserRecipe)
+                          Flexible(
                           flex: 2,
                           child: Text(
-                            "<Username>",
+                            (recipe as UserRecipe).username,
                             maxLines: 1,
                             overflow: TextOverflow.clip,
                             style: Theme.of(context).textTheme.caption,

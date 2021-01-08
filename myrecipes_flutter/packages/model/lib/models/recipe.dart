@@ -54,8 +54,6 @@ class Recipe with EquatableMixin{
   }
 
   factory Recipe.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
-
     return Recipe(
       id: map['id'],
       name: map['name'],

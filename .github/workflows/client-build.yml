@@ -56,7 +56,7 @@ jobs:
           echo keyAlias=release >> android/key.properties
           echo storeFile=key.jks >> android/key.properties
       - name: Build APK
-        run: flutter build apk --release --no-tree-shake-icons --verbose
+        run: flutter build apk --release --no-tree-shake-icons --verbose --dart-define=ENVIRONMENT=Production --dart-define=API_BASE_URL=https://vm133.htl-leonding.ac.at
         
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
@@ -72,7 +72,7 @@ jobs:
         
       - name: Create Release
         id: create_release
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name != 'pull_request' }}
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
@@ -83,7 +83,7 @@ jobs:
           draft: false
           prerelease: true
       - name: Upload Release Asset
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name != 'pull_request' }}
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
         env:

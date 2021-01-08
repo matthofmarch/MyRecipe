@@ -43,8 +43,6 @@ dependencies:
   fluttertoast: 7.1.6
   image_picker: 0.6.7+17
 
-  #flutter_plugin_android_lifecycle: 1.0.11
-
   auth_repository:
     path: packages/auth_repository
   meal_repository:
@@ -57,7 +55,6 @@ dependencies:
     path: packages/group_repository
   ingredient_repository:
     path: packages/ingredient_repository
-
 
 
   # The following adds the Cupertino Icons font to your application.
