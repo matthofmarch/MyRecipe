@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +25,6 @@ class HouseholdGuard extends StatelessWidget {
           if(state is HouseholdGuardCreateOrJoin){
             final householdNameController = TextEditingController();
             final householdInviteCodeController = TextEditingController();
-
             return Scaffold(
               body: Padding(
                 padding: const EdgeInsets.all(16.0),

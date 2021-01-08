@@ -8,7 +8,7 @@ import 'package:group_repository/group_repository.dart';
 import 'package:http_interceptor/http_client_with_interceptor.dart';
 import 'package:ingredient_repository/ingredient_repository.dart';
 import 'package:meal_repository/meal_repository.dart';
-import 'package:myrecipes_flutter/env_config.dart';
+import 'package:myrecipes_flutter/enviroment_config.dart';
 import 'package:myrecipes_flutter/interceptors/jsoncontent_interceptor.dart';
 import 'package:myrecipes_flutter/retry_policy/expired_token_retry_policy.dart';
 import 'package:myrecipes_flutter/splash/splash.dart';
@@ -21,7 +21,7 @@ import 'interceptors/bearer_interceptor.dart';
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final baseUrl = EnvConfig.API_URL;
+    final baseUrl = EnvironmentConfig.API_BASE_URL;
     final authRepository = AuthRepository(baseUrl);
 
     return RepositoryProvider<AuthRepository>(

@@ -27,7 +27,7 @@ class HouseholdGuardCubit extends Cubit<HouseholdGuardState> {
       await _groupRepository.create(name);
       checkHouseholdState();
     } catch(e){
-      log(e);
+      log(e.toString());
       emit(HouseholdGuardCreateOrJoin(errorMessage: "Could not create household: "+e.toString()));
     }
   }
