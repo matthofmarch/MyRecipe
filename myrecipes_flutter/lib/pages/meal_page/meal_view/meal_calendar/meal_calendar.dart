@@ -10,7 +10,6 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/model.dart';
-import 'package:myrecipes_flutter/auth_guard/auth_guard.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/cubit/meal_view_cubit.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/views/vote_summary.dart';
 import 'package:myrecipes_flutter/views/recipeDetails/recipe_detail.dart';
