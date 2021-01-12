@@ -25,99 +25,102 @@ class Login extends StatelessWidget {
             return Center(child: CircularProgressIndicator());
           }
           return Scaffold(
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset("assets/MyRecipe_Logo.svg",
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        SvgPicture.asset("assets/MyRecipe_Logo.svg",
                             color: Theme.of(context).colorScheme.primary,
                             width: 100,
                             height: 100),
-                      Text(
-                        "MyRecipes",
-                        style: Theme.of(context).textTheme.headline4,
-                      ),
-                      Card(
-                        elevation: 0,
-                        child: Padding(
-                          padding: EdgeInsets.all(16),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Welcome back,",
-                                  style: Theme.of(context).textTheme.overline,
-                                ),
-                                Text(
-                                  "Log In!",
-                                  style: Theme.of(context).textTheme.headline5,
-                                ),
-                                SizedBox(
-                                  height: 16,
-                                ),
-                                PlatformTextField(
-                                  controller: _emailController,
-                                  keyboardType: TextInputType.emailAddress,
-                                  material: (context, platform) =>
-                                      MaterialTextFieldData(
-                                          decoration: InputDecoration(
-                                              labelText: "Email")),
-                                  cupertino: (context, platform) =>
-                                      CupertinoTextFieldData(
-                                          placeholder: "Email"),
-                                ),
-                                SizedBox(
-                                  height: 16,
-                                ),
-                                PlatformTextField(
-                                  obscureText: true,
-                                  controller: _passwordController,
-                                  material: (context, platform) =>
-                                      MaterialTextFieldData(
-                                          decoration: InputDecoration(
-                                              labelText: "Password")),
-                                  cupertino: (context, platform) =>
-                                      CupertinoTextFieldData(
-                                          placeholder: "Password"),
-                                ),
-                              ]),
+                        Text(
+                          "MyRecipes",
+                          style: Theme.of(context).textTheme.headline4,
                         ),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        height: 50,
-                        child: OutlineButton(
-                          onPressed: () => BlocProvider.of<LoginCubit>(context)
-                              .login(_emailController.text,
-                                  _passwordController.text),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
+                      ],
+                    ),
+                    Card(
+                      elevation: 0,
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Log in",
-                                style: TextStyle(fontSize: 20),
-                              )
-                            ],
-                          ),
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.primary, width: 1.5),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25)),
-                        ),
+                                "Welcome back,",
+                                style: Theme.of(context).textTheme.overline,
+                              ),
+                              Text(
+                                "Log In!",
+                                style: Theme.of(context).textTheme.headline5,
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              PlatformTextField(
+                                controller: _emailController,
+                                keyboardType: TextInputType.emailAddress,
+                                material: (context, platform) =>
+                                    MaterialTextFieldData(
+                                        decoration: InputDecoration(
+                                            labelText: "Email")),
+                                cupertino: (context, platform) =>
+                                    CupertinoTextFieldData(
+                                        placeholder: "Email"),
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              PlatformTextField(
+                                obscureText: true,
+                                controller: _passwordController,
+                                material: (context, platform) =>
+                                    MaterialTextFieldData(
+                                        decoration: InputDecoration(
+                                            labelText: "Password")),
+                                cupertino: (context, platform) =>
+                                    CupertinoTextFieldData(
+                                        placeholder: "Password"),
+                              ),
+                            ]),
                       ),
-                      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        Text("You don't have an account? "),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (_) => Signup()));
-                            },
-                            child: Text("Sign Up"))
-                      ])
-                    ]),
-              ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      height: 50,
+                      child: OutlineButton(
+                        onPressed: () => BlocProvider.of<LoginCubit>(context)
+                            .login(_emailController.text,
+                                _passwordController.text),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Log in",
+                              style: TextStyle(fontSize: 20),
+                            )
+                          ],
+                        ),
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.primary, width: 1.5),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25)),
+                      ),
+                    ),
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Text("You don't have an account? "),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                                MaterialPageRoute(builder: (_) => Signup()));
+                          },
+                          child: Text("Sign Up"))
+                    ])
+                  ]),
             ),
           );
         }));

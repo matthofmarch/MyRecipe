@@ -31,7 +31,8 @@ class RecipePage extends StatelessWidget {
               final recipes = state.recipes;
               return Scaffold(
                 floatingActionButton: FloatingActionButton(
-                  child: Icon(context.platformIcons.add),
+                  child: Icon(context.platformIcons.add, color: Theme.of(context).scaffoldBackgroundColor,),
+                  backgroundColor: Theme.of(context).primaryColor,
                   onPressed: () async {
                     await Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => AddRecipe(),
@@ -42,10 +43,12 @@ class RecipePage extends StatelessWidget {
                 body: CustomScrollView(
                   slivers: [
                     SliverAppBar(
+                      expandedHeight: 70,
                       floating: true,
                       backgroundColor: Colors.transparent,
                       flexibleSpace: Container(
-                        margin: const EdgeInsets.all(4.0),
+                        padding: const EdgeInsets.only(left: 10, right: 10, top: 50),
+                        height: 100,
                         child: TextFormField(
                           onChanged: (value) =>
                               BlocProvider.of<RecipepageCubit>(context)
@@ -53,13 +56,16 @@ class RecipePage extends StatelessWidget {
                           controller: _searchController,
                           decoration: InputDecoration(
                             hintText: "Search recipes",
+                            hintStyle: TextStyle(
+                              height: 1.1
+                            ),
                             fillColor: Theme
                                 .of(context)
                                 .scaffoldBackgroundColor,
                             filled: true,
                             border: OutlineInputBorder(
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(32))),
+                                BorderRadius.all(Radius.circular(20))),
                             suffixIcon: GestureDetector(
                                 onTap: () =>
                                     BlocProvider.of<RecipepageCubit>(context)
@@ -83,9 +89,9 @@ class RecipePage extends StatelessWidget {
     return SliverPersistentHeader(
       delegate: _SliverAppBarDelegate(
         PreferredSize(
-          preferredSize: Size.fromHeight(40),
+          preferredSize: Size.fromHeight(50),
           child: ListView(
-              padding: EdgeInsets.all(0),
+              padding: EdgeInsets.only(bottom: 10),
               scrollDirection: Axis.horizontal,
               children: [
                 "Bio",

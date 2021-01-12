@@ -9,7 +9,7 @@ final colorScheme = ColorScheme(
   secondary: const Color(0xFF798c1f),
   secondaryVariant: const Color(0xFF4a5f00),
   onSecondary: const Color(0xFF000000),
-  background: Colors.grey[300],
+  background: Colors.grey[50],
   surface: Color(0xFF808080),
   onBackground: Colors.white,
   error: Colors.redAccent,
@@ -29,10 +29,14 @@ final themes = [ThemeData.light(), ThemeData.dark()]
           accentColor: colorScheme.secondary,
           cardTheme: t.cardTheme.copyWith(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)))),
+                  borderRadius: BorderRadius.all(Radius.circular(20)))),
           inputDecorationTheme: t.inputDecorationTheme.copyWith(
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8)),
           ),
         ))
     .toList();
+
+List<BoxShadow> shadowList = [
+  BoxShadow(color: Colors.grey[300], blurRadius: 30, offset: Offset(0,30))
+];
