@@ -17,7 +17,7 @@ class RecipeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 95,
-      decoration: BoxDecoration(boxShadow: shadowList),
+      decoration: MediaQuery.of(context).platformBrightness == Brightness.light ? BoxDecoration(boxShadow: shadowList) : null,
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
@@ -49,7 +49,7 @@ class RecipeCard extends StatelessWidget {
                   ),
                 )
                     : Container(
-                  height: 120,
+                 height: 120,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
@@ -73,7 +73,7 @@ class RecipeCard extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       topRight: Radius.circular(20),
                       bottomRight: Radius.circular(20)),
-                  color: Colors.white),
+                  color: Theme.of(context).cardColor),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
