@@ -40,43 +40,45 @@ class RecipePage extends StatelessWidget {
                     BlocProvider.of<RecipepageCubit>(context).loadRecipes();
                   },
                 ),
-                body: CustomScrollView(
-                  slivers: [
-                    SliverAppBar(
-                      expandedHeight: 70,
-                      floating: true,
-                      backgroundColor: Colors.transparent,
-                      flexibleSpace: Container(
-                        padding: const EdgeInsets.only(left: 10, right: 10, top: 50),
-                        height: 100,
-                        child: TextFormField(
-                          onChanged: (value) =>
-                              BlocProvider.of<RecipepageCubit>(context)
-                                  .filter(_searchController.text),
-                          controller: _searchController,
-                          decoration: InputDecoration(
-                            hintText: "Search recipes",
-                            hintStyle: TextStyle(
-                              height: 1.1
-                            ),
-                            fillColor: Theme
-                                .of(context)
-                                .scaffoldBackgroundColor,
-                            filled: true,
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                            suffixIcon: GestureDetector(
-                                onTap: () =>
-                                    BlocProvider.of<RecipepageCubit>(context)
-                                        .filter(_searchController.text),
-                                child: Icon(Icons.search)),),
+                body: SafeArea(
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        elevation: 0.0,
+                        snap: true,
+                        floating: true,
+                        backgroundColor: Colors.transparent,
+                        flexibleSpace: Container(
+                          margin: const EdgeInsets.all(5),
+                          child: TextField(
+                            onChanged: (value) =>
+                                BlocProvider.of<RecipepageCubit>(context)
+                                    .filter(_searchController.text),
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              hintText: "Search recipes",
+                              hintStyle: TextStyle(
+                                height: 1.1
+                              ),
+                              fillColor: Theme
+                                  .of(context)
+                                  .scaffoldBackgroundColor,
+                              filled: true,
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
+                              suffixIcon: GestureDetector(
+                                  onTap: () =>
+                                      BlocProvider.of<RecipepageCubit>(context)
+                                          .filter(_searchController.text),
+                                  child: Icon(Icons.search)),),
+                          ),
                         ),
                       ),
-                    ),
-                    _makeTagHeader(context),
-                    RecipeList(recipes)
-                  ],
+                      _makeTagHeader(context),
+                      RecipeList(recipes)
+                    ],
+                  ),
                 ),
               );
             }
