@@ -29,39 +29,37 @@ class RecipeList extends StatefulWidget {
 }
 
 class _RecipeListState extends State<RecipeList> {
-
   @override
   Widget build(BuildContext context) {
-    return SliverGrid(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        childAspectRatio: 3/4,
-        crossAxisCount: MediaQuery.of(context).size.width ~/ 160,
-      ),
-      delegate: SliverChildBuilderDelegate(
-    (context, index) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate((context, index) {
         final recipe = widget.recipes[index];
         return GestureDetector(
-            onLongPress: () async {
-              await _showRecipeOperationsBottomSheet(context, index);
-            },
-            onTap: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) =>
-                      RecipeDetail(
-                        recipe: recipe,
-                      ),
+          onLongPress: () async {
+            await _showRecipeOperationsBottomSheet(context, index);
+          },
+          onTap: () async {
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => RecipeDetail(
+                  recipe: recipe,
                 ),
-              );
-            },
-            child: RecipeCard(recipe));
-      },
-      childCount: widget.recipes.length
-    ),
-      );
+              ),
+            );
+          },
+          child: Column(children: [
+            RecipeCard(recipe),
+            SizedBox(
+              height: 20,
+            )
+          ]),
+        );
+      }, childCount: widget.recipes.length),
+    );
   }
 
-  _showRecipeOperationsBottomSheet(BuildContext parentContext, int index) async {
+  _showRecipeOperationsBottomSheet(
+      BuildContext parentContext, int index) async {
     return showPlatformModalSheet(
         context: parentContext,
         builder: (context) {
@@ -76,10 +74,13 @@ class _RecipeListState extends State<RecipeList> {
                   try {
                     await RepositoryProvider.of<MealRepository>(context)
                         .propose(widget.recipes[index].id, dateTime);
-                    Scaffold.of(parentContext).showSnackBar(SnackBar(content: Text("Planned meal")));
-
+                    Scaffold.of(parentContext)
+                        .showSnackBar(SnackBar(content: Text("Planned meal")));
                   } catch (e) {
-                    Scaffold.of(parentContext).showSnackBar(SnackBar(content: Text("Could not plan meal"),backgroundColor: Theme.of(context).errorColor,));
+                    Scaffold.of(parentContext).showSnackBar(SnackBar(
+                      content: Text("Could not plan meal"),
+                      backgroundColor: Theme.of(context).errorColor,
+                    ));
                   }
                   Navigator.of(context).pop();
                 }
@@ -110,42 +111,39 @@ class _RecipeListState extends State<RecipeList> {
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(context.platformIcons.pen),
-                    Text("Edit")
-                  ],
+                  children: [Icon(context.platformIcons.pen), Text("Edit")],
                 )),
             PlatformButton(
               materialFlat: (context, platform) => MaterialFlatButtonData(),
               onPressed: () async {
                 try {
                   final res =
-                  await RepositoryProvider.of<RecipeRepository>(context)
-                      .delete(widget.recipes[index].id);
+                      await RepositoryProvider.of<RecipeRepository>(context)
+                          .delete(widget.recipes[index].id);
                   if (res) {
                     setState(() {
                       widget.recipes.removeAt(index);
                     });
-                    Scaffold.of(parentContext).showSnackBar(SnackBar(content: Text("Deleted Recipe"),));
+                    Scaffold.of(parentContext).showSnackBar(SnackBar(
+                      content: Text("Deleted Recipe"),
+                    ));
                   }
                 } catch (e) {
-                  Scaffold.of(parentContext).showSnackBar(SnackBar(content: Text("Could not delete Recipe"),backgroundColor: Theme.of(context).errorColor,));
+                  Scaffold.of(parentContext).showSnackBar(SnackBar(
+                    content: Text("Could not delete Recipe"),
+                    backgroundColor: Theme.of(context).errorColor,
+                  ));
                 }
                 Navigator.of(context).pop();
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(context.platformIcons.delete),
-                  Text("Delete")
-                ],
+                children: [Icon(context.platformIcons.delete), Text("Delete")],
               ),
             )
           ];
 
-          switch (Theme
-              .of(context)
-              .platform) {
+          switch (Theme.of(context).platform) {
             case TargetPlatform.iOS:
               return CupertinoActionSheet(
                 actions: popupContent,

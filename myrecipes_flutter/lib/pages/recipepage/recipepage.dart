@@ -31,7 +31,8 @@ class RecipePage extends StatelessWidget {
               final recipes = state.recipes;
               return Scaffold(
                 floatingActionButton: FloatingActionButton(
-                  child: Icon(context.platformIcons.add),
+                  child: Icon(context.platformIcons.add, color: Theme.of(context).scaffoldBackgroundColor,),
+                  backgroundColor: Theme.of(context).primaryColor,
                   onPressed: () async {
                     await Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => AddRecipe(),
@@ -39,38 +40,45 @@ class RecipePage extends StatelessWidget {
                     BlocProvider.of<RecipepageCubit>(context).loadRecipes();
                   },
                 ),
-                body: CustomScrollView(
-                  slivers: [
-                    SliverAppBar(
-                      floating: true,
-                      backgroundColor: Colors.transparent,
-                      flexibleSpace: Container(
-                        margin: const EdgeInsets.all(4.0),
-                        child: TextFormField(
-                          onChanged: (value) =>
-                              BlocProvider.of<RecipepageCubit>(context)
-                                  .filter(_searchController.text),
-                          controller: _searchController,
-                          decoration: InputDecoration(
-                            hintText: "Search recipes",
-                            fillColor: Theme
-                                .of(context)
-                                .scaffoldBackgroundColor,
-                            filled: true,
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(32))),
-                            suffixIcon: GestureDetector(
-                                onTap: () =>
-                                    BlocProvider.of<RecipepageCubit>(context)
-                                        .filter(_searchController.text),
-                                child: Icon(Icons.search)),),
+                body: SafeArea(
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        elevation: 0.0,
+                        snap: true,
+                        floating: true,
+                        backgroundColor: Colors.transparent,
+                        flexibleSpace: Container(
+                          margin: const EdgeInsets.all(5),
+                          child: TextField(
+                            onChanged: (value) =>
+                                BlocProvider.of<RecipepageCubit>(context)
+                                    .filter(_searchController.text),
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              hintText: "Search recipes",
+                              hintStyle: TextStyle(
+                                height: 1.1
+                              ),
+                              fillColor: Theme
+                                  .of(context)
+                                  .scaffoldBackgroundColor,
+                              filled: true,
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
+                              suffixIcon: GestureDetector(
+                                  onTap: () =>
+                                      BlocProvider.of<RecipepageCubit>(context)
+                                          .filter(_searchController.text),
+                                  child: Icon(Icons.search)),),
+                          ),
                         ),
                       ),
-                    ),
-                    _makeTagHeader(context),
-                    RecipeList(recipes)
-                  ],
+                      _makeTagHeader(context),
+                      RecipeList(recipes)
+                    ],
+                  ),
                 ),
               );
             }
@@ -83,9 +91,9 @@ class RecipePage extends StatelessWidget {
     return SliverPersistentHeader(
       delegate: _SliverAppBarDelegate(
         PreferredSize(
-          preferredSize: Size.fromHeight(40),
+          preferredSize: Size.fromHeight(50),
           child: ListView(
-              padding: EdgeInsets.all(0),
+              padding: EdgeInsets.only(bottom: 10),
               scrollDirection: Axis.horizontal,
               children: [
                 "Bio",

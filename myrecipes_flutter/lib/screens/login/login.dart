@@ -30,14 +30,19 @@ class Login extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      SvgPicture.asset("assets/MyRecipe_Logo.svg",
-                            color: Theme.of(context).colorScheme.primary,
-                            width: 100,
-                            height: 100),
-                      Text(
-                        "MyRecipes",
-                        style: Theme.of(context).textTheme.headline4,
+                      Column(
+                        children: [
+                          SvgPicture.asset("assets/MyRecipe_Logo.svg",
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 100,
+                              height: 100),
+                          Text(
+                            "MyRecipes",
+                            style: Theme.of(context).textTheme.headline4,
+                          ),
+                        ],
                       ),
                       Card(
                         elevation: 0,
