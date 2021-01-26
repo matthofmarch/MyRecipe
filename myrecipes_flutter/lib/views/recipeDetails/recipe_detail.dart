@@ -7,7 +7,6 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:models/model.dart';
 import 'package:models/models/user_recipe.dart';
 import 'package:myrecipes_flutter/theme.dart';
-import 'package:myrecipes_flutter/views/recipeCard/RecipeCard.dart';
 import 'package:myrecipes_flutter/views/util/RoundedImage.dart';
 
 class RecipeDetail extends StatelessWidget {
