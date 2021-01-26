@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:models/model.dart';
+import 'package:models/models/user_recipe.dart';
 import 'package:myrecipes_flutter/theme.dart';
 import 'package:myrecipes_flutter/views/recipeCard/RecipeCard.dart';
 import 'package:myrecipes_flutter/views/util/RoundedImage.dart';
@@ -90,9 +91,13 @@ class RecipeDetail extends StatelessWidget {
                             height: 8,
                           ),
                           if (recipe.description != null)
-                            Text(
-                              recipe.description,
-                              style: Theme.of(context).textTheme.subtitle1,
+                            Row(
+                              children: [
+                                Text(
+                                  recipe.description,
+                                  style: Theme.of(context).textTheme.subtitle1,
+                                ),
+                              ],
                             )
                         ],
                       ),
@@ -134,10 +139,14 @@ class RecipeDetail extends StatelessWidget {
                                   SizedBox(
                                     width: 8,
                                   ),
-                                  Text(
-                                    ingredients,
-                                    style:
-                                        Theme.of(context).textTheme.subtitle1,
+                                  Row(
+                                    children: [
+                                      Text(
+                                        ingredients,
+                                        style:
+                                            Theme.of(context).textTheme.subtitle1,
+                                      ),
+                                    ],
                                   ),
                                 ],
                               );
@@ -155,30 +164,42 @@ class RecipeDetail extends StatelessWidget {
             alignment: Alignment.center,
             child: Container(
               height: 150,
-              padding: EdgeInsets.all(30),
+              padding: EdgeInsets.all(25),
               margin: EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.all(Radius.circular(30))),
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                  boxShadow: MediaQuery.of(context).platformBrightness == Brightness.light ? shadowList : null),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         recipe.name,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.headline5,
                       ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Row(
                         children: [
                           Icon(PlatformIcons(context).clockSolid),
                           Text("${recipe.cookingTimeInMin} min"),
                         ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(PlatformIcons(context).personSolid),
+                          Text("${(recipe as UserRecipe).username}")
+                        ],
                       )
                     ],
-                  ),
+                  )
                 ],
               ),
             ),
