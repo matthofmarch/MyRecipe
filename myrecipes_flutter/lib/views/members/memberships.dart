@@ -4,7 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:group_repository/group_repository.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/model.dart';
+import 'package:myrecipes_flutter/views/inviteView/invite_view.dart';
 import 'package:myrecipes_flutter/views/members/cubit/memberships_cubit.dart';
 
 const kChipDistance = 2.0;
@@ -34,13 +36,34 @@ class MembershipsView extends StatelessWidget {
                   children: [
                     Text(
                       "Members in " + group.name,
-                      style: Theme.of(context).textTheme.subtitle1,
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .subtitle1,
                     ),
                     Divider(),
                     Column(
                       children: [
                         ...group.members
-                            .map((member) => _makeMemberTile(context, member))
+                            .map((member) => _makeMemberTile(context, member)),
+                        FlatButton(
+                          textColor: Theme
+                              .of(context)
+                              .primaryColor,
+                          onPressed: () {
+                            showBarModalBottomSheet(
+                                context: context, builder: (context) => InviteView());
+                          },
+                          splashColor: Colors.transparent,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.person_add_alt_1),
+                              SizedBox(width: 4,),
+                              Text("Invite User")
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ],
@@ -59,33 +82,52 @@ class MembershipsView extends StatelessWidget {
         leading: Icon(Icons.person),
         title: Text(member.email),
         trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-          if (member.email == RepositoryProvider.of<AuthRepository>(context).authState.email)Padding(
+          if (member.email ==
+              RepositoryProvider
+                  .of<AuthRepository>(context)
+                  .authState
+                  .email)
+            Padding(
               padding: const EdgeInsets.all(kChipDistance),
               child: Chip(
                 label: Text(
                   "You",
-                  style: Theme.of(context)
+                  style: Theme
+                      .of(context)
                       .textTheme
                       .bodyText1
                       .copyWith(color: Colors.green),
                 ),
                 shape: StadiumBorder(
-                  side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                  side:
+                  BorderSide(color: Theme
+                      .of(context)
+                      .colorScheme
+                      .primary),
                 ),
               ),
             ),
-          if (member.isAdmin)Padding(
+          if (member.isAdmin)
+            Padding(
               padding: const EdgeInsets.all(kChipDistance),
               child: Chip(
                 label: Text(
                   "Admin",
-                  style: Theme.of(context)
+                  style: Theme
+                      .of(context)
                       .textTheme
                       .bodyText1
-                      .copyWith(color: Theme.of(context).colorScheme.secondary),
+                      .copyWith(color: Theme
+                      .of(context)
+                      .colorScheme
+                      .secondary),
                 ),
                 shape: StadiumBorder(
-                  side: BorderSide(color: Theme.of(context).colorScheme.secondary),
+                  side: BorderSide(
+                      color: Theme
+                          .of(context)
+                          .colorScheme
+                          .secondary),
                 ),
               ),
             )

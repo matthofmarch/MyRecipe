@@ -34,6 +34,7 @@ final themes = [ThemeData.light(), ThemeData.dark()]
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8)),
           ),
+          platform: TargetPlatform.iOS
         ))
     .toList();
 
