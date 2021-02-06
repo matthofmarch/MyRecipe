@@ -181,7 +181,7 @@ class UpdateRecipe extends StatelessWidget {
                 _makeGalleryButton(context)
               ],
             ),
-            if(image != null) CustomAbrounding.image(image),
+            if(image != null) CustomAbrounding.widget(child: image),
             // ClipRRect(
             //     borderRadius: BorderRadius.all(Radius.circular(20)),
             //     child: image ?? Text("No Image selected")),

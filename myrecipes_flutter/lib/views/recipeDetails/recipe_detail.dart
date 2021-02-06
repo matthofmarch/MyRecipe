@@ -51,13 +51,13 @@ class RecipeDetail extends StatelessWidget {
                               imageUrl: recipe.image,
                               fit: BoxFit.fitWidth,
                               imageBuilder: (context, imageProvider) =>
-                                  CustomAbrounding.provider(imageProvider),
+                                  CustomAbrounding.provider(imageProvider: imageProvider),
                               errorWidget: (context, url, error) =>
                                   Text("Could not load image"),
                             ),
                           )
                         : CustomAbrounding.provider(
-                            ExactAssetImage("assets/placeholder-image.png"),
+                          imageProvider: ExactAssetImage("assets/placeholder-image.png"),
                           );
                   },
                 ),

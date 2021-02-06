@@ -242,8 +242,8 @@ class MealCalendar extends StatelessWidget {
                 padding: EdgeInsets.all(2),
                 child: AspectRatio(
                   aspectRatio: 1,
-                  child: CustomAbrounding.image(
-                    NetworkOrDefaultImage(meal.recipe.image),
+                  child: CustomAbrounding.widget(
+                    child: NetworkOrDefaultImage(meal.recipe.image),
                   ),
                 ),
               ),

@@ -15,11 +15,11 @@ class NetworkOrDefaultImage extends StatelessWidget {
             imageUrl: imageUri,
             fit: BoxFit.fitWidth,
             imageBuilder: (context, imageProvider) =>
-                CustomAbrounding.provider(imageProvider),
+                Image(image: imageProvider),
             placeholder: (context, url) =>
                 Center(child: CircularProgressIndicator()),
             errorWidget: (context, url, error) => Text("Could not load image"),
           )
-        : CustomAbrounding.provider(AssetImage("assets/placeholder-image.png"));
+        : CustomAbrounding.provider(imageProvider: AssetImage("assets/placeholder-image.png"));
   }
 }

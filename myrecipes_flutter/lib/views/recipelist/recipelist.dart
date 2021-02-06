@@ -14,6 +14,7 @@ import 'package:models/model.dart';
 import 'package:myrecipes_flutter/pages/recipepage/cubit/recipepage_cubit.dart';
 import 'package:myrecipes_flutter/screens/update_recipe/update_recipe.dart';
 import 'package:myrecipes_flutter/views/recipeCard/RecipeCard.dart';
+import 'package:myrecipes_flutter/views/recipeCard/RecipeCardBlock.dart';
 import 'package:myrecipes_flutter/views/recipeDetails/recipe_detail.dart';
 import 'package:myrecipes_flutter/views/recipelist/cubit/recipelist_cubit.dart';
 import 'package:myrecipes_flutter/views/util/custom_platform_datepicker_sheet.dart';
@@ -31,7 +32,7 @@ class RecipeList extends StatefulWidget {
 class _RecipeListState extends State<RecipeList> {
   @override
   Widget build(BuildContext context) {
-    return SliverList(
+    /*return SliverList(
       delegate: SliverChildBuilderDelegate((context, index) {
         final recipe = widget.recipes[index];
         return GestureDetector(
@@ -55,6 +56,38 @@ class _RecipeListState extends State<RecipeList> {
           ]),
         );
       }, childCount: widget.recipes.length),
+    );*/
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      sliver: SliverGrid(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          childAspectRatio: 5/6,
+          crossAxisSpacing: 5,
+          mainAxisSpacing: 3,
+          crossAxisCount: MediaQuery.of(context).size.width ~/ 160,
+        ),
+        delegate: SliverChildBuilderDelegate(
+                (context, index) {
+              final recipe = widget.recipes[index];
+              return GestureDetector(
+                  onLongPress: () async {
+                    await _showRecipeOperationsBottomSheet(context, index);
+                  },
+                  onTap: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            RecipeDetail(
+                              recipe: recipe,
+                            ),
+                      ),
+                    );
+                  },
+                  child: RecipeCardBlock(recipe));
+            },
+            childCount: widget.recipes.length
+        ),
+      ),
     );
   }
 

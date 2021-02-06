@@ -29,13 +29,17 @@ final themes = [ThemeData.light(), ThemeData.dark()]
           accentColor: colorScheme.secondary,
           cardTheme: t.cardTheme.copyWith(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20)))),
+                  borderRadius: BorderRadius.all(Radius.circular(8)))),
           inputDecorationTheme: t.inputDecorationTheme.copyWith(
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8)),
           ),
         ))
     .toList();
+
+List<BoxShadow> shadowGrid = [
+  BoxShadow(color: Colors.grey[300], blurRadius: 5, offset: Offset(0,10))
+];
 
 List<BoxShadow> shadowList = [
   BoxShadow(color: Colors.grey[300], blurRadius: 30, offset: Offset(0,30))
