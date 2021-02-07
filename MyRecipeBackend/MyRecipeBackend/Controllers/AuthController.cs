@@ -78,18 +78,21 @@ namespace MyRecipeBackend.Controllers
 
                 var identityClaims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, user.Id),
-                    new Claim(ClaimTypes.NameIdentifier, user.Id),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new (ClaimTypes.Name, user.Id),
+                    new(ClaimTypes.NameIdentifier, user.Id),
+                    new (ClaimTypes.Email, user.Email),
+                    new (JwtRegisteredClaimNames.Sub, user.Email),
+                    new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
-                if (user.IsAdmin)
+                if (user.GroupId is not null)
                 {
-                    identityClaims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                    identityClaims.Add(new Claim("household", user.GroupId.ToString()));
+                    if (user.IsAdmin)
+                    {
+                        identityClaims.Add(new Claim(ClaimTypes.Role, "GroupAdmin"));
+                    }
                 }
-
 
                 var token = GenerateJwtToken(identityClaims.Concat(customClaims));
                 var refreshToken = await _userManager.GenerateUserTokenAsync(
@@ -109,7 +112,6 @@ namespace MyRecipeBackend.Controllers
                 return Unauthorized(new {Error = "Email needs to be confirmed"});
 
             return Unauthorized();
-
         }
 
         /// <summary>

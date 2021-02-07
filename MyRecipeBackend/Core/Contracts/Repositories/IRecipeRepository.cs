@@ -5,7 +5,7 @@ using Devices.Core.Contracts;
 
 namespace Core.Contracts
 {
-    public interface IRecipeRepository:IBaseRepository<Recipe>
+    public interface IRecipeRepository:IEntityRepository<Recipe>
     {
         Task<Recipe[]> GetPagedRecipesAsync(ApplicationUser user, string filter, int page, int pageSize);
         Task<Recipe> GetByIdAsync(ApplicationUser user, Guid id);

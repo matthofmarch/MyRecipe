@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Core.Entities
 {
-    public partial class MealVote:EntityObject
+    public class MealVote:EntityObject
     {
         public string UserId { get; set; }
         [ForeignKey(nameof(UserId))]

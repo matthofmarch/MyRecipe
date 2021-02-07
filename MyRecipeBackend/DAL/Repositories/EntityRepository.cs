@@ -10,11 +10,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Devices.Persistence.Repositories
 {
-    public class BaseRepository<T>: IBaseRepository<T> where T:EntityObject
+    public class EntityRepository<T>: IEntityRepository<T> where T:EntityObject
     {
         protected readonly ApplicationDbContext _dbContext;
 
-        public BaseRepository(ApplicationDbContext dbContext)
+        public EntityRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    class RecipeRepository :BaseRepository<Recipe>, IRecipeRepository
+    class RecipeRepository :EntityRepository<Recipe>, IRecipeRepository
     {
         public RecipeRepository(ApplicationDbContext dbContext):base(dbContext)
         {
@@ -53,7 +53,6 @@ namespace DAL.Repositories
         {
             var query = _dbContext.Recipes
                 .Where(r => r.User.Id == user.Id);
-                
 
 
             if (filter != null)

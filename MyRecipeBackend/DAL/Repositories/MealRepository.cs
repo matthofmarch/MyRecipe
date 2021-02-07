@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    public class MealRepository :BaseRepository<Meal>, IMealRepository
+    public class MealRepository :EntityRepository<Meal>, IMealRepository
     {
 
         public MealRepository(ApplicationDbContext dbContext):base(dbContext)

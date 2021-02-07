@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    class IngredientRepository :BaseRepository<Ingredient>, IIngredientRepository
+    class IngredientRepository :EntityRepository<Ingredient>, IIngredientRepository
     {
         public IngredientRepository(ApplicationDbContext dbContext):base(dbContext)
         {

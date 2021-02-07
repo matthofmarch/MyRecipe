@@ -108,7 +108,7 @@
             <param name="inviteCode"></param>
             <returns></returns>
         </member>
-        <member name="M:MyRecipeBackend.Controllers.MealplanController.GetPlannedMeals">
+        <member name="M:MyRecipeBackend.Controllers.MealplanController.GetMeals(System.Nullable{System.Boolean})">
             <summary>
             Get all the meals that have been accepted
             </summary>

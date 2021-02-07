@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    public class InviteCodeRepository: BaseRepository<InviteCode>, IInviteCodeRepository
+    public class InviteCodeRepository: EntityRepository<InviteCode>, IInviteCodeRepository
     {
         public InviteCodeRepository(ApplicationDbContext dbContext):base(dbContext)
         {

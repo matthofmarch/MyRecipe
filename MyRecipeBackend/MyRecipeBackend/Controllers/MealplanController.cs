@@ -39,7 +39,7 @@ namespace MyRecipeBackend.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<MealDto[]>> GetPlannedMeals()
+        public async Task<ActionResult<MealDto[]>> GetMeals(bool? accepted)
         {
             var user = await _userManager.GetUserAsync(User);
             var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
@@ -48,7 +48,7 @@ namespace MyRecipeBackend.Controllers
                 return BadRequest();
             }
 
-            Meal[] meals = await _uow.Meals.GetMealsWithRecipeAndInitiatorAsync(group.Id, true);
+            Meal[] meals = await _uow.Meals.GetMealsWithRecipeAndInitiatorAsync(group.Id, accepted);
 
             var proposedMealList =
                 meals.Select(m => new MealDto(m)).ToArray();

@@ -190,7 +190,17 @@ namespace DAL
                     RecipeId = recipes[0].Id,
                     DateTime = DateTime.Now,
                     GroupId = groups[0].Id,
+                    Accepted = true,
                     Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                },
+                new Meal
+                {
+                    InitiatorId = users[0].Id,
+                    RecipeId = recipes[1].Id,
+                    DateTime = DateTime.Now.AddDays(2),
+                    GroupId = groups[0].Id,
+                    Accepted = false,
+                    Id = new Guid("00000000-0000-0000-0000-000000000002"),
                 }
             };
             builder.Entity<Meal>().HasData(meals);
@@ -203,6 +213,13 @@ namespace DAL
                     MealId = meals[0].Id,
                     UserId = users[1].Id,
                     Vote = VoteEnum.Approved
+                },
+                new MealVote()
+                {
+                    Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                    MealId = meals[0].Id,
+                    UserId = users[1].Id,
+                    Vote = VoteEnum.Rejected
                 }
             };
             builder.Entity<MealVote>().HasData(mealVotes);

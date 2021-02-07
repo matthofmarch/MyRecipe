@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Devices.Core.Contracts
 {
-    public interface IBaseRepository<T>
+    public interface IEntityRepository<T>
     {
         Task<T[]> AllAsync();
         Task<T> FindAsync(Guid id);

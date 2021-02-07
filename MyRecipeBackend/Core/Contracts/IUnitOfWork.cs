@@ -14,6 +14,7 @@ namespace Core.Contracts
         IRecipeRepository Recipes { get; }
         IIngredientRepository Ingredients { get; }
         IApplicationUserRepository Users { get; }
+        IShoppingCartRepository ShoppingCart { get; }
 
         Task<int> SaveChangesAsync();
         Task DeleteDatabaseAsync();

@@ -7,7 +7,7 @@ using Devices.Core.Contracts;
 
 namespace Core.Contracts.Repositories
 {
-    public interface IMealRepository:IBaseRepository<Meal>
+    public interface IMealRepository:IEntityRepository<Meal>
     {
         Task ProposeMealAsync(Meal meal);
         Task VoteMealAsync(ApplicationUser user, VoteEnum vote, Guid mealId);

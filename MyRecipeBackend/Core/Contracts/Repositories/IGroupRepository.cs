@@ -7,7 +7,7 @@ using Devices.Core.Contracts;
 
 namespace Core.Contracts
 {
-    public interface IGroupRepository:IBaseRepository<Group>
+    public interface IGroupRepository:IEntityRepository<Group>
     {
         Task<Group> GetGroupForUserAsync(string userId);
         Task<Group> GetGroupForInviteCodeAsync(string inviteCode);

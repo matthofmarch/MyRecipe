@@ -7,7 +7,7 @@ using Devices.Core.Contracts;
 
 namespace Core.Contracts
 {
-    public interface IInviteCodeRepository:IBaseRepository<InviteCode>
+    public interface IInviteCodeRepository:IEntityRepository<InviteCode>
     {
         Task<bool> InviteCodeExistsAsync(string inviteCode);
         Task Delete(string code);

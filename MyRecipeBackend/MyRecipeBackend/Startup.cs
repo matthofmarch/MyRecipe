@@ -124,6 +124,7 @@ namespace MyRecipeBackend
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<TokenStillValidMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

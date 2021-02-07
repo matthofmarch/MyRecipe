@@ -5,7 +5,7 @@ using Devices.Core.Contracts;
 
 namespace Core.Contracts
 {
-    public interface IIngredientRepository:IBaseRepository<Ingredient>
+    public interface IIngredientRepository:IEntityRepository<Ingredient>
     {
         Task<Ingredient> GetByNameAsync(string identifier);
 

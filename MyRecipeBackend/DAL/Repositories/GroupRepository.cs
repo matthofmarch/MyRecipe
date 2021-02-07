@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Core.Contracts;
 using Core.Entities;
-using DAL;
 using Devices.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
-    public class GroupRepository : BaseRepository<Group>,IGroupRepository
+    public class GroupRepository : EntityRepository<Group>, IGroupRepository
     {
 
         public GroupRepository(ApplicationDbContext dbContext):base(dbContext)

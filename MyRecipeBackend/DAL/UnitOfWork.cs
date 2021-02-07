@@ -27,6 +27,7 @@ namespace DAL
             Ingredients = new IngredientRepository(_dbContext);
             Meals = new MealRepository(_dbContext);
             Users = new ApplicationUserRepository(_dbContext);
+            ShoppingCart = new ShoppingCartRepository(_dbContext);
         }
 
         public IMealRepository Meals { get; }
@@ -36,6 +37,7 @@ namespace DAL
         public IRecipeRepository Recipes { get; }
         public IIngredientRepository Ingredients { get; }
         public IApplicationUserRepository Users { get;  }
+        public IShoppingCartRepository ShoppingCart { get; }
 
         public async Task<int> SaveChangesAsync()
         {
