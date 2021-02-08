@@ -50,14 +50,18 @@ class UpdateRecipe extends StatelessWidget {
           return _makeRecipeInteraction(context, state);
         }
         if (state is UpdateRecipeSuccess) {
-          Future.delayed(
-              Duration(milliseconds: 500), () => Navigator.of(context).pop(state.recipe));
+          Future.delayed(Duration(milliseconds: 500),
+              () => Navigator.of(context).pop(state.recipe));
           return Center(child: Icon(context.platformIcons.checkMark));
         }
         if (state is UpdateRecipeFailure) {
-          Future.delayed(
-              Duration(milliseconds: 500), () => Navigator.of(context).pop(null));
-          return Center(child: Icon(context.platformIcons.error, color: Theme.of(context).errorColor,));
+          Future.delayed(Duration(milliseconds: 500),
+              () => Navigator.of(context).pop());
+          return Center(
+              child: Icon(
+            context.platformIcons.error,
+            color: Theme.of(context).errorColor,
+          ));
         }
         return null;
       }),
@@ -67,7 +71,9 @@ class UpdateRecipe extends StatelessWidget {
   Widget _makeRecipeInteraction(
       BuildContext context, UpdateRecipeInteraction state) {
     return Scaffold(
-      appBar: CustomDefaultAppBar(title: Text("Update Recipe"),),
+      appBar: CustomDefaultAppBar(
+        title: Text("Update Recipe"),
+      ),
       body: _makeForm(context, state),
       floatingActionButton: FloatingActionButton(
         child: Icon(context.platformIcons.checkMark),
@@ -90,7 +96,6 @@ class UpdateRecipe extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-
               _makeInformationCard(context, state),
               SizedBox(
                 height: 8,
@@ -124,9 +129,10 @@ class UpdateRecipe extends StatelessWidget {
                     flex: 2,
                     child: TextFormField(
                       controller: _nameController,
-                      onChanged:(value) =>  BlocProvider.of<UpdateRecipeCubit>(context).name = value,
-                      decoration: new InputDecoration(
-                          labelText: "Name"),
+                      onChanged: (value) =>
+                          BlocProvider.of<UpdateRecipeCubit>(context).name =
+                              value,
+                      decoration: new InputDecoration(labelText: "Name"),
                     ),
                   ),
                   SizedBox(
@@ -136,10 +142,11 @@ class UpdateRecipe extends StatelessWidget {
                     flex: 1,
                     child: TextFormField(
                       controller: _cookingTimeInMinController,
-                      onChanged:(value) =>  BlocProvider.of<UpdateRecipeCubit>(context).cookingTimeInMin = int.parse(value),
+                      onChanged: (value) =>
+                          BlocProvider.of<UpdateRecipeCubit>(context)
+                              .cookingTimeInMin = int.parse(value),
                       keyboardType: TextInputType.number,
-                      decoration: new InputDecoration(
-                          labelText: "Duration"),
+                      decoration: new InputDecoration(labelText: "Duration"),
                     ),
                   ),
                 ],
@@ -149,9 +156,10 @@ class UpdateRecipe extends StatelessWidget {
               ),
               TextFormField(
                 controller: _descriptionController,
-                onChanged:(value) =>  BlocProvider.of<UpdateRecipeCubit>(context).description = value,
-                decoration: new InputDecoration(
-                    labelText: "Description"),
+                onChanged: (value) =>
+                    BlocProvider.of<UpdateRecipeCubit>(context).description =
+                        value,
+                decoration: new InputDecoration(labelText: "Description"),
               ),
             ],
           ),
@@ -181,7 +189,7 @@ class UpdateRecipe extends StatelessWidget {
                 _makeGalleryButton(context)
               ],
             ),
-            if(image != null) CustomAbrounding.image(image),
+            if (image != null) CustomAbrounding.image(image),
             // ClipRRect(
             //     borderRadius: BorderRadius.all(Radius.circular(20)),
             //     child: image ?? Text("No Image selected")),
@@ -219,7 +227,6 @@ class UpdateRecipe extends StatelessWidget {
 
   _makeCameraButton(BuildContext context) => TextButton(
       onPressed: () async {
-
         var pickedPath = (await picker.getImage(
                 source: ImageSource.camera, maxWidth: 1920, maxHeight: 1280))
             .path;
@@ -230,8 +237,8 @@ class UpdateRecipe extends StatelessWidget {
                   aspectRatio: CropAspectRatio(ratioX: 3, ratioY: 2)))
               .path;
         }
-        BlocProvider.of<UpdateRecipeCubit>(context)
-            .selectedImage = File(pickedPath);
+        BlocProvider.of<UpdateRecipeCubit>(context).selectedImage =
+            File(pickedPath);
       },
       child: Row(
         children: [

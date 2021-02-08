@@ -22,11 +22,10 @@ class MealCalendar extends StatelessWidget {
   List<Meal> meals;
   DateTime viewInitialDate;
 
-  MealCalendar(List<Meal> meals, DateTime initialDate, {Key key})
-      : super(key: key) {
-    this.meals = meals;
-    viewInitialDate = initialDate;
-  }
+  Function(Meal meal) showMealOptions;
+
+  MealCalendar(this.meals, this.viewInitialDate, {Key key, this.showMealOptions})
+      : super(key: key) {}
 
   @override
   Widget build(BuildContext context) {
@@ -98,135 +97,9 @@ class MealCalendar extends StatelessWidget {
           ),
         );
       },
-      onLongPress: () async {
-        showBarModalBottomSheet(
-          context: context,
-          builder: (context) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Meal Actions",
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                ),
-                SizedBox(height: 8,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(context.platformIcons.pen), Text("Delete")],
-                ),
-                SizedBox(height: 8,),
-                if(RepositoryProvider.of<AuthRepository>(context).authState.isAdmin)
-                PlatformButton(
-                  onPressed: () {},
-                  materialFlat: (context, platform) => MaterialFlatButtonData(),
-                  color: Colors.green,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Icon(context.platformIcons.checkMark), Text("Accept")],
-                  ),
-                )
-              ],
-            );
-          },
-        );
-        return;
-        await showCupertinoModalBottomSheet(
-            context: context,
-            builder: (context) {
-              var title = Text(
-                "Meal Actions",
-                style: Theme.of(context).textTheme.subtitle1,
-              );
-              var mealActions = [
-                PlatformButton(
-                    materialFlat: (context, platform) =>
-                        MaterialFlatButtonData(),
-                    onPressed: () async {
-                      //Navigator.of(context).pop();
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(context.platformIcons.pen),
-                        Text("Vote up")
-                      ],
-                    )),
-              ];
-
-              var platformActionSheet = Platform.isIOS
-                  ? CupertinoActionSheet(
-                      title: title,
-                      actions: [...mealActions],
-                    )
-                  : Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: title,
-                        ),
-                        Divider(),
-                        ...mealActions
-                      ],
-                    );
-              return ModalBottomSheet(
-                  onClosing: () {}, child: platformActionSheet);
-
-              return BottomSheet(
-                onClosing: () {},
-                builder: (context) => platformActionSheet,
-              );
-            });
-
-        await showPlatformModalSheet(
-          context: context,
-          builder: (context) {
-            var title = Text(
-              "Meal Actions",
-              style: Theme.of(context).textTheme.subtitle1,
-            );
-            var mealActions = [
-              PlatformButton(
-                  materialFlat: (context, platform) => MaterialFlatButtonData(),
-                  onPressed: () async {
-                    //Navigator.of(context).pop();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(context.platformIcons.pen),
-                      Text("Vote up")
-                    ],
-                  )),
-            ];
-
-            var platformActionSheet = Platform.isIOS
-                ? CupertinoActionSheet(
-                    title: title,
-                    actions: [...mealActions],
-                  )
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: title,
-                      ),
-                      Divider(),
-                      ...mealActions
-                    ],
-                  );
-
-            return BottomSheet(
-              onClosing: () {},
-              builder: (context) => platformActionSheet,
-            );
-          },
-        );
-      },
+      onLongPress: 
+        showMealOptions(meal)
+      ,
       child: AspectRatio(
         aspectRatio: 2 / 3,
         child: Card(

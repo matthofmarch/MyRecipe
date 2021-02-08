@@ -21,11 +21,7 @@ class MealPage extends StatelessWidget {
       create: (context) =>
           MealsCubit(RepositoryProvider.of<MealRepository>(context)),
       child: BlocBuilder<MealsCubit, MealsState>(
-          buildWhen: (previous, current) {
-            //We don't need to update simple changes of date
-            final relevantChanges = previous is! MealsInteractable || current is! MealsInteractable;
-            return relevantChanges;
-          },
+          buildWhen: (previous, current) => previous is! MealsInteractable || current is! MealsInteractable,
           builder: (context, state) {
             if (state is MealsInitial) {
               BlocProvider.of<MealsCubit>(context).load();

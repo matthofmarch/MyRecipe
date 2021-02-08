@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:models/model.dart';
 import 'package:models/models/user_recipe.dart';
-import 'package:myrecipes_flutter/views/util/NetworkOrDefaultImage.dart';
-import 'package:myrecipes_flutter/views/util/RoundedImage.dart';
 
 import '../../theme.dart';
 
@@ -44,8 +42,7 @@ class RecipeCard extends StatelessWidget {
                       ),
                     ),
                     placeholder: (context, url) => Text("Loading"),
-                    errorWidget: (context, url, error) =>
-                        Text("Could not load image"),
+                    errorWidget: (context, url, error) => Text("Could not load image"),
                   ),
                 )
                     : Container(

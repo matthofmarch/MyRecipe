@@ -42,6 +42,7 @@ dependencies:
   badges: 1.1.4
   fluttertoast: 7.1.6
   image_picker: 0.6.7+17
+  platform_date_picker: 0.0.4+1
 
   auth_repository:
     path: packages/auth_repository
