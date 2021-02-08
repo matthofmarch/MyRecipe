@@ -5,7 +5,9 @@ namespace MyRecipe.Infrastructure.Configurations
 {
     public class SendGridOptions: ISendGridConfiguration
     {
-        public string SendGridUser { get; set; }
-        public string SendGridKey { get; set; }
+        [Required]
+        public string User { get; set; }
+        [Required]
+        public string Key { get; set; }
     }
 }

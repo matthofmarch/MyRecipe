@@ -64,7 +64,7 @@ namespace MyRecipe.Web
         /// <param name="dbContext"></param>
         /// <param name="staticFilesConfiguration"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApplicationDbContext dbContext, 
-            IOptions<StaticFilesOptions> staticFilesConfiguration
+            IOptions<StaticRecipeImagesOptions> staticFilesConfiguration
         )
         {
             if (env.IsDevelopment())

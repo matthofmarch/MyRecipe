@@ -28,7 +28,7 @@ namespace MyRecipe.Infrastructure
             services.AddOptions<SendGridOptions>()
                 .Bind(configuration.GetSection("SendGrid"))
                 .ValidateDataAnnotations();
-            services.AddOptions<StaticFilesOptions>()
+            services.AddOptions<StaticRecipeImagesOptions>()
                 .Bind(configuration.GetSection("StaticFiles"))
                 .ValidateDataAnnotations();
             
@@ -56,9 +56,6 @@ namespace MyRecipe.Infrastructure
                 .AddDefaultTokenProviders();
             
             services.AddJwtAuthentication();
-
-            
-
             return services;
         }
     }

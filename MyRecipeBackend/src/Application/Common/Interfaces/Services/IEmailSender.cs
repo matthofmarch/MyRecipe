@@ -9,7 +9,7 @@ namespace MyRecipe.Application.Common.Interfaces.Services
 
     public interface ISendGridConfiguration
     {
-        string SendGridUser { get; }
-        string SendGridKey { get; }
+        string User { get; }
+        string Key { get; }
     }
 }

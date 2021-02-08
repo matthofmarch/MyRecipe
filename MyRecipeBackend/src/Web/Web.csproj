@@ -44,8 +44,6 @@
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Remove="appsettings.Production.json" />
-    <Content Remove="appsettings.Staging.json" />
   </ItemGroup>
 
   <ItemGroup>
