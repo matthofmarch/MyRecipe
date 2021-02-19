@@ -34,7 +34,8 @@ class App extends StatelessWidget {
               ],
               retryPolicy: ExpiredTokenRetryPolicy(
                   RepositoryProvider.of<AuthRepository>(context)),
-              badCertificateCallback: (certificate, host, port) => true);
+              badCertificateCallback: (certificate, host, port) =>
+                  EnvironmentConfig.ALLOW_BAD_CERTIFICATE);
           return MultiRepositoryProvider(
               providers: [
                 RepositoryProvider<MealRepository>(

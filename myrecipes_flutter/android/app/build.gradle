@@ -31,11 +31,6 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
-task copyDebugCertificate(type:Copy){
-    from '../../../development/development_certificates/development_certificate.der' into 'src/debug/res/raw'
-    println 'Copied the development certificate'
-}
-
 android {
     compileSdkVersion 30
 
@@ -64,8 +59,6 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
-            preBuild.dependsOn copyDebugCertificate
-
         }
         release {
             signingConfig signingConfigs.release
