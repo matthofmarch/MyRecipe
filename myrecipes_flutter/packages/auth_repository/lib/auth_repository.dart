@@ -2,26 +2,23 @@ library auth_repository;
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer' as developer;
+
 import 'package:auth_repository/jwt_util.dart';
 import 'package:auth_repository/models/login_result.dart';
 import 'package:auth_repository/models/models.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
-import 'dart:developer' as developer;
-
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-const kAccessTokenName="access_token";
-const kRefreshTokenName="refresh_token";
-
+const kAccessTokenName = "access_token";
+const kRefreshTokenName = "refresh_token";
 
 class AuthRepository {
-  Future<SharedPreferences> get sharedPreferences => SharedPreferences.getInstance();
-  //final storage = FlutterSecureStorage();
+  Future<SharedPreferences> get sharedPreferences =>
+      SharedPreferences.getInstance();
   var _baseUrl;
   bool _currentlyRefreshing = false;
-
 
   final _authSubject = BehaviorSubject<User>();
   User get authState => _authSubject.value;
@@ -33,12 +30,11 @@ class AuthRepository {
     var res = await http.post(
       "$_baseUrl/api/Auth/login",
       headers: {
-        'Content-type' : 'application/json',
+        'Content-type': 'application/json',
       },
       body: jsonEncode({"Email": email, "Password": password}),
     );
-    if (res.statusCode != 200)
-      throw Exception("Could not login");
+    if (res.statusCode != 200) throw Exception("Could not login");
 
     var loginResult = LoginResult.fromJson(jsonDecode(res.body));
     final storage = await sharedPreferences;
@@ -50,16 +46,19 @@ class AuthRepository {
 
   Future<void> signup(String email, String password) async {
     var requestBody = jsonEncode({"email": email, "password": password});
-    var res = await http.post("$_baseUrl/api/Auth/register", body: requestBody,       headers: {
-      'Content-type' : 'application/json',
-    },);
-    if(res.statusCode != 200)
-      throw Exception("Could not sign up");
+    var res = await http.post(
+      "$_baseUrl/api/Auth/register",
+      body: requestBody,
+      headers: {
+        'Content-type': 'application/json',
+      },
+    );
+    if (res.statusCode != 200) throw Exception("Could not sign up");
   }
 
-  Future<void> logout() async{
+  Future<void> logout() async {
     final storage = await sharedPreferences;
-    await storage.remove( kAccessTokenName);
+    await storage.remove(kAccessTokenName);
     await storage.remove(kRefreshTokenName);
     _authSubject.add(null);
   }
@@ -68,7 +67,7 @@ class AuthRepository {
     developer.log("Checking auth state");
     final storage = await sharedPreferences;
     String accessToken = storage.getString(kAccessTokenName);
-    if(accessToken == null){
+    if (accessToken == null) {
       developer.log("No access token available");
       _authSubject.sink.add(null);
       return;
@@ -76,8 +75,9 @@ class AuthRepository {
     var claims = JwtUtil().parseJwt(accessToken);
 
     //Somehow the expiration gives seconds and not milliseconds since 1970
-    var expiration = DateTime.fromMillisecondsSinceEpoch(claims["exp"]*1000, isUtc: true);
-    if(DateTime.now().isAfter(expiration)){
+    var expiration =
+        DateTime.fromMillisecondsSinceEpoch(claims["exp"] * 1000, isUtc: true);
+    if (DateTime.now().isAfter(expiration)) {
       developer.log("Access token expired at $expiration, calling refresh");
       refreshAsync();
       return;
@@ -88,16 +88,19 @@ class AuthRepository {
     _authSubject.add(user);
   }
 
-  User getUserFromAccessToken(String accessToken){
+  User getUserFromAccessToken(String accessToken) {
     final jwtUtil = JwtUtil();
     var claims = jwtUtil.parseJwt(accessToken);
-    var email = claims["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"];
-    var role = claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-    return User(email: email, accessToken: accessToken, isAdmin: role=="Admin");
+    var email = claims[
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"];
+    var role =
+        claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+    return User(
+        email: email, accessToken: accessToken, isAdmin: role == "Admin");
   }
 
   Future<void> refreshAsync() async {
-    if(_currentlyRefreshing){
+    if (_currentlyRefreshing) {
       developer.log("Refreshing already active, aborting");
       return;
     }
@@ -106,12 +109,12 @@ class AuthRepository {
     _currentlyRefreshing = true;
     developer.log("Refresh started");
     //Don't actually catch errors here, just ensure to remove the refreshing flag afterwards
-    try{
+    try {
       _authSubject.value = null;
       final storage = await sharedPreferences;
       String accessToken = storage.getString(kAccessTokenName);
       String refreshToken = storage.getString(kRefreshTokenName);
-      if(accessToken == null || refreshToken == null){
+      if (accessToken == null || refreshToken == null) {
         developer.log("Not all tokens required for refresh available");
         return;
       }
@@ -119,7 +122,7 @@ class AuthRepository {
       var res = await http.post(
         "$_baseUrl/api/Auth/refresh",
         headers: {
-          'Content-type' : 'application/json',
+          'Content-type': 'application/json',
         },
         body: jsonEncode({"token": accessToken, "refreshToken": refreshToken}),
       );
@@ -135,18 +138,15 @@ class AuthRepository {
       await storage.setString(kRefreshTokenName, loginResult.refreshToken);
 
       checkAuthStateAsync();
-    }catch(e){
+    } catch (e) {
       throw e;
-    }
-    finally{
+    } finally {
       _currentlyRefreshing = false;
       developer.log("Refresh stopped");
     }
   }
 
-  void dispose(){
+  void dispose() {
     _authSubject.close();
   }
-
-
 }

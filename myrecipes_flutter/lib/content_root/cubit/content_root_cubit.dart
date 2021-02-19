@@ -9,7 +9,7 @@ class ContentRootCubit extends Cubit<ContentRootState> {
 
   ContentRootCubit(this._authRepository) : super(ContentRootInitial());
 
-  void logout(){
+  void logout() {
     _authRepository.logout();
   }
 }

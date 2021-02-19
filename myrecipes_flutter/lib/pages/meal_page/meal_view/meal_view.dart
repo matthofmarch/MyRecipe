@@ -1,18 +1,16 @@
-import 'dart:io';
-
+import 'package:auth_repository/auth_repository.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/model.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/cubit/meal_view_cubit.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/meal_calendar/meal_calendar.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/meal_list/meal_list.dart';
 import 'package:myrecipes_flutter/views/appbar/CustomDefaultAppBar.dart';
-import 'package:myrecipes_flutter/views/util/custom_platform_datepicker_sheet.dart';
+import 'package:platform_date_picker/platform_date_picker.dart';
 
 class MealView extends StatelessWidget {
   List<Meal> meals;
@@ -29,7 +27,11 @@ class MealView extends StatelessWidget {
             builder: (context, state) => GestureDetector(
               onTap: () async {
                 print(Theme.of(context).brightness);
-                DateTime pickedDate = await showPlatformModalSheet(context: rootContext, builder: (context) => CustomPlatformDatePickerSheet());
+                DateTime pickedDate = await PlatformDatePicker.showDate(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2020),
+                    lastDate: DateTime(2021));
 
                 if (pickedDate != null)
                   BlocProvider.of<MealViewCubit>(context).currentDate =
@@ -69,9 +71,52 @@ class MealView extends StatelessWidget {
                 previous.showCalendar != current.showCalendar ||
                 current.forceReload,
             builder: (context, state) => state.showCalendar
-                ? MealCalendar(meals, state.currentDate)
+                ? MealCalendar(
+                    meals,
+                    state.currentDate,
+                  )
                 : MealList(meals)),
       ),
+    );
+  }
+
+  _showMealOptions(BuildContext context) {
+    showBarModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Meal Actions",
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [Icon(Icons.edit), Text("Delete")],
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            if (RepositoryProvider.of<AuthRepository>(context)
+                .authState
+                .isAdmin)
+              TextButton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Icon(Icons.check), Text("Accept")],
+                ),
+                onPressed: () {},
+              )
+          ],
+        );
+      },
     );
   }
 }

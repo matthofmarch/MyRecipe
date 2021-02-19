@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:myrecipes_flutter/pages/home_page/invite_card.dart';
 import 'package:myrecipes_flutter/views/appbar/CustomDefaultAppBar.dart';
 import 'package:myrecipes_flutter/views/members/memberships.dart';
@@ -16,14 +15,16 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomDefaultAppBar(title:Text("Household")),
+        appBar: CustomDefaultAppBar(title: Text("Household")),
         body: ListView(
           children: [
             SizedBox(
               height: 8,
             ),
             MembershipsView(),
-            SizedBox(height: 8,),
+            SizedBox(
+              height: 8,
+            ),
             InviteCodeCard(),
             SizedBox(
               height: 8,
@@ -41,10 +42,8 @@ class HomePage extends StatelessWidget {
                         Text(
                           "Logout ",
                           textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              .copyWith(color: Theme.of(context).colorScheme.error),
+                          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                              color: Theme.of(context).colorScheme.error),
                         ),
                         Icon(
                           Icons.logout,
@@ -52,7 +51,8 @@ class HomePage extends StatelessWidget {
                         )
                       ],
                     ),
-                    borderSide: BorderSide(color: Theme.of(context).colorScheme.error, width: 1.5),
+                    borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.error, width: 1.5),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25)),
                   ),
@@ -70,7 +70,7 @@ class HomePage extends StatelessWidget {
             content: Text(
                 'Do you really want to be logged out? You will be redirected to the login screen.'),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -78,17 +78,13 @@ class HomePage extends StatelessWidget {
                     "No",
                     style: Theme.of(context).textTheme.bodyText1,
                   )),
-              PlatformButton(
+              OutlinedButton(
                 onPressed: () async {
                   Navigator.of(context).pop();
                   await RepositoryProvider.of<AuthRepository>(context).logout();
                 },
-                child: Text(
-                  "Logout",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1),
-                color: Theme.of(context).colorScheme.onError,
+                child: Text("Logout",
+                    style: Theme.of(context).textTheme.bodyText1),
               ),
             ],
           );

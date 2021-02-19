@@ -3,10 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:models/model.dart';
-import 'package:myrecipes_flutter/theme.dart';
-import 'package:myrecipes_flutter/views/recipeCard/RecipeCard.dart';
 import 'package:myrecipes_flutter/views/util/RoundedImage.dart';
 
 class RecipeDetail extends StatelessWidget {
@@ -18,24 +15,20 @@ class RecipeDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: PreferredSize(
-        preferredSize: Size(double.infinity, 120),
-        child: Container(
-          margin: EdgeInsets.only(top: 40, left: 10),
-          child: Row(
-            children: [
-              IconButton(
-                  icon: Icon(
-                    Icons.arrow_back,
-                    size: 30,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  }),
-            ],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {},
           ),
-        ),
+          IconButton(
+            icon: Icon(Icons.calendar_today),
+            onPressed: () {},
+          ),
+          IconButton(icon: Icon(Icons.delete), onPressed: () {})
+        ],
       ),
       body: Stack(
         children: [
@@ -173,7 +166,7 @@ class RecipeDetail extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          Icon(PlatformIcons(context).clockSolid),
+                          Icon(Icons.watch_later),
                           Text("${recipe.cookingTimeInMin} min"),
                         ],
                       )
