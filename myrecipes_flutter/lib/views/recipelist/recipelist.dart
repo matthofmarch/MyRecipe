@@ -58,7 +58,7 @@ class _RecipeListState extends State<RecipeList> {
     Navigator.of(context).pop();
 
     if (dateTime == null) {
-      ScaffoldMessenger.of(context)
+      Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text("No date selected")));
       return;
     }
@@ -66,10 +66,10 @@ class _RecipeListState extends State<RecipeList> {
     try {
       await RepositoryProvider.of<MealRepository>(context)
           .propose(recipe.id, dateTime);
-      ScaffoldMessenger.of(context)
+      Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text("Meal planned")));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      Scaffold.of(context).showSnackBar(SnackBar(
         content: Text("Could not plan meal"),
         backgroundColor: Theme.of(context).errorColor,
       ));
@@ -84,12 +84,12 @@ class _RecipeListState extends State<RecipeList> {
         setState(() {
           widget.recipes.removeWhere((r) => r.id == id);
         });
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        Scaffold.of(context).showSnackBar(SnackBar(
           content: Text("Deleted Recipe"),
         ));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      Scaffold.of(context).showSnackBar(SnackBar(
         content: Text("Could not delete Recipe"),
         backgroundColor: Theme.of(context).errorColor,
       ));
