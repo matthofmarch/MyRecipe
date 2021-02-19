@@ -14,7 +14,9 @@ class RecipeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 95,
-      decoration: MediaQuery.of(context).platformBrightness == Brightness.light ? BoxDecoration(boxShadow: shadowList) : null,
+      decoration: MediaQuery.of(context).platformBrightness == Brightness.light
+          ? BoxDecoration(boxShadow: shadowList)
+          : null,
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
@@ -24,40 +26,40 @@ class RecipeCard extends StatelessWidget {
               builder: (context) {
                 return recipe.image != null
                     ? Hero(
-                  tag: recipe.id,
-                  child: CachedNetworkImage(
-                    imageUrl: recipe.image,
-                    fit: BoxFit.fitWidth,
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          bottomLeft: Radius.circular(20),
+                        tag: recipe.id,
+                        child: CachedNetworkImage(
+                          imageUrl: recipe.image,
+                          fit: BoxFit.fitWidth,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                bottomLeft: Radius.circular(20),
+                              ),
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover),
+                            ),
+                          ),
+                          placeholder: (context, url) => Text("Loading"),
+                          errorWidget: (context, url, error) =>
+                              Text("Could not load image"),
                         ),
-                        image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover),
-                      ),
-                    ),
-                    placeholder: (context, url) => Text("Loading"),
-                    errorWidget: (context, url, error) => Text("Could not load image"),
-                  ),
-                )
+                      )
                     : Container(
-                 height: 120,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      bottomLeft: Radius.circular(20),
-                    ),
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: ExactAssetImage(
-                          "assets/placeholder-image.png"),
-                    ),
-                  ),
-                );
+                        height: 120,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            bottomLeft: Radius.circular(20),
+                          ),
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image:
+                                ExactAssetImage("assets/placeholder-image.png"),
+                          ),
+                        ),
+                      );
               },
             ),
           ),

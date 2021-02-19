@@ -9,10 +9,8 @@ namespace MyRecipe.Application.Common.Models.Recipe
 {
     public class RecipeModel
     {
-
         public RecipeModel()
         {
-
         }
 
         public RecipeModel(Domain.Entities.Recipe r)
@@ -29,8 +27,9 @@ namespace MyRecipe.Application.Common.Models.Recipe
 
 
         public Guid Id { get; set; }
-        [Required]
-        public string Name { get; set; }
+
+        [Required] public string Name { get; set; }
+
         public string Description { get; set; }
         public int CookingTimeInMin { get; set; }
         public string[] IngredientNames { get; set; }
@@ -51,9 +50,7 @@ namespace MyRecipe.Application.Common.Models.Recipe
                 User = user
             };
             if (IngredientNames != null)
-            {
                 userRecipe.Ingredients = await uow.Ingredients.GetListByNamesAsync(IngredientNames);
-            }
             return userRecipe;
         }
     }

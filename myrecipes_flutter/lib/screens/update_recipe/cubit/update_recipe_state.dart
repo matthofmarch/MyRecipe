@@ -1,8 +1,8 @@
 part of 'update_recipe_cubit.dart';
 
-
 abstract class UpdateRecipeState extends Equatable {
   const UpdateRecipeState();
+
   @override
   List<Object> get props => [];
 }
@@ -18,17 +18,30 @@ class UpdateRecipeInteraction extends UpdateRecipeState {
   List<String> selectedIngredients;
   String oldImageUri;
 
-  UpdateRecipeInteraction(this.name, this.description, this.cookingTimeInMin, this.ingredients, {this.selectedImage, this.selectedIngredients, this.oldImageUri});
+  UpdateRecipeInteraction(
+      this.name, this.description, this.cookingTimeInMin, this.ingredients,
+      {this.selectedImage, this.selectedIngredients, this.oldImageUri});
 
   @override
-  List<Object> get props =>[name, description, cookingTimeInMin, selectedImage, ingredients, oldImageUri];
+  List<Object> get props => [
+        name,
+        description,
+        cookingTimeInMin,
+        selectedImage,
+        ingredients,
+        oldImageUri
+      ];
 }
+
 class UpdateRecipeSubmitting extends UpdateRecipeState {}
+
 class UpdateRecipeFailure extends UpdateRecipeState {}
+
 class UpdateRecipeSuccess extends UpdateRecipeState {
   Recipe recipe;
+
   UpdateRecipeSuccess(this.recipe);
 
   @override
-  List<Object> get props =>[recipe];
+  List<Object> get props => [recipe];
 }

@@ -17,14 +17,16 @@ namespace MyRecipe.Application.Common.Interfaces
         DbSet<Recipe> Recipes { get; }
         DbSet<Ingredient> Ingredients { get; }
         DbSet<ApplicationUser> Users { get; }
-        DbSet<TEntity> Set<TEntity>()
-            where TEntity : class;
 
         ChangeTracker ChangeTracker { get; }
         DatabaseFacade Database { get; }
         DbSet<IdentityUserToken<string>> UserTokens { get; }
+
+        DbSet<TEntity> Set<TEntity>()
+            where TEntity : class;
+
         void Dispose();
         ValueTask DisposeAsync();
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken());
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = new());
     }
 }

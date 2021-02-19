@@ -1,5 +1,3 @@
-using System;
-
 namespace MyRecipe.Web.Models
 {
     public class ErrorViewModel

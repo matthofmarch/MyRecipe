@@ -8,9 +8,9 @@ using MyRecipe.Domain.Entities;
 
 namespace MyRecipe.Application.Logic.Repositories
 {
-    public class IngredientRepository :EntityRepository<Ingredient>, IIngredientRepository
+    public class IngredientRepository : EntityRepository<Ingredient>, IIngredientRepository
     {
-        public IngredientRepository(IApplicationDbContext dbContext):base(dbContext)
+        public IngredientRepository(IApplicationDbContext dbContext) : base(dbContext)
         {
         }
 

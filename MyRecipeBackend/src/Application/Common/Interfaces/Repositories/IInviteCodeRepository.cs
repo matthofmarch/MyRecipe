@@ -3,7 +3,7 @@ using MyRecipe.Domain.Entities;
 
 namespace MyRecipe.Application.Common.Interfaces.Repositories
 {
-    public interface IInviteCodeRepository:IEntityRepository<InviteCode>
+    public interface IInviteCodeRepository : IEntityRepository<InviteCode>
     {
         Task<bool> InviteCodeExistsAsync(string inviteCode);
         Task Delete(string code);

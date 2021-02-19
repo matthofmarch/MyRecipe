@@ -18,7 +18,8 @@ namespace MyRecipe.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services,
+            IConfiguration configuration, IHostEnvironment environment)
         {
             services.AddOptions<SpaLinksOptions>()
                 .Bind(configuration.GetSection("SpaLinks"))
@@ -32,7 +33,7 @@ namespace MyRecipe.Infrastructure
             services.AddOptions<StaticRecipeImagesOptions>()
                 .Bind(configuration.GetSection("StaticFiles"))
                 .ValidateDataAnnotations();
-            
+
             services.AddDbContext<ApplicationDbContext>(builder => builder
                 .UseSqlServer(
                     configuration.GetConnectionString("DefaultConnection"),
@@ -41,7 +42,7 @@ namespace MyRecipe.Infrastructure
             );
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            
+
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -55,7 +56,7 @@ namespace MyRecipe.Infrastructure
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>(configuration["Jwt:RefreshProvider"])
                 .AddDefaultTokenProviders();
-            
+
             services.AddJwtAuthentication();
             return services;
         }

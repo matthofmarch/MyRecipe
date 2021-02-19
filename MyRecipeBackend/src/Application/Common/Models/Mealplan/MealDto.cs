@@ -22,7 +22,7 @@ namespace MyRecipe.Application.Common.Models.Mealplan
         public string InitiatorName { get; set; }
         public RecipeModel Recipe { get; set; }
         public string Date { get; set; }
-        public bool Accepted  { get; set; }
+        public bool Accepted { get; set; }
         public IEnumerable<VoteDto> Votes { get; set; }
     }
 }

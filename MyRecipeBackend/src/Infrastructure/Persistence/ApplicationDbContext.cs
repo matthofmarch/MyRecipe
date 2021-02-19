@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +13,11 @@ namespace MyRecipe.Infrastructure.Persistence
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
     {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
+
         public DbSet<Meal> Meals { get; set; }
         public DbSet<MealVote> MealVotes { get; set; }
         public DbSet<Group> Groups { get; set; }
@@ -22,11 +25,6 @@ namespace MyRecipe.Infrastructure.Persistence
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
-            : base(options)
-        {
-        }
-        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -36,10 +34,7 @@ namespace MyRecipe.Infrastructure.Persistence
                 .IsUnique();
 
             var hostEnvironment = this.GetService<IHostEnvironment>();
-            if (hostEnvironment.IsDevelopment() || hostEnvironment.IsStaging())
-            {
-                SeedDatabase(builder);
-            }
+            if (hostEnvironment.IsDevelopment() || hostEnvironment.IsStaging()) SeedDatabase(builder);
         }
 
 
@@ -49,28 +44,29 @@ namespace MyRecipe.Infrastructure.Persistence
 
             var seedGroupId = new Guid("00000000-0000-0000-0000-000000000001");
 
-            var users = new []
+            var users = new[]
             {
-                new ApplicationUser()
+                new ApplicationUser
                 {
                     Id = "testUser1",
                     Email = "test1@test.test",
-                    SecurityStamp = String.Empty,
+                    SecurityStamp = string.Empty,
                     Recipes = new List<Recipe>(),
                     EmailConfirmed = true,
                     IsAdmin = true,
-                    GroupId=seedGroupId
+                    GroupId = seedGroupId
                 },
-                new ApplicationUser()
+                new ApplicationUser
                 {
                     Id = "testUser2",
                     Email = "test2@test.test",
-                    SecurityStamp = String.Empty,
+                    SecurityStamp = string.Empty,
                     Recipes = new List<Recipe>(),
                     EmailConfirmed = true,
                     GroupId = seedGroupId
                 }
-            }.Select(u => { 
+            }.Select(u =>
+            {
                 u.PasswordHash = hasher.HashPassword(u, "Pass123$");
                 u.UserName = u.NormalizedUserName = u.NormalizedEmail = u.Email;
                 return u;
@@ -80,26 +76,26 @@ namespace MyRecipe.Infrastructure.Persistence
 
             var groups = new[]
             {
-                new Group()
+                new Group
                 {
                     Id = seedGroupId,
-                    Name = "TestGroup",
+                    Name = "TestGroup"
                 }
             };
             builder.Entity<Group>().HasData(groups);
 
             var ingredients = new List<Ingredient>
             {
-                new Ingredient {Id = new Guid("00000000-0000-0000-0000-000000000001"), Name = "Green salad"},
-                new Ingredient {Id = new Guid("00000000-0000-0000-0000-000000000002"), Name = "Potato"},
-                new Ingredient {Id = new Guid("00000000-0000-0000-0000-000000000003"), Name = "Brown Rice"},
-                new Ingredient {Id = new Guid("00000000-0000-0000-0000-000000000004"), Name = "Oats"},
-                new Ingredient {Id = new Guid("00000000-0000-0000-0000-000000000005"), Name = "Tomato"},
-                new Ingredient {Id = new Guid("00000000-0000-0000-0000-000000000006"), Name = "Steak"},
-                new Ingredient {Id = new Guid("00000000-0000-0000-0000-000000000007"), Name = "Ham"},
-                new Ingredient {Id = new Guid("00000000-0000-0000-0000-000000000008"), Name = "Whole chicken egg"},
-                new Ingredient {Id = new Guid("00000000-0000-0000-0000-000000000009"), Name = "White rice"},
-                new Ingredient {Id = new Guid("00000000-0000-0000-0000-000000000010"), Name = "Greek yogurt"},
+                new() {Id = new Guid("00000000-0000-0000-0000-000000000001"), Name = "Green salad"},
+                new() {Id = new Guid("00000000-0000-0000-0000-000000000002"), Name = "Potato"},
+                new() {Id = new Guid("00000000-0000-0000-0000-000000000003"), Name = "Brown Rice"},
+                new() {Id = new Guid("00000000-0000-0000-0000-000000000004"), Name = "Oats"},
+                new() {Id = new Guid("00000000-0000-0000-0000-000000000005"), Name = "Tomato"},
+                new() {Id = new Guid("00000000-0000-0000-0000-000000000006"), Name = "Steak"},
+                new() {Id = new Guid("00000000-0000-0000-0000-000000000007"), Name = "Ham"},
+                new() {Id = new Guid("00000000-0000-0000-0000-000000000008"), Name = "Whole chicken egg"},
+                new() {Id = new Guid("00000000-0000-0000-0000-000000000009"), Name = "White rice"},
+                new() {Id = new Guid("00000000-0000-0000-0000-000000000010"), Name = "Greek yogurt"}
             };
             builder.Entity<Ingredient>().HasData(ingredients);
 
@@ -112,7 +108,7 @@ namespace MyRecipe.Infrastructure.Persistence
                     Name = "Pot of Rice",
                     Description = "Just rice",
                     UserId = users[0].Id,
-                    AddToGroupPool = true,
+                    AddToGroupPool = true
                 },
                 new Recipe
                 {
@@ -121,7 +117,7 @@ namespace MyRecipe.Infrastructure.Persistence
                     Name = "A tasty steak",
                     Description = "Steak",
                     UserId = users[0].Id,
-                    AddToGroupPool = true,
+                    AddToGroupPool = true
                 },
                 new Recipe
                 {
@@ -130,7 +126,7 @@ namespace MyRecipe.Infrastructure.Persistence
                     Name = "Ham and Eggs",
                     Description = "Fast",
                     UserId = users[1].Id,
-                    AddToGroupPool = true,
+                    AddToGroupPool = true
                 },
                 new Recipe
                 {
@@ -139,19 +135,19 @@ namespace MyRecipe.Infrastructure.Persistence
                     Name = "Yogurt",
                     Description = "Healthy",
                     UserId = users[1].Id,
-                    AddToGroupPool = true,
+                    AddToGroupPool = true
                 }
             };
             builder.Entity<Recipe>().HasData(recipes);
 
             var joinIngredientUserRecipe = new[]
             {
-                new//rice for pot of rice
+                new //rice for pot of rice
                 {
                     IngredientsId = ingredients[2].Id,
                     RecipesId = recipes[0].Id
                 },
-                new//steak for steak
+                new //steak for steak
                 {
                     IngredientsId = ingredients[5].Id,
                     RecipesId = recipes[1].Id
@@ -183,8 +179,9 @@ namespace MyRecipe.Infrastructure.Persistence
                 }
             };
             builder.Entity("IngredientRecipe").HasData(joinIngredientUserRecipe);
-            
-            var meals = new[] {
+
+            var meals = new[]
+            {
                 new Meal
                 {
                     InitiatorId = users[0].Id,
@@ -192,7 +189,7 @@ namespace MyRecipe.Infrastructure.Persistence
                     DateTime = DateTime.Now,
                     GroupId = groups[0].Id,
                     Accepted = true,
-                    Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                    Id = new Guid("00000000-0000-0000-0000-000000000001")
                 },
                 new Meal
                 {
@@ -201,21 +198,21 @@ namespace MyRecipe.Infrastructure.Persistence
                     DateTime = DateTime.Now.AddDays(2),
                     GroupId = groups[0].Id,
                     Accepted = false,
-                    Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                    Id = new Guid("00000000-0000-0000-0000-000000000002")
                 }
             };
             builder.Entity<Meal>().HasData(meals);
 
             var mealVotes = new[]
             {
-                new MealVote()
+                new MealVote
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000001"),
                     MealId = meals[0].Id,
                     UserId = users[1].Id,
                     Vote = VoteEnum.Approved
                 },
-                new MealVote()
+                new MealVote
                 {
                     Id = new Guid("00000000-0000-0000-0000-000000000002"),
                     MealId = meals[0].Id,

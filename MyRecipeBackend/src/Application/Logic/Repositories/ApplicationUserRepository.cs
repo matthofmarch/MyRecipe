@@ -10,6 +10,7 @@ namespace MyRecipe.Application.Logic.Repositories
     public class ApplicationUserRepository : IApplicationUserRepository
     {
         private readonly IApplicationDbContext _dbContext;
+
         public ApplicationUserRepository(IApplicationDbContext dbContext)
         {
             _dbContext = dbContext;

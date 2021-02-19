@@ -4,7 +4,7 @@ using MyRecipe.Domain.Entities;
 
 namespace MyRecipe.Application.Common.Interfaces.Repositories
 {
-    public interface IGroupRepository:IEntityRepository<Group>
+    public interface IGroupRepository : IEntityRepository<Group>
     {
         Task<Group> GetGroupForUserAsync(string userId);
         Task<Group> GetGroupForInviteCodeAsync(string inviteCode);

@@ -20,8 +20,8 @@ namespace MyRecipe.Web
         {
             var user = await userManager.GetUserAsync(context.User);
             if (user is not null &&
-                (user.IsAdmin != context.User.IsInRole("GroupAdmin") 
-                || user.GroupId.ToString() != context.User.Claims.Single(c => c.Type == "household").Value))
+                (user.IsAdmin != context.User.IsInRole("GroupAdmin")
+                 || user.GroupId.ToString() != context.User.Claims.Single(c => c.Type == "household").Value))
             {
                 await context.Response.WriteAsJsonAsync(new ForbidResult());
                 context.Abort();

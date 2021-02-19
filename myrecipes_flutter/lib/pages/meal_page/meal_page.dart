@@ -3,11 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meal_repository/meal_repository.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/meal_view.dart';
-import 'dart:developer' as dev;
 
 import 'cubit/meals_cubit.dart';
-import 'meal_view/meal_calendar/meal_calendar.dart';
-import 'meal_view/meal_list/meal_list.dart';
 
 /**
  * This page shows views that show meals
@@ -21,7 +18,8 @@ class MealPage extends StatelessWidget {
       create: (context) =>
           MealsCubit(RepositoryProvider.of<MealRepository>(context)),
       child: BlocBuilder<MealsCubit, MealsState>(
-          buildWhen: (previous, current) => previous is! MealsInteractable || current is! MealsInteractable,
+          buildWhen: (previous, current) =>
+              previous is! MealsInteractable || current is! MealsInteractable,
           builder: (context, state) {
             if (state is MealsInitial) {
               BlocProvider.of<MealsCubit>(context).load();
@@ -39,5 +37,3 @@ class MealPage extends StatelessWidget {
     );
   }
 }
-
-

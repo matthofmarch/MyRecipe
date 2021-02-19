@@ -1,13 +1,9 @@
-import 'dart:io';
-
-import 'package:auth_repository/auth_repository.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/model.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/cubit/meal_view_cubit.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/views/vote_summary.dart';
@@ -23,7 +19,8 @@ class MealCalendar extends StatelessWidget {
 
   Function(Meal meal) showMealOptions;
 
-  MealCalendar(this.meals, this.viewInitialDate, {Key key, this.showMealOptions})
+  MealCalendar(this.meals, this.viewInitialDate,
+      {Key key, this.showMealOptions})
       : super(key: key) {}
 
   @override
@@ -49,25 +46,30 @@ class MealCalendar extends StatelessWidget {
               VerticalDivider(
                 indent: 20,
                 endIndent: 20,
-                width: 0, //Else one will see more of the most-left column than the one on the right
+                width:
+                    0, //Else one will see more of the most-left column than the one on the right
               ),
               Expanded(
                 child: Stack(
                   alignment: Alignment.topCenter,
                   children: [
-                    Builder(
-                      builder: (context) {
-                        final mealsForDay = meals
-                            .where((m) => mealOnCurrentDay(m, columnDate))
-                            .map((m) => _mealCard(context, m))
-                            .toList();
+                    Builder(builder: (context) {
+                      final mealsForDay = meals
+                          .where((m) => mealOnCurrentDay(m, columnDate))
+                          .map((m) => _mealCard(context, m))
+                          .toList();
 
-                        return ListView(
+                      return ListView(
                           padding: EdgeInsets.only(top: 44),
-                          children: mealsForDay.isNotEmpty ? mealsForDay : [Text("No meals", textAlign: TextAlign.center,)]
-                        );
-                      }
-                    ),
+                          children: mealsForDay.isNotEmpty
+                              ? mealsForDay
+                              : [
+                                  Text(
+                                    "No meals",
+                                    textAlign: TextAlign.center,
+                                  )
+                                ]);
+                    }),
                     _makeDateBadge(context, columnDate)
                   ],
                 ),
@@ -96,9 +98,7 @@ class MealCalendar extends StatelessWidget {
           ),
         );
       },
-      onLongPress: 
-        showMealOptions(meal)
-      ,
+      onLongPress: showMealOptions(meal),
       child: AspectRatio(
         aspectRatio: 2 / 3,
         child: Card(

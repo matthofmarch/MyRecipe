@@ -8,7 +8,7 @@ using MyRecipe.Domain.Entities;
 
 namespace MyRecipe.Application.Logic.Repositories
 {
-    public class EntityRepository<T>: IEntityRepository<T> where T:EntityObject
+    public class EntityRepository<T> : IEntityRepository<T> where T : EntityObject
     {
         protected readonly IApplicationDbContext _dbContext;
 
@@ -16,6 +16,7 @@ namespace MyRecipe.Application.Logic.Repositories
         {
             _dbContext = dbContext;
         }
+
         public async Task<T[]> AllAsync()
         {
             return await _dbContext.Set<T>().ToArrayAsync();

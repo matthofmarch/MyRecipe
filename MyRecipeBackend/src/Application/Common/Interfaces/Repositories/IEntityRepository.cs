@@ -13,5 +13,4 @@ namespace MyRecipe.Application.Common.Interfaces.Repositories
         void Update(T entity);
         Task<bool> AnyAsync(Expression<Func<T, bool>> lambda);
     }
-
 }

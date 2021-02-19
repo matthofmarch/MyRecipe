@@ -11,8 +11,7 @@ namespace MyRecipe.Application.Logic.Repositories
 {
     public class GroupRepository : EntityRepository<Group>, IGroupRepository
     {
-
-        public GroupRepository(IApplicationDbContext dbContext):base(dbContext)
+        public GroupRepository(IApplicationDbContext dbContext) : base(dbContext)
         {
         }
 
@@ -22,7 +21,6 @@ namespace MyRecipe.Application.Logic.Repositories
                 .Where(u => u.Id == userId)
                 .Select(u => u.Group)
                 .SingleOrDefaultAsync();
-
         }
 
         public Task<Group> GetGroupForInviteCodeAsync(string inviteCode)
@@ -31,7 +29,6 @@ namespace MyRecipe.Application.Logic.Repositories
                 .Where(i => i.Code == inviteCode)
                 .Select(i => i.Group)
                 .SingleOrDefaultAsync();
-
         }
 
         public Task<Group> GetGroupForUserIncludeAllAsync(string userId)
@@ -51,7 +48,7 @@ namespace MyRecipe.Application.Logic.Repositories
                 .SelectMany(u => u.Group.Members)
                 .Select(u => u.Id)
                 .ToArrayAsync();
-            
+
             var query = _dbContext.Recipes
                 .Where(r => userGroup.Contains(r.UserId) && !prevRecipeIds.Contains(r.Id))
                 .Where(r => r.AddToGroupPool);
@@ -63,7 +60,6 @@ namespace MyRecipe.Application.Logic.Repositories
                 return await query
                     .Include(r => r.Ingredients)
                     .FirstAsync();
-
             }
 
             return null;
@@ -72,7 +68,7 @@ namespace MyRecipe.Application.Logic.Repositories
         public async Task<bool> CheckIsUserAdmin(string userId, Guid groupId)
         {
             return await _dbContext.Users
-                .AnyAsync(u => u.GroupId == groupId 
+                .AnyAsync(u => u.GroupId == groupId
                                && u.Id == userId
                                && u.IsAdmin);
         }

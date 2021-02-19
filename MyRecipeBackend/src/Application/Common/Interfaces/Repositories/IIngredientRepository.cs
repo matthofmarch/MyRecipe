@@ -4,7 +4,7 @@ using MyRecipe.Domain.Entities;
 
 namespace MyRecipe.Application.Common.Interfaces.Repositories
 {
-    public interface IIngredientRepository:IEntityRepository<Ingredient>
+    public interface IIngredientRepository : IEntityRepository<Ingredient>
     {
         Task<Ingredient> GetByNameAsync(string identifier);
 

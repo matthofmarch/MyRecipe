@@ -9,6 +9,7 @@ namespace MyRecipe.Web.ViewModels.ResetPassword
         [Required(ErrorMessage = "User Id is required")]
         [HiddenInput(DisplayValue = false)]
         public string UserId { get; set; }
+
         [Required(ErrorMessage = "Token is required")]
         [HiddenInput(DisplayValue = false)]
         public string Token { get; set; }
@@ -17,6 +18,7 @@ namespace MyRecipe.Web.ViewModels.ResetPassword
         [DisplayName("New Password")]
         [DataType(DataType.Password)]
         public string NewPassword { get; set; }
+
         [Required]
         [DisplayName("Confirm new Password")]
         [DataType(DataType.Password)]

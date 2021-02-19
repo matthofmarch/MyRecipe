@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myrecipes_flutter/pages/home_page/home_page.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_page.dart';
 import 'package:myrecipes_flutter/pages/recipepage/recipepage.dart';
+
 import 'cubit/content_root_cubit.dart';
 
 class Destination {
@@ -25,7 +26,6 @@ class ContentRoot extends StatefulWidget {
   State<StatefulWidget> createState() => _ContentRootState();
 }
 
-
 class _ContentRootState extends State<ContentRoot> {
   int _currentIndex = 1;
 
@@ -37,19 +37,21 @@ class _ContentRootState extends State<ContentRoot> {
       child: Scaffold(
         body: getDestinationWidget(_currentIndex),
         bottomNavigationBar: BottomNavigationBar(
-          fixedColor: Theme.of(context).colorScheme.primary,
-          items: destinations.asMap().entries.map((e) =>
-             BottomNavigationBarItem(
-              label: e.value.label,
-              icon: Icon(e.value.icon),
-            )).toList(),
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          }
-        ),
+            fixedColor: Theme.of(context).colorScheme.primary,
+            items: destinations
+                .asMap()
+                .entries
+                .map((e) => BottomNavigationBarItem(
+                      label: e.value.label,
+                      icon: Icon(e.value.icon),
+                    ))
+                .toList(),
+            currentIndex: _currentIndex,
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            }),
       ),
     );
   }

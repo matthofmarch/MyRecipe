@@ -11,7 +11,6 @@ namespace MyRecipe.Web.Installers
     public static class ConfigureSwaggerExtensions
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
@@ -19,7 +18,7 @@ namespace MyRecipe.Web.Installers
         {
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -63,7 +62,6 @@ namespace MyRecipe.Web.Installers
                 {
                     Console.WriteLine("Cannot add xml Comments to swagger");
                 }
-
             });
 
             return services;

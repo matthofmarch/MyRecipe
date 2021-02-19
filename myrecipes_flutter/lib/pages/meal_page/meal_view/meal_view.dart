@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:auth_repository/auth_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +27,15 @@ class MealView extends StatelessWidget {
             builder: (context, state) => GestureDetector(
               onTap: () async {
                 print(Theme.of(context).brightness);
-                DateTime pickedDate = await PlatformDatePicker.showDate(context: context, initialDate: DateTime.now(), firstDate: DateTime(2020), lastDate: DateTime(2021));
+                DateTime pickedDate = await PlatformDatePicker.showDate(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2020),
+                    lastDate: DateTime(2021));
 
                 if (pickedDate != null)
-                  BlocProvider.of<MealViewCubit>(context).currentDate = pickedDate;
+                  BlocProvider.of<MealViewCubit>(context).currentDate =
+                      pickedDate;
               },
               child: Row(
                 children: [
@@ -68,13 +71,16 @@ class MealView extends StatelessWidget {
                 previous.showCalendar != current.showCalendar ||
                 current.forceReload,
             builder: (context, state) => state.showCalendar
-                ? MealCalendar(meals, state.currentDate, )
+                ? MealCalendar(
+                    meals,
+                    state.currentDate,
+                  )
                 : MealList(meals)),
       ),
     );
   }
 
-  _showMealOptions(BuildContext context){
+  _showMealOptions(BuildContext context) {
     showBarModalBottomSheet(
       context: context,
       builder: (context) {
@@ -88,13 +94,19 @@ class MealView extends StatelessWidget {
                 style: Theme.of(context).textTheme.subtitle1,
               ),
             ),
-            SizedBox(height: 8,),
+            SizedBox(
+              height: 8,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [Icon(Icons.edit), Text("Delete")],
             ),
-            SizedBox(height: 8,),
-            if(RepositoryProvider.of<AuthRepository>(context).authState.isAdmin)
+            SizedBox(
+              height: 8,
+            ),
+            if (RepositoryProvider.of<AuthRepository>(context)
+                .authState
+                .isAdmin)
               TextButton(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

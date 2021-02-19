@@ -20,15 +20,15 @@ namespace MyRecipe.Web.Controllers
     [ApiController]
     public class RecipesController : ControllerBase
     {
-
-        private readonly IUnitOfWork _uow;
         private readonly IConfiguration _configuration;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RecipesController> _log;
 
+        private readonly IUnitOfWork _uow;
+        private readonly UserManager<ApplicationUser> _userManager;
+
         public RecipesController(
-            IUnitOfWork uow, 
-            IConfiguration config, 
+            IUnitOfWork uow,
+            IConfiguration config,
             UserManager<ApplicationUser> userManager,
             ILogger<RecipesController> log)
         {
@@ -39,7 +39,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Add a recipe to the users cookbook
+        ///     Add a recipe to the users cookbook
         /// </summary>
         /// <param name="recipeModel"></param>
         /// <returns></returns>
@@ -53,18 +53,30 @@ namespace MyRecipe.Web.Controllers
                 return BadRequest("User not found");
 
             Recipe recipe;
-            try { recipe = await recipeModel.ToUserRecipe(_uow, user); }
-            catch(Exception e) { return BadRequest(e.Message); }
+            try
+            {
+                recipe = await recipeModel.ToUserRecipe(_uow, user);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
             await _uow.Recipes.AddAsync(recipe);
-            try { await _uow.SaveChangesAsync(); }
-            catch(ValidationException e){ return BadRequest(e.Message); }
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch (ValidationException e)
+            {
+                return BadRequest(e.Message);
+            }
 
             return Ok();
         }
 
         /// <summary>
-        /// Update a users recipe
+        ///     Update a users recipe
         /// </summary>
         /// <param name="id"></param>
         /// <param name="recipeModel"></param>
@@ -73,7 +85,7 @@ namespace MyRecipe.Web.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> UpdateRecipe([FromRoute]Guid id, RecipeModel recipeModel)
+        public async Task<ActionResult> UpdateRecipe([FromRoute] Guid id, RecipeModel recipeModel)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user is null) return BadRequest("User not found");
@@ -91,7 +103,7 @@ namespace MyRecipe.Web.Controllers
 
             dbUserRecipe.Ingredients = null;
             dbUserRecipe.Ingredients = await _uow.Ingredients.GetListByNamesAsync(
-                    recipeModel.IngredientNames);
+                recipeModel.IngredientNames);
 
             try
             {
@@ -99,7 +111,7 @@ namespace MyRecipe.Web.Controllers
             }
             catch (Exception e)
             {
-                string errMsg = "Could not update Recipe";
+                var errMsg = "Could not update Recipe";
                 _log.LogError($"{errMsg}: {e}");
                 return BadRequest($"{errMsg}");
             }
@@ -108,7 +120,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Get recipes for user with paging
+        ///     Get recipes for user with paging
         /// </summary>
         /// <param name="filter">Filters by name of recipes</param>
         /// <param name="page"></param>
@@ -127,14 +139,14 @@ namespace MyRecipe.Web.Controllers
             if (user == null)
                 return BadRequest("User not found");
 
-            Recipe[] recipes = await _uow.Recipes.GetPagedRecipesAsync(user, filter, page, pageSize);
+            var recipes = await _uow.Recipes.GetPagedRecipesAsync(user, filter, page, pageSize);
 
             return recipes.Select(r => new RecipeModel(r)).ToArray();
         }
 
 
         /// <summary>
-        /// Gets all the recipes from the users of a group
+        ///     Gets all the recipes from the users of a group
         /// </summary>
         /// <param name="filter">Filter by name of the recipes</param>
         /// <param name="page"></param>
@@ -153,18 +165,15 @@ namespace MyRecipe.Web.Controllers
             if (user == null)
                 return BadRequest("User not found");
             var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
-            if (group == null)
-            {
-                return BadRequest("User not in a group");
-            }
+            if (group == null) return BadRequest("User not in a group");
 
-            Recipe[] recipes = await _uow.Recipes.GetPagedRecipesForGroupAsync(user, filter, page, pageSize, group.Id);
+            var recipes = await _uow.Recipes.GetPagedRecipesForGroupAsync(user, filter, page, pageSize, group.Id);
 
             return recipes.Select(r => new RecipeModel(r)).ToArray();
         }
 
         /// <summary>
-        /// Delete a users recipe
+        ///     Delete a users recipe
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -178,22 +187,25 @@ namespace MyRecipe.Web.Controllers
             if (user == null)
                 return BadRequest("User not found");
 
-            Recipe recipe = await _uow.Recipes.GetByIdAsync(user, id);
-            if(recipe == null)
-            {
-                return NotFound();
-            }
+            var recipe = await _uow.Recipes.GetByIdAsync(user, id);
+            if (recipe == null) return NotFound();
 
             _uow.Recipes.Delete(recipe);
 
-            try { await _uow.SaveChangesAsync(); }
-            catch(Exception e) { return BadRequest(e.Message); }
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
             return NoContent();
         }
 
         /// <summary>
-        /// Upload a image
+        ///     Upload a image
         /// </summary>
         /// <param name="image"></param>
         /// <returns>Path to the image file</returns>
@@ -213,14 +225,14 @@ namespace MyRecipe.Web.Controllers
                 Path.GetExtension(image.FileName));
 
             var path = Path.Combine(Directory.GetCurrentDirectory(),
-                _configuration["StaticFiles:ImageBasePath"],filename);
+                _configuration["StaticFiles:ImageBasePath"], filename);
 
             await using var fileStream = new FileStream(path, FileMode.Create);
             await image.CopyToAsync(fileStream);
-        
 
-            return Ok(new {uri = $"{this.Request.Scheme}s://{this.Request.Host}/{_configuration["StaticFiles:ImageBasePath"]}/{filename}"});
+
+            return Ok(new
+                {uri = $"{Request.Scheme}s://{Request.Host}/{_configuration["StaticFiles:ImageBasePath"]}/{filename}"});
         }
-
     }
 }

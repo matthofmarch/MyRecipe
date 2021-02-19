@@ -30,11 +30,11 @@ namespace MyRecipe.Web.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IApplicationDbContext _dbContext;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
-        private readonly SpaLinksOptions _spaLinksOptions;
         private readonly JwtOptions _jwtOptions;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly SpaLinksOptions _spaLinksOptions;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
@@ -53,7 +53,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Login endpoint for a user, Default users: test1@test.test and test2@test.test, Pw: Pass123$
+        ///     Login endpoint for a user, Default users: test1@test.test and test2@test.test, Pw: Pass123$
         /// </summary>
         /// <param name="model"></param>
         /// <returns>accessToken, refreshToken</returns>
@@ -76,20 +76,17 @@ namespace MyRecipe.Web.Controllers
 
                 var identityClaims = new List<Claim>
                 {
-                    new (ClaimTypes.Name, user.Id),
+                    new(ClaimTypes.Name, user.Id),
                     new(ClaimTypes.NameIdentifier, user.Id),
-                    new (ClaimTypes.Email, user.Email),
-                    new (JwtRegisteredClaimNames.Sub, user.Email),
-                    new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new(ClaimTypes.Email, user.Email),
+                    new(JwtRegisteredClaimNames.Sub, user.Email),
+                    new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
                 if (user.GroupId is not null)
                 {
                     identityClaims.Add(new Claim("household", user.GroupId.ToString()));
-                    if (user.IsAdmin)
-                    {
-                        identityClaims.Add(new Claim(ClaimTypes.Role, "GroupAdmin"));
-                    }
+                    if (user.IsAdmin) identityClaims.Add(new Claim(ClaimTypes.Role, "GroupAdmin"));
                 }
 
                 var token = GenerateJwtToken(identityClaims.Concat(customClaims));
@@ -106,14 +103,17 @@ namespace MyRecipe.Web.Controllers
                     refreshToken
                 });
             }
-            else if (result.IsNotAllowed)
+
+            if (result.IsNotAllowed)
+            {
                 return Unauthorized(new {Error = "Email needs to be confirmed"});
+            }
 
             return Unauthorized();
         }
 
         /// <summary>
-        /// Register a new user
+        ///     Register a new user
         /// </summary>
         /// <param name="loginModel"></param>
         /// <returns></returns>
@@ -136,7 +136,8 @@ namespace MyRecipe.Web.Controllers
             if (result.Succeeded)
             {
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var callbackUrl = Url.Action("ConfirmEmail", "Auth", new {userId = user.Id, code}, HttpScheme.Https.ToString());
+                var callbackUrl = Url.Action("ConfirmEmail", "Auth", new {userId = user.Id, code},
+                    HttpScheme.Https.ToString());
                 await _emailSender.SendEmailAsync(loginModel.Email, "Confirm your email",
                     $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
                 return Ok();
@@ -147,7 +148,7 @@ namespace MyRecipe.Web.Controllers
 
 
         /// <summary>
-        /// Called to confirm a users email
+        ///     Called to confirm a users email
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="code"></param>
@@ -171,7 +172,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Change a users password (has to be logged in)
+        ///     Change a users password (has to be logged in)
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -191,7 +192,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Request the reset of a users password (via email)
+        ///     Request the reset of a users password (via email)
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
@@ -214,7 +215,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Confirm reset of a users password
+        ///     Confirm reset of a users password
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -230,10 +231,7 @@ namespace MyRecipe.Web.Controllers
                 if (user != null)
                 {
                     var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
-                    if (result.Succeeded)
-                    {
-                        return Ok();
-                    }
+                    if (result.Succeeded) return Ok();
 
                     return BadRequest(result.Errors);
                 }
@@ -243,7 +241,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Request the change of email for a user (has to be logged in)
+        ///     Request the change of email for a user (has to be logged in)
         /// </summary>
         /// <param name="newEmail"></param>
         /// <returns></returns>
@@ -269,7 +267,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Confirm the change of a users email
+        ///     Confirm the change of a users email
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
@@ -279,10 +277,7 @@ namespace MyRecipe.Web.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ChangeEmail(ResetEmailViewModel viewModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
+            if (!ModelState.IsValid) return BadRequest();
 
             var user = await _userManager.FindByIdAsync(viewModel.UserId);
             if (user == null) return BadRequest("Could not find User");
@@ -290,16 +285,13 @@ namespace MyRecipe.Web.Controllers
             var result = await _userManager.ChangeEmailAsync(user, viewModel.NewEmail, viewModel.Token);
             var resultUserNameChange = await _userManager.SetUserNameAsync(user, viewModel.NewEmail);
 
-            if (result.Succeeded && resultUserNameChange.Succeeded)
-            {
-                return Ok();
-            }
+            if (result.Succeeded && resultUserNameChange.Succeeded) return Ok();
 
             return BadRequest(result.Succeeded ? resultUserNameChange.Errors : result.Errors);
         }
 
         /// <summary>
-        /// Exchange refresh tokens for a new access token
+        ///     Exchange refresh tokens for a new access token
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -310,7 +302,7 @@ namespace MyRecipe.Web.Controllers
         public async Task<IActionResult> Refresh(RefreshModel model)
         {
             if (!ModelState.IsValid) return BadRequest();
-            
+
             ClaimsPrincipal principal;
 
             try
@@ -321,13 +313,13 @@ namespace MyRecipe.Web.Controllers
             {
                 return BadRequest(e.Message);
             }
-                
+
             var user = await _userManager.FindByIdAsync(principal.Identity.Name);
             var result = await _dbContext.UserTokens.SingleOrDefaultAsync(t =>
                 t.UserId == user.Id && t.Value == model.RefreshToken);
 
             if (user is null || result is null) return BadRequest();
-            
+
             var newToken = GenerateJwtToken(principal.Claims);
             await _userManager.RemoveAuthenticationTokenAsync(user, _jwtOptions.RefreshProvider,
                 "RefreshToken");
@@ -342,7 +334,6 @@ namespace MyRecipe.Web.Controllers
                 expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_jwtOptions.TokenValidMinutes)),
                 refreshToken = newRefreshToken
             });
-
         }
 
 

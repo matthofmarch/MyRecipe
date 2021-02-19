@@ -8,9 +8,9 @@ using MyRecipe.Domain.Entities;
 
 namespace MyRecipe.Application.Logic.Repositories
 {
-    public class RecipeRepository :EntityRepository<Recipe>, IRecipeRepository
+    public class RecipeRepository : EntityRepository<Recipe>, IRecipeRepository
     {
-        public RecipeRepository(IApplicationDbContext dbContext):base(dbContext)
+        public RecipeRepository(IApplicationDbContext dbContext) : base(dbContext)
         {
         }
 
@@ -19,17 +19,15 @@ namespace MyRecipe.Application.Logic.Repositories
             _dbContext.Recipes.Remove(recipe);
         }
 
-        public async Task<Recipe[]> GetPagedRecipesForGroupAsync(ApplicationUser user, string filter, int page, int pageSize, Guid groupId)
+        public async Task<Recipe[]> GetPagedRecipesForGroupAsync(ApplicationUser user, string filter, int page,
+            int pageSize, Guid groupId)
         {
             var query = _dbContext.Groups
                 .Where(g => g.Id == groupId)
                 .SelectMany(g => g.Members)
                 .SelectMany(u => u.Recipes);
 
-            if (filter != null)
-            {
-                query = query.Where(r => r.Name.Contains(filter));
-            }
+            if (filter != null) query = query.Where(r => r.Name.Contains(filter));
 
             query = query
                 .OrderBy(r => r.Name)
@@ -52,10 +50,7 @@ namespace MyRecipe.Application.Logic.Repositories
                 .Where(r => r.User.Id == user.Id);
 
 
-            if (filter != null)
-            {
-                query = query.Where(r => r.Name.Contains(filter));
-            }
+            if (filter != null) query = query.Where(r => r.Name.Contains(filter));
 
             query = query
                 .OrderBy(r => r.Name)

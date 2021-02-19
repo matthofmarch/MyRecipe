@@ -5,8 +5,7 @@ namespace MyRecipe.Domain.Entities
 {
     public class InviteCode : EntityObject
     {
-        [Required]
-        public DateTime CreationDate { get; set; }
+        [Required] public DateTime CreationDate { get; set; }
 
         [Required]
         [MinLength(6)]
@@ -14,6 +13,5 @@ namespace MyRecipe.Domain.Entities
         public string Code { get; set; }
 
         public Group Group { get; set; }
-
     }
 }

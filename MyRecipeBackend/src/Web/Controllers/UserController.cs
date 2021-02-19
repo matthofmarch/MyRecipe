@@ -16,9 +16,9 @@ namespace MyRecipe.Web.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly ILogger _logger;
         private readonly IUnitOfWork _uow;
         private readonly UserManager<ApplicationUser> _userManger;
-        private readonly ILogger _logger;
 
 
         public UserController(IUnitOfWork uow, UserManager<ApplicationUser> userManger, ILogger<UserController> logger)
@@ -30,7 +30,7 @@ namespace MyRecipe.Web.Controllers
 
 
         /// <summary>
-        /// Leave the group the user is currently in
+        ///     Leave the group the user is currently in
         /// </summary>
         /// <returns></returns>
         [HttpPut("leaveGroup")]
@@ -55,12 +55,13 @@ namespace MyRecipe.Web.Controllers
                 _logger.LogError(ex, "Failed while trying to leave group");
                 return BadRequest("Could not leave Group");
             }
+
             return Ok();
         }
 
 
         /// <summary>
-        /// Change a users admin status and/or kick him from a group (user has to be the admin of the group)
+        ///     Change a users admin status and/or kick him from a group (user has to be the admin of the group)
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -98,6 +99,7 @@ namespace MyRecipe.Web.Controllers
                 _logger.LogError(ex, "Failed while trying to leave group");
                 return BadRequest("Could not leave Group");
             }
+
             return Ok();
         }
     }

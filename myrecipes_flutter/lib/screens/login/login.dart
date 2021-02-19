@@ -20,7 +20,7 @@ class Login extends StatelessWidget {
         create: (context) =>
             LoginCubit(RepositoryProvider.of<AuthRepository>(context)),
         child: BlocBuilder<LoginCubit, LoginState>(builder: (context, state) {
-          if(state is LoginProgress){
+          if (state is LoginProgress) {
             return Center(child: CircularProgressIndicator());
           }
           return Scaffold(
@@ -62,20 +62,18 @@ class Login extends StatelessWidget {
                                   height: 16,
                                 ),
                                 TextField(
-                                  controller: _emailController,
-                                  keyboardType: TextInputType.emailAddress,
-                                    decoration: InputDecoration(
-                                        labelText: "Email")
-                                ),
+                                    controller: _emailController,
+                                    keyboardType: TextInputType.emailAddress,
+                                    decoration:
+                                        InputDecoration(labelText: "Email")),
                                 SizedBox(
                                   height: 16,
                                 ),
                                 TextField(
-                                  obscureText: true,
-                                  controller: _passwordController,
-                                  decoration: InputDecoration(
-                                        labelText: "Password")
-                                ),
+                                    obscureText: true,
+                                    controller: _passwordController,
+                                    decoration:
+                                        InputDecoration(labelText: "Password")),
                               ]),
                         ),
                       ),
@@ -96,24 +94,25 @@ class Login extends StatelessWidget {
                             ],
                           ),
 
-                         /* style: ButtonStyle(
+                          /* style: ButtonStyle(
                             border: BorderSide(
                                 color: Theme.of(context).colorScheme.primary, width: 1.5),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25)),
                           ),*/
-
                         ),
                       ),
-                      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        Text("You don't have an account? "),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (_) => Signup()));
-                            },
-                            child: Text("Sign Up"))
-                      ])
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("You don't have an account? "),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (_) => Signup()));
+                                },
+                                child: Text("Sign Up"))
+                          ])
                     ]),
               ),
             ),

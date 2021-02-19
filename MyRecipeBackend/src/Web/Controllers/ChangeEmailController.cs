@@ -17,9 +17,9 @@ namespace MyRecipe.Web.Controllers
     [Route("[controller]")]
     public class ChangeEmailController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ChangeEmailController> _log;
+        private readonly UserManager<ApplicationUser> _userManager;
 
 
         public ChangeEmailController(
@@ -34,7 +34,7 @@ namespace MyRecipe.Web.Controllers
 
 
         /// <summary>
-        /// Request the change of email for a user (has to be logged in)
+        ///     Request the change of email for a user (has to be logged in)
         /// </summary>
         /// <param name="newEmail"></param>
         /// <returns></returns>
@@ -49,16 +49,17 @@ namespace MyRecipe.Web.Controllers
 
             var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
             var callbackUrl = Url.Action("ChangeEmail", "ChangeEmail",
-                new ResetEmailViewModel{Token = token, UserId = user.Id, NewEmail = newEmail},
+                new ResetEmailViewModel {Token = token, UserId = user.Id, NewEmail = newEmail},
                 HttpScheme.Https.ToString());
             var encodedCallbackUrl = HtmlEncoder.Default.Encode(callbackUrl);
-            await _emailSender.SendEmailAsync(newEmail, "Change your account email", 
+            await _emailSender.SendEmailAsync(newEmail, "Change your account email",
                 $"Please follow the link to confirm your email change: <a href='{encodedCallbackUrl}'>Click here</a>");
             return Ok("Email sent");
         }
 
-        /// <summary>s
-        /// Confirm the change of a users email
+        /// <summary>
+        ///     s
+        ///     Confirm the change of a users email
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
@@ -67,10 +68,7 @@ namespace MyRecipe.Web.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ChangeEmail(ResetEmailViewModel viewModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var user = await _userManager.FindByIdAsync(viewModel.UserId);
             if (user is null) return BadRequest("Could not find User");
@@ -80,11 +78,10 @@ namespace MyRecipe.Web.Controllers
             {
                 _log.LogError(string.Join(", ", emailChange.Errors.Select(e => $"{e.Code}: {e.Description}")));
                 if (emailChange.Errors.Any(c => c.Description.Contains("DuplicateEmail")))
-                {
                     return BadRequest("Email is already bound to a user");
-                }
                 return BadRequest("Could not change email");
             }
+
             var userNameChange = await _userManager.SetUserNameAsync(user, viewModel.NewEmail);
             if (!userNameChange.Succeeded)
             {
@@ -92,7 +89,8 @@ namespace MyRecipe.Web.Controllers
                 return BadRequest("Could not change userName to new email");
             }
 
-            return RedirectToAction("ChangeEmailSuccess", new ChangeEmailSuccessViewModel{ NewEmail = viewModel.NewEmail});
+            return RedirectToAction("ChangeEmailSuccess",
+                new ChangeEmailSuccessViewModel {NewEmail = viewModel.NewEmail});
         }
 
         [HttpGet]

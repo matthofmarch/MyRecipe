@@ -4,7 +4,7 @@ using MyRecipe.Domain.Entities;
 
 namespace MyRecipe.Application.Common.Interfaces.Repositories
 {
-    public interface IMealRepository:IEntityRepository<Meal>
+    public interface IMealRepository : IEntityRepository<Meal>
     {
         Task ProposeMealAsync(Meal meal);
         Task VoteMealAsync(ApplicationUser user, VoteEnum vote, Guid mealId);

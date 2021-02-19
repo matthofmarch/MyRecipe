@@ -17,11 +17,12 @@ namespace MyRecipe.Web.Controllers
     [ApiController]
     public class MealplanController : ControllerBase
     {
+        private readonly ILogger _logger;
         private readonly IUnitOfWork _uow;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger _logger;
 
-        public MealplanController(IUnitOfWork uow, UserManager<ApplicationUser> userManager, ILogger<MealplanController> logger)
+        public MealplanController(IUnitOfWork uow, UserManager<ApplicationUser> userManager,
+            ILogger<MealplanController> logger)
         {
             _uow = uow;
             _userManager = userManager;
@@ -29,7 +30,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Get all the meals that have been accepted
+        ///     Get all the meals that have been accepted
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -39,12 +40,9 @@ namespace MyRecipe.Web.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
-            if (user is null || group is null)
-            {
-                return BadRequest();
-            }
+            if (user is null || group is null) return BadRequest();
 
-            Meal[] meals = await _uow.Meals.GetMealsWithRecipeAndInitiatorAsync(group.Id, accepted);
+            var meals = await _uow.Meals.GetMealsWithRecipeAndInitiatorAsync(group.Id, accepted);
 
             var proposedMealList =
                 meals.Select(m => new MealDto(m)).ToArray();
@@ -53,8 +51,8 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Get a meal by its id (has to be owned by the users group of course).
-        /// Does not matter if it is accepted or not
+        ///     Get a meal by its id (has to be owned by the users group of course).
+        ///     Does not matter if it is accepted or not
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -66,10 +64,7 @@ namespace MyRecipe.Web.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
-            if (user is null || group is null)
-            {
-                return BadRequest();
-            }
+            if (user is null || group is null) return BadRequest();
 
             var meal = await _uow.Meals.GetMealByIdAsync(group.Id, id);
 
@@ -80,7 +75,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Accept a meal as an admin (probably the one with the highest vote count
+        ///     Accept a meal as an admin (probably the one with the highest vote count
         /// </summary>
         /// <param name="mealId"></param>
         /// <param name="accepted"></param>
@@ -94,10 +89,7 @@ namespace MyRecipe.Web.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
-            if (user is null || group is null)
-            {
-                return BadRequest();
-            }
+            if (user is null || group is null) return BadRequest();
 
             if (!await _uow.Groups.CheckIsUserAdmin(user.Id, group.Id))
             {
@@ -113,18 +105,19 @@ namespace MyRecipe.Web.Controllers
             {
                 await _uow.SaveChangesAsync();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e.Message);
 
                 return BadRequest("Could not accept meal");
             }
+
             return new MealDto(meal);
         }
 
 
         /// <summary>
-        /// Delete a meal as an admin (doesnt matter if it is accepted or not)
+        ///     Delete a meal as an admin (doesnt matter if it is accepted or not)
         /// </summary>
         /// <param name="id">Id of the meal to delete</param>
         /// <returns></returns>
@@ -137,10 +130,7 @@ namespace MyRecipe.Web.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
-            if (user is null || group is null)
-            {
-                return BadRequest();
-            }
+            if (user is null || group is null) return BadRequest();
 
             if (!await _uow.Groups.CheckIsUserAdmin(user.Id, group.Id))
             {
@@ -149,18 +139,18 @@ namespace MyRecipe.Web.Controllers
             }
 
             var meal = await _uow.Meals.FindAsync(id);
-            if (meal == null)
-            {
-                return NotFound();
-            }
+            if (meal == null) return NotFound();
 
             _uow.Meals.Remove(meal);
 
-            try { await _uow.SaveChangesAsync(); }
-            catch (Exception e) 
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch (Exception e)
             {
                 _logger.LogError(e, "Error when trying to delete meal");
-                return BadRequest("Could not delete meal"); 
+                return BadRequest("Could not delete meal");
             }
 
             return NoContent();

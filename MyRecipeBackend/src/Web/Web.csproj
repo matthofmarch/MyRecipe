@@ -10,6 +10,21 @@
     <UserSecretsId>777c9e49-64d1-4389-b44c-f373b2ba2e27</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <None Update="development_certificates/development_certificate.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>    
+    <None Update="development_certificates/development_certificate.key.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>    
+    <None Update="development_certificate.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Dockerfile">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.10" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
@@ -61,19 +76,4 @@
     <_ContentIncludedByDefault Remove="Views\_ViewImports.cshtml" />
     <_ContentIncludedByDefault Remove="Views\_ViewStart.cshtml" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Update="development_certificate.key.pem">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="development_certificate.pem">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DevelopmentCertificates" />
-  </ItemGroup>
-  
-
 </Project>

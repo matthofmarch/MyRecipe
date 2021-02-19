@@ -16,11 +16,12 @@ namespace MyRecipe.Web.Controllers
     [ApiController]
     public class MealRecommendationController : Controller
     {
+        private readonly ILogger _logger;
         private readonly IUnitOfWork _uow;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger _logger;
 
-        public MealRecommendationController(IUnitOfWork uow, UserManager<ApplicationUser> userManager, ILogger<MealRecommendationController> logger)
+        public MealRecommendationController(IUnitOfWork uow, UserManager<ApplicationUser> userManager,
+            ILogger<MealRecommendationController> logger)
         {
             _uow = uow;
             _userManager = userManager;
@@ -28,7 +29,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Get random recommendations of what to eat based on the entire recipes of a group
+        ///     Get random recommendations of what to eat based on the entire recipes of a group
         /// </summary>
         /// <param name="requestModel"></param>
         /// <returns></returns>
@@ -39,10 +40,7 @@ namespace MyRecipe.Web.Controllers
         public async Task<ActionResult<RecipeModel>> GetRecommendedMeal(RecommendMealRequestModel requestModel)
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return BadRequest("User not found");
-            }
+            if (user == null) return BadRequest("User not found");
 
             var recipe = await _uow.Groups
                 .GetNextRecipeRecommendationForGroupAsync(user.Id, requestModel.PrevMealIds);

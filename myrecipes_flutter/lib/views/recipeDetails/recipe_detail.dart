@@ -21,15 +21,13 @@ class RecipeDetail extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.edit),
-            onPressed: (){
-            },
+            onPressed: () {},
           ),
-          IconButton(icon: Icon(Icons.calendar_today), onPressed: () {
-            
-          },),
-          IconButton(icon: Icon(Icons.delete), onPressed: (){
-
-          })
+          IconButton(
+            icon: Icon(Icons.calendar_today),
+            onPressed: () {},
+          ),
+          IconButton(icon: Icon(Icons.delete), onPressed: () {})
         ],
       ),
       body: Stack(

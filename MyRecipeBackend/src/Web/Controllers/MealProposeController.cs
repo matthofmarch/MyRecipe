@@ -17,11 +17,12 @@ namespace MyRecipe.Web.Controllers
     [ApiController]
     public class MealProposeController : Controller
     {
+        private readonly ILogger _logger;
         private readonly IUnitOfWork _uow;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger _logger;
 
-        public MealProposeController(IUnitOfWork uow, UserManager<ApplicationUser> userManager, ILogger<MealProposeController> logger)
+        public MealProposeController(IUnitOfWork uow, UserManager<ApplicationUser> userManager,
+            ILogger<MealProposeController> logger)
         {
             _uow = uow;
             _userManager = userManager;
@@ -29,7 +30,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Propose a recipe to be used in the selection process
+        ///     Propose a recipe to be used in the selection process
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -42,7 +43,7 @@ namespace MyRecipe.Web.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user is null)
             {
-                string errMsg = "User not found";
+                var errMsg = "User not found";
                 _logger.LogError(errMsg);
                 return Forbid(errMsg);
             }
@@ -50,7 +51,7 @@ namespace MyRecipe.Web.Controllers
             var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
             if (group is null)
             {
-                string errMsg = "No group found for user";
+                var errMsg = "No group found for user";
                 _logger.LogError(errMsg);
                 return Forbid(errMsg);
             }
@@ -70,7 +71,7 @@ namespace MyRecipe.Web.Controllers
             }
             catch (Exception e)
             {
-                string errMsg = "Could not propose Meal";
+                var errMsg = "Could not propose Meal";
                 _logger.LogError($"{errMsg}: {e.Message}");
                 return BadRequest("Could not propose Meal");
             }
@@ -79,7 +80,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Gets all the meals that have been proposed but not accepted
+        ///     Gets all the meals that have been proposed but not accepted
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -89,12 +90,9 @@ namespace MyRecipe.Web.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var group = await _uow.Groups.GetGroupForUserAsync(user.Id);
-            if (user is null || group is null)
-            {
-                return BadRequest();
-            }
+            if (user is null || group is null) return BadRequest();
 
-            Meal[] meals = await _uow.Meals.GetMealsWithRecipeAndInitiatorAsync(group.Id, false);
+            var meals = await _uow.Meals.GetMealsWithRecipeAndInitiatorAsync(group.Id, false);
 
             var proposedMealList =
                 meals.Select(m => new MealDto(m)).ToArray();

@@ -15,14 +15,16 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomDefaultAppBar(title:Text("Household")),
+        appBar: CustomDefaultAppBar(title: Text("Household")),
         body: ListView(
           children: [
             SizedBox(
               height: 8,
             ),
             MembershipsView(),
-            SizedBox(height: 8,),
+            SizedBox(
+              height: 8,
+            ),
             InviteCodeCard(),
             SizedBox(
               height: 8,
@@ -40,10 +42,8 @@ class HomePage extends StatelessWidget {
                         Text(
                           "Logout ",
                           textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              .copyWith(color: Theme.of(context).colorScheme.error),
+                          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                              color: Theme.of(context).colorScheme.error),
                         ),
                         Icon(
                           Icons.logout,
@@ -51,7 +51,8 @@ class HomePage extends StatelessWidget {
                         )
                       ],
                     ),
-                    borderSide: BorderSide(color: Theme.of(context).colorScheme.error, width: 1.5),
+                    borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.error, width: 1.5),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25)),
                   ),
@@ -82,11 +83,8 @@ class HomePage extends StatelessWidget {
                   Navigator.of(context).pop();
                   await RepositoryProvider.of<AuthRepository>(context).logout();
                 },
-                child: Text(
-                  "Logout",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1),
+                child: Text("Logout",
+                    style: Theme.of(context).textTheme.bodyText1),
               ),
             ],
           );

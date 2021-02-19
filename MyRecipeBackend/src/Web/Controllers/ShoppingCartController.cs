@@ -21,12 +21,12 @@ namespace MyRecipe.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<String[]> GetRequiredIngredients(GetRequiredMealsRequest request)
+        public async Task<string[]> GetRequiredIngredients(GetRequiredMealsRequest request)
         {
             var user = await _userManager.GetUserAsync(User);
             var groupId = user.GroupId.Value;
             return await _uow.ShoppingCart.GetRequiredIngredientsForHouseholdMealAsync(DateTime.Now,
-                    DateTime.Now.AddDays(3), groupId);
+                DateTime.Now.AddDays(3), groupId);
         }
 
         public class GetRequiredMealsRequest

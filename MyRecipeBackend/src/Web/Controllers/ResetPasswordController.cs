@@ -14,8 +14,8 @@ namespace MyRecipe.Web.Controllers
     [Route("[controller]")]
     public class ResetPasswordController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly UserManager<ApplicationUser> _userManager;
 
 
         public ResetPasswordController(
@@ -28,7 +28,7 @@ namespace MyRecipe.Web.Controllers
 
 
         /// <summary>
-        /// Request the reset of a users password (via email)
+        ///     Request the reset of a users password (via email)
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
@@ -55,16 +55,13 @@ namespace MyRecipe.Web.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult ResetPassword(ResetPasswordModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Invalid model");
-            }
+            if (!ModelState.IsValid) return BadRequest("Invalid model");
 
             return View(new ResetPasswordViewModel {Token = model.Token, UserId = model.UserId});
         }
 
         /// <summary>
-        /// Confirm reset of a users password
+        ///     Confirm reset of a users password
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -73,10 +70,7 @@ namespace MyRecipe.Web.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
+            if (!ModelState.IsValid) return BadRequest();
 
             var user = await _userManager.FindByIdAsync(model.UserId);
             if (user is null)
@@ -84,10 +78,7 @@ namespace MyRecipe.Web.Controllers
 
 
             var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
-            if (result.Succeeded)
-            {
-                return RedirectToAction("ResetPasswordSuccess");
-            }
+            if (result.Succeeded) return RedirectToAction("ResetPasswordSuccess");
 
             return BadRequest(result.Errors);
         }
@@ -97,5 +88,5 @@ namespace MyRecipe.Web.Controllers
         {
             return View();
         }
-    } 
+    }
 }

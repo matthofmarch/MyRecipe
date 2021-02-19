@@ -17,7 +17,6 @@ namespace MyRecipe.Web.Controllers
     [ApiController]
     public class InviteCodeController : ControllerBase
     {
-
         private readonly IUnitOfWork _uow;
         private readonly UserManager<ApplicationUser> _userManger;
 
@@ -28,7 +27,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Create a new invite code for the group the user is in
+        ///     Create a new invite code for the group the user is in
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -43,7 +42,8 @@ namespace MyRecipe.Web.Controllers
             if (group == null) return BadRequest("User not in Group");
 
             var inviteCode = new InviteCode
-            {   //TODO generate as often until unique
+            {
+                //TODO generate as often until unique
                 Code = GenerateInviteCode(),
                 CreationDate = DateTime.Now
             };
@@ -63,7 +63,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Accept an invite code in order to join group
+        ///     Accept an invite code in order to join group
         /// </summary>
         /// <param name="inviteCode"></param>
         /// <returns></returns>
@@ -103,7 +103,6 @@ namespace MyRecipe.Web.Controllers
             return new string(Enumerable.Range(1, length)
                 .Select(_ => chars[rnd.Next(chars.Length)])
                 .ToArray());
-
         }
     }
 }

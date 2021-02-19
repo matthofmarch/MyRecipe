@@ -7,9 +7,9 @@ using MyRecipe.Domain.Entities;
 
 namespace MyRecipe.Application.Logic.Repositories
 {
-    public class InviteCodeRepository: EntityRepository<InviteCode>, IInviteCodeRepository
+    public class InviteCodeRepository : EntityRepository<InviteCode>, IInviteCodeRepository
     {
-        public InviteCodeRepository(IApplicationDbContext dbContext):base(dbContext)
+        public InviteCodeRepository(IApplicationDbContext dbContext) : base(dbContext)
         {
         }
 
@@ -24,9 +24,8 @@ namespace MyRecipe.Application.Logic.Repositories
             var inviteCode = await _dbContext.InviteCodes
                 .Where(i => i.Code == code)
                 .SingleOrDefaultAsync();
-            if(inviteCode != null)
+            if (inviteCode != null)
                 _dbContext.InviteCodes.Remove(inviteCode);
         }
-
     }
 }

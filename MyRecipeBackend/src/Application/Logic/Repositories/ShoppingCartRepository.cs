@@ -7,7 +7,7 @@ using MyRecipe.Application.Common.Interfaces.Repositories;
 
 namespace MyRecipe.Application.Logic.Repositories
 {
-    public class ShoppingCartRepository: IShoppingCartRepository
+    public class ShoppingCartRepository : IShoppingCartRepository
     {
         private readonly IApplicationDbContext _dbContext;
 
@@ -16,7 +16,8 @@ namespace MyRecipe.Application.Logic.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<string[]> GetRequiredIngredientsForHouseholdMealAsync(DateTime from, DateTime to, Guid householdId)
+        public async Task<string[]> GetRequiredIngredientsForHouseholdMealAsync(DateTime from, DateTime to,
+            Guid householdId)
         {
             return await _dbContext.Groups
                 .Where(group => group.Id == householdId)
@@ -30,5 +31,4 @@ namespace MyRecipe.Application.Logic.Repositories
                 .ToArrayAsync();
         }
     }
-
 }

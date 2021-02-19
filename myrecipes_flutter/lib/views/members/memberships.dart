@@ -58,7 +58,9 @@ class MembershipsView extends StatelessWidget {
         leading: Icon(Icons.person),
         title: Text(member.email),
         trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-          if (member.email == RepositoryProvider.of<AuthRepository>(context).authState.email)Padding(
+          if (member.email ==
+              RepositoryProvider.of<AuthRepository>(context).authState.email)
+            Padding(
               padding: const EdgeInsets.all(kChipDistance),
               child: Chip(
                 label: Text(
@@ -69,11 +71,13 @@ class MembershipsView extends StatelessWidget {
                       .copyWith(color: Colors.green),
                 ),
                 shape: StadiumBorder(
-                  side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                  side:
+                      BorderSide(color: Theme.of(context).colorScheme.primary),
                 ),
               ),
             ),
-          if (member.isAdmin)Padding(
+          if (member.isAdmin)
+            Padding(
               padding: const EdgeInsets.all(kChipDistance),
               child: Chip(
                 label: Text(
@@ -84,7 +88,8 @@ class MembershipsView extends StatelessWidget {
                       .copyWith(color: Theme.of(context).colorScheme.secondary),
                 ),
                 shape: StadiumBorder(
-                  side: BorderSide(color: Theme.of(context).colorScheme.secondary),
+                  side: BorderSide(
+                      color: Theme.of(context).colorScheme.secondary),
                 ),
               ),
             )

@@ -8,15 +8,14 @@ using MyRecipe.Domain.Entities;
 
 namespace MyRecipe.Application.Logic.Repositories
 {
-    public class MealRepository :EntityRepository<Meal>, IMealRepository
+    public class MealRepository : EntityRepository<Meal>, IMealRepository
     {
-
-        public MealRepository(IApplicationDbContext dbContext):base(dbContext)
+        public MealRepository(IApplicationDbContext dbContext) : base(dbContext)
         {
         }
 
         /// <summary>
-        /// Adds a new Meal and adds the vote for the initiator
+        ///     Adds a new Meal and adds the vote for the initiator
         /// </summary>
         /// <param name="proposeModel"></param>
         /// <returns></returns>
@@ -26,12 +25,12 @@ namespace MyRecipe.Application.Logic.Repositories
                 .Where(u => u.GroupId == mealModel.Initiator.GroupId)
                 .CountAsync() == 1;
 
-            Meal meal = new Meal
+            var meal = new Meal
             {
                 Initiator = mealModel.Initiator,
                 Group = mealModel.Group,
                 DateTime = mealModel.DateTime,
-                Recipe = await _dbContext.Recipes.FindAsync(mealModel.RecipeId),
+                Recipe = await _dbContext.Recipes.FindAsync(mealModel.RecipeId)
             };
             await _dbContext.Meals.AddAsync(meal);
         }
@@ -53,6 +52,7 @@ namespace MyRecipe.Application.Logic.Repositories
                     _dbContext.MealVotes.Remove(existing);
                     return;
                 }
+
                 //If different, then apply change
                 existing.Vote = vote;
                 return;
@@ -62,9 +62,8 @@ namespace MyRecipe.Application.Logic.Repositories
             {
                 Meal = meal,
                 User = user,
-                Vote = vote,
+                Vote = vote
             });
-
         }
 
         public async Task<Meal[]> GetMealsWithRecipeAndInitiatorAsync(Guid groupId, bool? isAccepted)
@@ -77,10 +76,7 @@ namespace MyRecipe.Application.Logic.Repositories
                 .ThenInclude(v => v.User)
                 .Where(m => m.GroupId == groupId);
 
-            if (isAccepted != null)
-            {
-                query = query.Where(m => m.Accepted == isAccepted.Value);
-            }
+            if (isAccepted != null) query = query.Where(m => m.Accepted == isAccepted.Value);
 
             query = query.OrderBy(m => m.DateTime);
 

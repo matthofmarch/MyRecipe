@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +10,7 @@ namespace MyRecipe.Web.Controllers
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
-    public class IngredientController:ControllerBase
+    public class IngredientController : ControllerBase
     {
         private readonly IUnitOfWork _uow;
 
@@ -23,7 +22,7 @@ namespace MyRecipe.Web.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<String[]>> GetNames()
+        public async Task<ActionResult<string[]>> GetNames()
         {
             return (await _uow.Ingredients.AllAsync()).Select(i => i.Name).ToArray();
         }

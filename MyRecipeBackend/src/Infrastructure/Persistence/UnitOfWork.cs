@@ -11,7 +11,6 @@ using MyRecipe.Application.Logic.Repositories;
 namespace MyRecipe.Infrastructure.Persistence
 {
     /// <summary>
-    /// 
     /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
@@ -35,7 +34,7 @@ namespace MyRecipe.Infrastructure.Persistence
         public IInviteCodeRepository InviteCodes { get; }
         public IRecipeRepository Recipes { get; }
         public IIngredientRepository Ingredients { get; }
-        public IApplicationUserRepository Users { get;  }
+        public IApplicationUserRepository Users { get; }
         public IShoppingCartRepository ShoppingCart { get; }
 
         public async Task<int> SaveChangesAsync()
@@ -44,45 +43,51 @@ namespace MyRecipe.Infrastructure.Persistence
                 .Where(entity => entity.State == EntityState.Added
                                  || entity.State == EntityState.Modified)
                 .Select(e => e.Entity)
-                .ToArray();  // Geänderte Entities ermitteln
+                .ToArray(); // Geänderte Entities ermitteln
             foreach (var entity in entities)
             {
                 var validationContext = new ValidationContext(entity, null, null);
                 if (entity is IValidatableObject)
-                {     // UnitOfWork injizieren, wenn Interface implementiert ist
+                    // UnitOfWork injizieren, wenn Interface implementiert ist
                     validationContext.InitializeServiceProvider(serviceType => this);
-                }
 
                 var validationResults = new List<ValidationResult>();
                 var isValid = Validator.TryValidateObject(entity, validationContext, validationResults,
-                    validateAllProperties: true);
+                    true);
                 if (!isValid)
                 {
                     var memberNames = new List<string>();
-                    List<ValidationException> validationExceptions = new List<ValidationException>();
-                    foreach (ValidationResult validationResult in validationResults)
+                    var validationExceptions = new List<ValidationException>();
+                    foreach (var validationResult in validationResults)
                     {
                         validationExceptions.Add(new ValidationException(validationResult, null, null));
                         memberNames.AddRange(validationResult.MemberNames);
                     }
 
-                    if (validationExceptions.Count == 1)  // eine Validationexception werfen
-                    {
+                    if (validationExceptions.Count == 1) // eine Validationexception werfen
                         throw validationExceptions.Single();
-                    }
-                    else  // AggregateException mit allen ValidationExceptions als InnerExceptions werfen
-                    {
-                        throw new ValidationException($"Entity validation failed for {string.Join(", ", memberNames)}",
-                            new AggregateException(validationExceptions));
-                    }
+                    throw new ValidationException($"Entity validation failed for {string.Join(", ", memberNames)}",
+                        new AggregateException(validationExceptions));
                 }
             }
+
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteDatabaseAsync() => await _dbContext.Database.EnsureDeletedAsync();
-        public async Task MigrateDatabaseAsync() => await _dbContext.Database.MigrateAsync();
-        public async Task CreateDatabaseAsync() => await _dbContext.Database.EnsureCreatedAsync();
+        public async Task DeleteDatabaseAsync()
+        {
+            await _dbContext.Database.EnsureDeletedAsync();
+        }
+
+        public async Task MigrateDatabaseAsync()
+        {
+            await _dbContext.Database.MigrateAsync();
+        }
+
+        public async Task CreateDatabaseAsync()
+        {
+            await _dbContext.Database.EnsureCreatedAsync();
+        }
 
         public async ValueTask DisposeAsync()
         {
@@ -93,12 +98,8 @@ namespace MyRecipe.Infrastructure.Persistence
         protected virtual async ValueTask DisposeAsync(bool disposing)
         {
             if (!_disposed)
-            {
                 if (disposing)
-                {
                     await _dbContext.DisposeAsync();
-                }
-            }
             _disposed = true;
         }
 

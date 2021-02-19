@@ -16,10 +16,10 @@ namespace MyRecipe.Web.Controllers
     [ApiController]
     public class MealVoteController : ControllerBase
     {
+        private readonly ILogger _logger;
 
         private readonly IUnitOfWork _uow;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger _logger;
 
         public MealVoteController(IUnitOfWork uow, UserManager<ApplicationUser> userManager, ILogger logger)
         {
@@ -29,19 +29,16 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Vote for a meal that has been proposed
+        ///     Vote for a meal that has been proposed
         /// </summary>
         /// <param name="voteRequestModel"></param>
         /// <returns></returns>
-        [HttpPost()]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> VoteMeal(VoteRequestModel voteRequestModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
+            if (!ModelState.IsValid) return BadRequest();
 
             var user = await _userManager.GetUserAsync(User);
             await _uow.Meals.VoteMealAsync(user, voteRequestModel.VoteEnum, voteRequestModel.MealId);
@@ -52,7 +49,7 @@ namespace MyRecipe.Web.Controllers
             }
             catch (Exception e)
             {
-                string errMsg = "Could not vote for meal";
+                var errMsg = "Could not vote for meal";
                 _logger.LogError($"{errMsg}: {e.Message}");
                 return BadRequest(errMsg);
             }

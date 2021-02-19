@@ -25,7 +25,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Create a new group
+        ///     Create a new group
         /// </summary>
         /// <param name="input">Name of the new group</param>
         /// <returns>group</returns>
@@ -38,7 +38,7 @@ namespace MyRecipe.Web.Controllers
             if (user == null)
                 return BadRequest("User not found");
 
-            var group = new Group() { Name = input.Name};
+            var group = new Group {Name = input.Name};
             user.Group = group;
             user.IsAdmin = true;
 
@@ -55,7 +55,7 @@ namespace MyRecipe.Web.Controllers
         }
 
         /// <summary>
-        /// Get group for user
+        ///     Get group for user
         /// </summary>
         /// <returns>Group for the loggend in user</returns>
         [HttpGet("getGroupForUser")]
@@ -72,6 +72,5 @@ namespace MyRecipe.Web.Controllers
 
             return new GroupDto(group);
         }
-
     }
 }

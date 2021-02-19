@@ -24,7 +24,7 @@ namespace MyRecipe.Infrastructure.Services
         public Task Execute(string apiKey, string subject, string message, string email)
         {
             var client = new SendGridClient(apiKey);
-            var msg = new SendGridMessage()
+            var msg = new SendGridMessage
             {
                 From = new EmailAddress("myrecipes@noreply.com", _sendGridOptions.User),
                 Subject = subject,

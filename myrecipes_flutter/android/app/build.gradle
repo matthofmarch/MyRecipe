@@ -31,6 +31,11 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
+task copyDebugCertificate(type:Copy){
+    from '../../../development/development_certificates/development_certificate.der' into 'src/debug/res/raw'
+    println 'Copied the development certificate'
+}
+
 android {
     compileSdkVersion 30
 
@@ -44,7 +49,6 @@ android {
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-
         multiDexEnabled true
     }
 
@@ -60,6 +64,8 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+            preBuild.dependsOn copyDebugCertificate
+
         }
         release {
             signingConfig signingConfigs.release
@@ -75,3 +81,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 }
+
+
+

@@ -10,6 +10,5 @@ namespace MyRecipe.Application.Common.Models.Auth
 
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
-
     }
 }

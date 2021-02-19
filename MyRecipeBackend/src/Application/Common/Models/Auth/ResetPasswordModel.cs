@@ -6,6 +6,7 @@ namespace MyRecipe.Application.Common.Models.Auth
     {
         [Required(ErrorMessage = "User Id is required")]
         public string UserId { get; set; }
+
         [Required(ErrorMessage = "Token is required")]
         public string Token { get; set; }
     }
