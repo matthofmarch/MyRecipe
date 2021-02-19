@@ -2,11 +2,9 @@ import 'dart:io';
 
 import 'package:auth_repository/auth_repository.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/model.dart';
@@ -93,16 +91,15 @@ class MealView extends StatelessWidget {
             SizedBox(height: 8,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [Icon(context.platformIcons.pen), Text("Delete")],
+              children: [Icon(Icons.edit), Text("Delete")],
             ),
             SizedBox(height: 8,),
             if(RepositoryProvider.of<AuthRepository>(context).authState.isAdmin)
-              PlatformButton(
+              TextButton(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(context.platformIcons.checkMark), Text("Accept")],
+                  children: [Icon(Icons.check), Text("Accept")],
                 ),
-                materialFlat: (context, platform) => MaterialFlatButtonData(),
                 onPressed: () {},
               )
           ],

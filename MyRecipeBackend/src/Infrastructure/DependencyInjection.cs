@@ -9,6 +9,7 @@ using MyRecipe.Application.Common.Interfaces.Services;
 using MyRecipe.Domain.Entities;
 using MyRecipe.Infrastructure.Configurations;
 using MyRecipe.Infrastructure.Installers;
+using MyRecipe.Infrastructure.Options;
 using MyRecipe.Infrastructure.Persistence;
 using MyRecipe.Infrastructure.Services;
 using MyRecipe.Web.Config;

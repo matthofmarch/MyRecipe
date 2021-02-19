@@ -1,4 +1,4 @@
-﻿namespace MyRecipe.Infrastructure.Configurations
+﻿namespace MyRecipe.Infrastructure.Options
 {
     public class StaticRecipeImagesOptions
     {

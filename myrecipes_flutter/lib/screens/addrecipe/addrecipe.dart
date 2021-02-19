@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ingredient_repository/ingredient_repository.dart';
@@ -42,7 +41,7 @@ class AddRecipe extends StatelessWidget {
                 ),
                 body: _makeForm(context, state),
                 floatingActionButton: FloatingActionButton(
-                  child: Icon(context.platformIcons.checkMark),
+                  child: Icon(Icons.check),
                   onPressed: () {
                     BlocProvider.of<AddrecipeCubit>(context).submit(
                         Recipe(
@@ -65,12 +64,12 @@ class AddRecipe extends StatelessWidget {
         if (state is AddrecipeSuccess) {
           Future.delayed(
               Duration(milliseconds: 500), () => Navigator.of(context).pop(state.recipe));
-          return Center(child: Icon(context.platformIcons.checkMark));
+          return Center(child: Icon(Icons.check_circle));
         }
         if (state is AddrecipeFailure) {
           Future.delayed(
               Duration(milliseconds: 500), () => Navigator.of(context).pop(null));
-          return Center(child: Icon(context.platformIcons.error, color: Theme.of(context).errorColor,));
+          return Center(child: Icon(Icons.error, color: Theme.of(context).errorColor,));
         }
         return null;
           }
@@ -118,14 +117,11 @@ class AddRecipe extends StatelessWidget {
             children: [
               Flexible(
                 flex: 2,
-                child: PlatformTextField(
+                child: TextField(
                   controller: _nameController,
-                  material: (context, platform) =>
-                      MaterialTextFieldData(
-                          decoration:
-                          InputDecoration(labelText: "Name")),
-                  cupertino: (context, platform) =>
-                      CupertinoTextFieldData(placeholder: "Name"),
+                  decoration: InputDecoration(
+                    labelText: "Name"
+                  )
                 ),
               ),
               SizedBox(
@@ -133,17 +129,12 @@ class AddRecipe extends StatelessWidget {
               ),
               Flexible(
                 flex: 1,
-                child: PlatformTextField(
+                child: TextField(
                   controller: _cookingTimeInMinController,
                   keyboardType: TextInputType.number,
-                  material: (context, platform) =>
-                      MaterialTextFieldData(
-                          decoration: InputDecoration(
-                              labelText: "Cooking time")),
-                  cupertino: (context, platform) =>
-                      CupertinoTextFieldData(
-                        placeholder: "Cooking time",
-                      ),
+                  decoration: InputDecoration(
+                    labelText: "Cooking time"
+                  ),
                 ),
               ),
             ],
@@ -151,16 +142,11 @@ class AddRecipe extends StatelessWidget {
           SizedBox(
             height: 8,
           ),
-          PlatformTextField(
+          TextField(
             controller: _descriptionController,
-            minLines: 1,
-            material: (context, platform) => MaterialTextFieldData(
-                decoration:
-                InputDecoration(labelText: "Description")),
-            cupertino: (context, platform) =>
-                CupertinoTextFieldData(
-                  placeholder: "Description",
-                ),
+            minLines: 3,
+              decoration:
+              InputDecoration(labelText: "Description")
           ),
         ],
       ),
@@ -204,10 +190,12 @@ class AddRecipe extends StatelessWidget {
               .reload(image: File(picked.path));
         }
       },
-      child: Row(
-        children: [
+      child: IconButton(
+        icon: Icon(Icons.collections),
+        tooltip: "Gallery",
+
+        /*children: [
           Icon(
-            context.platformIcons.collections,
             color: Theme.of(context).colorScheme.primary,
           ),
           Text(
@@ -215,7 +203,7 @@ class AddRecipe extends StatelessWidget {
             style:
             Theme.of(context).textTheme.subtitle2,
           ),
-        ],
+        ],*/
       ));
 
 
@@ -243,7 +231,7 @@ class AddRecipe extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            context.platformIcons.photoCamera,
+            Icons.camera_alt,
             color: Theme.of(context).colorScheme.primary,
           ),
           Text(
@@ -297,7 +285,7 @@ class AddRecipe extends StatelessWidget {
             doneButton: SizedBox.shrink(),
             isExpanded: true,
             dialogBox: true,
-            clearIcon: Icon(context.platformIcons.delete),
+            clearIcon: Icon(Icons.delete),
           )
         ],
       ),

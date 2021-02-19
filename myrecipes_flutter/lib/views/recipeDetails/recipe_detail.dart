@@ -3,11 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:models/model.dart';
-import 'package:myrecipes_flutter/theme.dart';
-import 'package:myrecipes_flutter/views/recipeCard/RecipeCard.dart';
 import 'package:myrecipes_flutter/views/util/RoundedImage.dart';
 
 class RecipeDetail extends StatelessWidget {
@@ -172,7 +168,7 @@ class RecipeDetail extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          Icon(PlatformIcons(context).clockSolid),
+                          Icon(Icons.watch_later),
                           Text("${recipe.cookingTimeInMin} min"),
                         ],
                       )

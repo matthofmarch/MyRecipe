@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:group_repository/group_repository.dart';
 import 'package:myrecipes_flutter/content_root/content_root.dart';
 import 'package:myrecipes_flutter/household_guard/cubit/household_guard_cubit.dart';
@@ -42,8 +41,7 @@ class HouseholdGuard extends StatelessWidget {
                                 controller: householdNameController,
                                 decoration: InputDecoration(labelText: "Name"),
                               ),
-                              PlatformButton(
-                                material: (context, platform) => MaterialRaisedButtonData(color: Theme.of(context).primaryColor),
+                              ElevatedButton(
                                 onPressed: () async {
                                   await BlocProvider.of<HouseholdGuardCubit>(context).createHousehold(householdNameController.text);
                                 },
@@ -60,8 +58,7 @@ class HouseholdGuard extends StatelessWidget {
                                 controller: householdInviteCodeController,
                                 decoration: InputDecoration(labelText: "Invite Code"),
                               ),
-                              PlatformButton(
-                                material: (context, platform) => MaterialRaisedButtonData(color: Theme.of(context).primaryColor),
+                              ElevatedButton(
                                 onPressed: () async {
                                   await BlocProvider.of<HouseholdGuardCubit>(context).joinWithCode(householdInviteCodeController.text);
                                 },

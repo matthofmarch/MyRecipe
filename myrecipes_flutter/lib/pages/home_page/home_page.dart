@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:myrecipes_flutter/pages/home_page/invite_card.dart';
 import 'package:myrecipes_flutter/views/appbar/CustomDefaultAppBar.dart';
 import 'package:myrecipes_flutter/views/members/memberships.dart';
@@ -70,7 +69,7 @@ class HomePage extends StatelessWidget {
             content: Text(
                 'Do you really want to be logged out? You will be redirected to the login screen.'),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -78,7 +77,7 @@ class HomePage extends StatelessWidget {
                     "No",
                     style: Theme.of(context).textTheme.bodyText1,
                   )),
-              PlatformButton(
+              OutlinedButton(
                 onPressed: () async {
                   Navigator.of(context).pop();
                   await RepositoryProvider.of<AuthRepository>(context).logout();
@@ -88,7 +87,6 @@ class HomePage extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1),
-                color: Theme.of(context).colorScheme.onError,
               ),
             ],
           );

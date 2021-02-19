@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Debug http://localhost:5000" type="FlutterRunConfigurationType" factoryName="Flutter">
-    <option name="additionalArgs" value="--dart-define=API_BASE_URL=http://localhost:5000 --dart-define=ENVIRONMENT=Development" />
+  <configuration default="false" name="Debug https://localhost:5001" type="FlutterRunConfigurationType" factoryName="Flutter">
+    <option name="additionalArgs" value="--dart-define=API_BASE_URL=http://localhost:5001 --dart-define=ENVIRONMENT=Development --dart-define=ALLOW_BAD_CERTIFICATE=true" />
     <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
     <method v="2" />
   </configuration>

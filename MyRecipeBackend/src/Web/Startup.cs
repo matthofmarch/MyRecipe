@@ -16,6 +16,7 @@ using MyRecipe.Application.Logic;
 using MyRecipe.Domain.Entities;
 using MyRecipe.Infrastructure;
 using MyRecipe.Infrastructure.Configurations;
+using MyRecipe.Infrastructure.Options;
 using MyRecipe.Infrastructure.Persistence;
 using MyRecipe.Infrastructure.Services;
 using MyRecipe.Web.Config;
@@ -34,11 +35,7 @@ namespace MyRecipe.Web
 
         public IHostEnvironment Environment { get; }
         public IConfiguration Configuration { get; }
-
-        /// <summary>
-        /// This method gets called by the runtime. Use this method to add services to the container.
-        /// </summary>
-        /// <param name="services"></param>
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddLogging();
@@ -54,15 +51,7 @@ namespace MyRecipe.Web
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="env"></param>
-        /// <param name="dbContext"></param>
-        /// <param name="staticFilesConfiguration"></param>
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApplicationDbContext dbContext, 
             IOptions<StaticRecipeImagesOptions> staticFilesConfiguration
         )
@@ -71,13 +60,10 @@ namespace MyRecipe.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            if (!env.IsDevelopment())
-            {
-                app.UseHttpsRedirection();
-            }
             
-            if (env.IsStaging() || env.IsProduction())
+            app.UseHttpsRedirection();
+
+            if (env.IsStaging() | env.IsProduction())
             {
                 dbContext.Database.Migrate();
             }

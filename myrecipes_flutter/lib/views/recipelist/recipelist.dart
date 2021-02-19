@@ -1,22 +1,13 @@
-import 'dart:io';
-
-import 'package:badges/badges.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'dart:developer' as dev;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meal_repository/meal_repository.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/model.dart';
-import 'package:myrecipes_flutter/pages/recipepage/cubit/recipepage_cubit.dart';
 import 'package:myrecipes_flutter/screens/update_recipe/update_recipe.dart';
 import 'package:myrecipes_flutter/views/recipeCard/RecipeCard.dart';
 import 'package:myrecipes_flutter/views/recipeDetails/recipe_detail.dart';
-import 'package:myrecipes_flutter/views/recipelist/cubit/recipelist_cubit.dart';
 import 'package:platform_date_picker/platform_date_picker.dart';
 import 'package:recipe_repository/recipe_repository.dart';
 
@@ -123,7 +114,7 @@ class _RecipeListState extends State<RecipeList> {
         context: context,
         builder: (BuildContext context) {
           return Column(mainAxisSize: MainAxisSize.min, children: [
-            PlatformButton(
+            TextButton(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -131,26 +122,20 @@ class _RecipeListState extends State<RecipeList> {
                   Text("Plan"),
                 ],
               ),
-              materialFlat: (context, platform) => MaterialFlatButtonData(),
               onPressed: () => proposeMeal(context, recipe),
             ),
-            PlatformButton(
+            TextButton(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [Icon(context.platformIcons.pen), Text("Edit")],
+                children: [Icon(Icons.edit), Text("Edit")],
               ),
-              materialFlat: (context, platform) => MaterialFlatButtonData(),
               onPressed: () => editRecipe(recipe),
             ),
-            PlatformButton(
+            TextButton(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(context.platformIcons.delete),
-                    Text("Delete")
-                  ],
+                  children: [Icon(Icons.delete), Text("Delete")],
                 ),
-                materialFlat: (context, platform) => MaterialFlatButtonData(),
                 onPressed: () => deleteRecipe(recipe.id))
           ]);
         });

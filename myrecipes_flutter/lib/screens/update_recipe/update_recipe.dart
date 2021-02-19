@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ingredient_repository/ingredient_repository.dart';
@@ -52,14 +51,14 @@ class UpdateRecipe extends StatelessWidget {
         if (state is UpdateRecipeSuccess) {
           Future.delayed(Duration(milliseconds: 500),
               () => Navigator.of(context).pop(state.recipe));
-          return Center(child: Icon(context.platformIcons.checkMark));
+          return Center(child: Icon(Icons.check_circle));
         }
         if (state is UpdateRecipeFailure) {
-          Future.delayed(Duration(milliseconds: 500),
-              () => Navigator.of(context).pop());
+          Future.delayed(
+              Duration(milliseconds: 500), () => Navigator.of(context).pop());
           return Center(
               child: Icon(
-            context.platformIcons.error,
+            Icons.error,
             color: Theme.of(context).errorColor,
           ));
         }
@@ -76,7 +75,7 @@ class UpdateRecipe extends StatelessWidget {
       ),
       body: _makeForm(context, state),
       floatingActionButton: FloatingActionButton(
-        child: Icon(context.platformIcons.checkMark),
+        child: Icon(Icons.check),
         onPressed: () {
           BlocProvider.of<UpdateRecipeCubit>(context).submit(
               _nameController.text,
@@ -215,7 +214,7 @@ class UpdateRecipe extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            context.platformIcons.collections,
+            Icons.collections,
             color: Theme.of(context).colorScheme.primary,
           ),
           Text(
@@ -243,7 +242,7 @@ class UpdateRecipe extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            context.platformIcons.photoCamera,
+            Icons.camera_alt,
             color: Theme.of(context).colorScheme.primary,
           ),
           Text(
@@ -307,7 +306,7 @@ class UpdateRecipe extends StatelessWidget {
                 doneButton: SizedBox.shrink(),
                 isExpanded: true,
                 dialogBox: true,
-                clearIcon: Icon(context.platformIcons.delete),
+                clearIcon: Icon(Icons.delete),
               )
             ],
           ),

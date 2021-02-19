@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:group_repository/group_repository.dart';
 import 'package:http_interceptor/http_client_with_interceptor.dart';
 import 'package:ingredient_repository/ingredient_repository.dart';
@@ -27,10 +26,12 @@ class App extends StatelessWidget {
     return RepositoryProvider<AuthRepository>(
         create: (context) => authRepository,
         child: Builder(builder: (context) {
-          final httpClient = HttpClientWithInterceptor.build(interceptors: [
+          final httpClient = HttpClientWithInterceptor.build(
+              interceptors: [
             BearerInterceptor(RepositoryProvider.of<AuthRepository>(context)),
             JsonContentInterceptor()
-          ], retryPolicy: ExpiredTokenRetryPolicy(RepositoryProvider.of<AuthRepository>(context)));
+          ], retryPolicy: ExpiredTokenRetryPolicy(RepositoryProvider.of<AuthRepository>(context)),
+          badCertificateCallback: (certificate, host, port) => EnvironmentConfig.ALLOW_BAD_CERTIFICATE);
           return MultiRepositoryProvider(
               providers: [
                 RepositoryProvider<MealRepository>(

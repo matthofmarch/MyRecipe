@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:models/model.dart';
 import 'package:models/models/user_recipe.dart';
 
@@ -84,7 +83,7 @@ class RecipeCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(PlatformIcons(context).clockSolid),
+                          Icon(Icons.watch_later),
                           Text(" ${recipe.cookingTimeInMin} min"),
                         ],
                       ),
