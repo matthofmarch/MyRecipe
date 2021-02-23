@@ -40,6 +40,7 @@ class MealView extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(Icons.calendar_today_outlined),
+                  SizedBox(width: 5,),
                   Text(
                     DateFormat.yMEd().format(state.currentDate),
                   ),

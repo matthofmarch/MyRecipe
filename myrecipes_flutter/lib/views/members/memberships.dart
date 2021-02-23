@@ -25,24 +25,28 @@ class MembershipsView extends StatelessWidget {
           }
           if (state is MembershipsSuccess) {
             final group = state.group as Group;
-            return Card(
-              child: Container(
-                margin: EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Members in " + group.name,
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                    Divider(),
-                    Column(
-                      children: [
-                        ...group.members
-                            .map((member) => _makeMemberTile(context, member))
-                      ],
-                    ),
-                  ],
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 9),
+              child: Card(
+                child: Container(
+                  margin: EdgeInsets.only(left: 8, right: 8, top: 16,bottom: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Members in " + group.name,
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      SizedBox(height: 8,),
+                      Divider(),
+                      Column(
+                        children: [
+                          ...group.members
+                              .map((member) => _makeMemberTile(context, member))
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
