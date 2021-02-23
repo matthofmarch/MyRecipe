@@ -1,10 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:models/model.dart';
 import 'package:models/models/user_recipe.dart';
-import 'package:myrecipes_flutter/views/util/NetworkOrDefaultImage.dart';
-import 'package:myrecipes_flutter/views/util/RoundedImage.dart';
 
 import '../../theme.dart';
 
@@ -17,7 +14,9 @@ class RecipeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 95,
-      decoration: BoxDecoration(boxShadow: shadowList),
+      decoration: MediaQuery.of(context).platformBrightness == Brightness.light
+          ? BoxDecoration(boxShadow: shadowList)
+          : null,
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
@@ -27,41 +26,40 @@ class RecipeCard extends StatelessWidget {
               builder: (context) {
                 return recipe.image != null
                     ? Hero(
-                  tag: recipe.id,
-                  child: CachedNetworkImage(
-                    imageUrl: recipe.image,
-                    fit: BoxFit.fitWidth,
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          bottomLeft: Radius.circular(20),
+                        tag: recipe.id,
+                        child: CachedNetworkImage(
+                          imageUrl: recipe.image,
+                          fit: BoxFit.fitWidth,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                bottomLeft: Radius.circular(20),
+                              ),
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover),
+                            ),
+                          ),
+                          placeholder: (context, url) => Text("Loading"),
+                          errorWidget: (context, url, error) =>
+                              Text("Could not load image"),
                         ),
-                        image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover),
-                      ),
-                    ),
-                    placeholder: (context, url) => Text("Loading"),
-                    errorWidget: (context, url, error) =>
-                        Text("Could not load image"),
-                  ),
-                )
+                      )
                     : Container(
-                  height: 120,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      bottomLeft: Radius.circular(20),
-                    ),
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: ExactAssetImage(
-                          "assets/placeholder-image.png"),
-                    ),
-                  ),
-                );
+                        height: 120,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            bottomLeft: Radius.circular(20),
+                          ),
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image:
+                                ExactAssetImage("assets/placeholder-image.png"),
+                          ),
+                        ),
+                      );
               },
             ),
           ),
@@ -73,7 +71,7 @@ class RecipeCard extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       topRight: Radius.circular(20),
                       bottomRight: Radius.circular(20)),
-                  color: Colors.white),
+                  color: Theme.of(context).cardColor),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,7 +85,7 @@ class RecipeCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(PlatformIcons(context).clockSolid),
+                          Icon(Icons.watch_later),
                           Text(" ${recipe.cookingTimeInMin} min"),
                         ],
                       ),

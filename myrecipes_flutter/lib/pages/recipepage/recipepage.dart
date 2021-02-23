@@ -1,12 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:myrecipes_flutter/pages/recipepage/cubit/recipepage_cubit.dart';
 import 'package:myrecipes_flutter/screens/addrecipe/addrecipe.dart';
 import 'package:myrecipes_flutter/views/recipelist/recipelist.dart';
-import 'dart:developer' as dev;
 import 'package:recipe_repository/recipe_repository.dart';
 
 class RecipePage extends StatelessWidget {
@@ -31,7 +28,10 @@ class RecipePage extends StatelessWidget {
               final recipes = state.recipes;
               return Scaffold(
                 floatingActionButton: FloatingActionButton(
-                  child: Icon(context.platformIcons.add, color: Theme.of(context).scaffoldBackgroundColor,),
+                  child: Icon(
+                    Icons.add,
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                  ),
                   backgroundColor: Theme.of(context).primaryColor,
                   onPressed: () async {
                     await Navigator.of(context).push(MaterialPageRoute(
@@ -40,43 +40,43 @@ class RecipePage extends StatelessWidget {
                     BlocProvider.of<RecipepageCubit>(context).loadRecipes();
                   },
                 ),
-                body: CustomScrollView(
-                  slivers: [
-                    SliverAppBar(
-                      expandedHeight: 70,
-                      floating: true,
-                      backgroundColor: Colors.transparent,
-                      flexibleSpace: Container(
-                        padding: const EdgeInsets.only(left: 10, right: 10, top: 50),
-                        height: 100,
-                        child: TextFormField(
-                          onChanged: (value) =>
-                              BlocProvider.of<RecipepageCubit>(context)
-                                  .filter(_searchController.text),
-                          controller: _searchController,
-                          decoration: InputDecoration(
-                            hintText: "Search recipes",
-                            hintStyle: TextStyle(
-                              height: 1.1
+                body: SafeArea(
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        elevation: 0.0,
+                        snap: true,
+                        floating: true,
+                        backgroundColor: Colors.transparent,
+                        flexibleSpace: Container(
+                          margin: const EdgeInsets.all(5),
+                          child: TextField(
+                            onChanged: (value) =>
+                                BlocProvider.of<RecipepageCubit>(context)
+                                    .filter(_searchController.text),
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              hintText: "Search recipes",
+                              hintStyle: TextStyle(height: 1.1),
+                              fillColor:
+                                  Theme.of(context).scaffoldBackgroundColor,
+                              filled: true,
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                              suffixIcon: GestureDetector(
+                                  onTap: () =>
+                                      BlocProvider.of<RecipepageCubit>(context)
+                                          .filter(_searchController.text),
+                                  child: Icon(Icons.search)),
                             ),
-                            fillColor: Theme
-                                .of(context)
-                                .scaffoldBackgroundColor,
-                            filled: true,
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                            suffixIcon: GestureDetector(
-                                onTap: () =>
-                                    BlocProvider.of<RecipepageCubit>(context)
-                                        .filter(_searchController.text),
-                                child: Icon(Icons.search)),),
+                          ),
                         ),
                       ),
-                    ),
-                    _makeTagHeader(context),
-                    RecipeList(recipes)
-                  ],
+                      _makeTagHeader(context),
+                      RecipeList(recipes)
+                    ],
+                  ),
                 ),
               );
             }
@@ -93,16 +93,9 @@ class RecipePage extends StatelessWidget {
           child: ListView(
               padding: EdgeInsets.only(bottom: 10),
               scrollDirection: Axis.horizontal,
-              children: [
-                "Bio",
-                "Vegan",
-                "Gluten-free",
-                "Keto",
-                "Mischkost"
-              ]
-                  .map((e) =>
-                  Card(
-                      child: Padding(
+              children: ["Bio", "Vegan", "Gluten-free", "Keto", "Mischkost"]
+                  .map((e) => Card(
+                          child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8.0, vertical: 2),
                         child: Row(
@@ -118,7 +111,6 @@ class RecipePage extends StatelessWidget {
       pinned: true,
     );
   }
-
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
@@ -133,8 +125,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => _tabBar.preferredSize.height;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset,
-      bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return new Container(
       child: _tabBar,
     );

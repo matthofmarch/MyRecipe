@@ -1,0 +1,69 @@
+version: "3.3"
+services:
+    reverse-proxy:
+        image: traefik:2.3    # official v2 traefik docker image
+        restart: unless-stopped
+        # Enables the web UI and tells Traefik to listen to docker
+        # command: --api.insecure=true --providers.docker
+        ports:
+          - 80:80   # The HTTP port
+          - 443:443   # HTTPS port, needed for tlsChallenge in certResolvers
+          - 5000:5000   # The web ui (eneabled by --api.insecure=true)
+          - 8080:8080
+        volumes:
+          # So thaht Traefik can listen to the docker events
+          - /var/run/docker.sock:/var/run/docker.sock
+          - ./traefik.yml:/etc/traefik/traefik.yml
+          - ./letsencrypt:/letsencrypt
+          
+    ionic:
+        image: jrichtsfeld/myrecipefrontend
+        depends_on:
+         - api
+        labels:
+         - traefik.enable=true
+         - traefik.http.routers.frontend.entrypoints=websecure
+         - traefik.http.routers.frontend.rule=Host(`vm133.htl-leonding.ac.at`)
+         - traefik.http.routers.frontend.tls=true
+         - traefik.http.routers.frontend.tls.certresolver=myrecipesresolver
+         - traefik.http.middlewares.https-redirectFrontend.redirectscheme.scheme=https
+         - traefik.http.middlewares.https-redirectFrontned.redirectscheme.permanent=true
+         - traefik.http.middlewares.https-redirectFrontend.redirectscheme.port=443
+
+    api:
+        image: "jrichtsfeld/myrecipebackend"
+        restart: unless-stopped
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Staging
+            - StaticFiles:ImageBasePath=RecipeImages
+            - ConnectionStrings:DefaultConnection=Data Source=db;Initial Catalog=MyRecipe;User=sa;Password=Al26Dnas!123;
+            - Jwt:Key=YVBy0OLlMQG6VVVp1OH7Xzyr7gHuw1qvUC5dcGt3SBM=
+            - Jwt:Issuer=https://vm133.htl-leonding.ac.at:5000
+            - Jwt:Audience=https://vm133.htl-leonding.ac.at
+            - Jwt:RefreshProvider=RefTokenProvider
+            - SpaLinks:ResetPasswordBaseLink=https://vm133.htl-leonding.ac.at/confirmreset
+            - SpaLinks:ResetEmailBaseLink=https://vm133.htl-leonding.ac.at/confirmemailchange
+            - SendGridUser=MyRecipe
+            - SendGridKey=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
+        depends_on:
+            - db
+        labels:
+            - traefik.enable=true
+            # Host and Port definition
+            - traefik.http.routers.api.entrypoints=backend
+            - traefik.http.routers.api.rule=Host(`vm133.htl-leonding.ac.at`)
+            # TLS Certificate configuration
+            - traefik.http.routers.api.tls=true
+            - traefik.http.routers.api.tls.certresolver=myrecipesresolver
+            - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+            - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
+            - traefik.http.middlewares.https-redirect.redirectscheme.port=5000
+    db:
+        image: "mcr.microsoft.com/mssql/server"
+        restart: unless-stopped
+        environment:
+            - SA_PASSWORD=Al26Dnas!123
+            - ACCEPT_EULA=Y
+        labels:
+            - traefik.enable=false
+

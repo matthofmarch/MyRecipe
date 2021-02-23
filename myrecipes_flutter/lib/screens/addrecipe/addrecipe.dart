@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ingredient_repository/ingredient_repository.dart';
@@ -42,14 +41,15 @@ class AddRecipe extends StatelessWidget {
                 ),
                 body: _makeForm(context, state),
                 floatingActionButton: FloatingActionButton(
-                  child: Icon(context.platformIcons.checkMark),
+                  child: Icon(Icons.check),
                   onPressed: () {
                     BlocProvider.of<AddrecipeCubit>(context).submit(
                         Recipe(
                           name: _nameController.text.toString(),
                           description: _nameController.text.toString(),
                           cookingTimeInMin:
-                              int.tryParse(_cookingTimeInMinController.text) ?? 0,
+                              int.tryParse(_cookingTimeInMinController.text) ??
+                                  0,
                           ingredientNames: state?.selectedIngredients
                               ?.map((e) => state.ingredients[e]),
                           addToGroupPool: true,
@@ -58,23 +58,27 @@ class AddRecipe extends StatelessWidget {
                   },
                 ),
               ),
-              if(state is AddrecipeSubmitting) Container(child: Center(child: CircularProgressIndicator())),
+              if (state is AddrecipeSubmitting)
+                Container(child: Center(child: CircularProgressIndicator())),
             ],
           );
         }
         if (state is AddrecipeSuccess) {
-          Future.delayed(
-              Duration(milliseconds: 500), () => Navigator.of(context).pop(state.recipe));
-          return Center(child: Icon(context.platformIcons.checkMark));
+          Future.delayed(Duration(milliseconds: 500),
+              () => Navigator.of(context).pop(state.recipe));
+          return Center(child: Icon(Icons.check_circle));
         }
         if (state is AddrecipeFailure) {
-          Future.delayed(
-              Duration(milliseconds: 500), () => Navigator.of(context).pop(null));
-          return Center(child: Icon(context.platformIcons.error, color: Theme.of(context).errorColor,));
+          Future.delayed(Duration(milliseconds: 500),
+              () => Navigator.of(context).pop(null));
+          return Center(
+              child: Icon(
+            Icons.error,
+            color: Theme.of(context).errorColor,
+          ));
         }
         return null;
-          }
-          ),
+      }),
     );
   }
 
@@ -104,110 +108,91 @@ class AddRecipe extends StatelessWidget {
     );
   }
 
-  _makeInformationCard(BuildContext context, AddrecipeInteraction state)=> Card(
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Text(
-            "Information",
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-          Divider(),
-          Row(
+  _makeInformationCard(BuildContext context, AddrecipeInteraction state) =>
+      Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
             children: [
-              Flexible(
-                flex: 2,
-                child: PlatformTextField(
-                  controller: _nameController,
-                  material: (context, platform) =>
-                      MaterialTextFieldData(
-                          decoration:
-                          InputDecoration(labelText: "Name")),
-                  cupertino: (context, platform) =>
-                      CupertinoTextFieldData(placeholder: "Name"),
-                ),
+              Text(
+                "Information",
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              Divider(),
+              Row(
+                children: [
+                  Flexible(
+                    flex: 2,
+                    child: TextField(
+                        controller: _nameController,
+                        decoration: InputDecoration(labelText: "Name")),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: TextField(
+                      controller: _cookingTimeInMinController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(labelText: "Cooking time"),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(
-                width: 8,
+                height: 8,
               ),
-              Flexible(
-                flex: 1,
-                child: PlatformTextField(
-                  controller: _cookingTimeInMinController,
-                  keyboardType: TextInputType.number,
-                  material: (context, platform) =>
-                      MaterialTextFieldData(
-                          decoration: InputDecoration(
-                              labelText: "Cooking time")),
-                  cupertino: (context, platform) =>
-                      CupertinoTextFieldData(
-                        placeholder: "Cooking time",
-                      ),
-                ),
-              ),
+              TextField(
+                  controller: _descriptionController,
+                  minLines: 3,
+                  decoration: InputDecoration(labelText: "Description")),
             ],
           ),
-          SizedBox(
-            height: 8,
-          ),
-          PlatformTextField(
-            controller: _descriptionController,
-            minLines: 1,
-            material: (context, platform) => MaterialTextFieldData(
-                decoration:
-                InputDecoration(labelText: "Description")),
-            cupertino: (context, platform) =>
-                CupertinoTextFieldData(
-                  placeholder: "Description",
-                ),
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
-  _makeImageCard(BuildContext context, AddrecipeInteraction state)=> Card(
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Text(
-            "Image",
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-          Divider(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  _makeImageCard(BuildContext context, AddrecipeInteraction state) => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
             children: [
-              _makeCameraButton(context),
-              _makeGalleryButton(context)
+              Text(
+                "Image",
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _makeCameraButton(context),
+                  _makeGalleryButton(context)
+                ],
+              ),
+              state is AddrecipeInteraction && state.image != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      child: Image.file(state.image))
+                  : Text("No Image selected"),
             ],
           ),
-          state is AddrecipeInteraction && state.image != null
-              ? ClipRRect(
-              borderRadius:
-              BorderRadius.all(Radius.circular(20)),
-              child: Image.file(state.image))
-              : Text("No Image selected"),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
-  _makeGalleryButton(BuildContext context)=>TextButton(
-      onPressed: () async {
-        var picked = await picker.getImage(
-            source: ImageSource.gallery);
-        if (picked != null) {
-          BlocProvider.of<AddrecipeCubit>(context)
-              .reload(image: File(picked.path));
-        }
-      },
-      child: Row(
-        children: [
+  _makeGalleryButton(BuildContext context) => TextButton(
+          child: IconButton(
+        icon: Icon(Icons.collections),
+        tooltip: "Gallery",
+        onPressed: () async {
+          var picked = await picker.getImage(source: ImageSource.gallery);
+          if (picked != null) {
+            BlocProvider.of<AddrecipeCubit>(context)
+                .reload(image: File(picked.path));
+          }
+        },
+
+        /*children: [
           Icon(
-            context.platformIcons.collections,
             color: Theme.of(context).colorScheme.primary,
           ),
           Text(
@@ -215,35 +200,28 @@ class AddRecipe extends StatelessWidget {
             style:
             Theme.of(context).textTheme.subtitle2,
           ),
-        ],
+        ],*/
       ));
 
-
-
-  _makeCameraButton(BuildContext context) =>TextButton(
+  _makeCameraButton(BuildContext context) => TextButton(
       onPressed: () async {
         var pickedPath = (await picker.getImage(
-            source: ImageSource.camera,
-            maxWidth: 1024,
-            maxHeight: 1024))
+                source: ImageSource.camera, maxWidth: 1024, maxHeight: 1024))
             .path;
 
         if (pickedPath != null && !kIsWeb) {
           pickedPath = (await ImageCropper.cropImage(
-              sourcePath: pickedPath,
-              aspectRatio: CropAspectRatio(
-                  ratioX: 3, ratioY: 2)))
+                  sourcePath: pickedPath,
+                  aspectRatio: CropAspectRatio(ratioX: 3, ratioY: 2)))
               .path;
         }
-        BlocProvider.of<AddrecipeCubit>(context).reload(
-            image: pickedPath == null
-                ? null
-                : File(pickedPath));
+        BlocProvider.of<AddrecipeCubit>(context)
+            .reload(image: pickedPath == null ? null : File(pickedPath));
       },
       child: Row(
         children: [
           Icon(
-            context.platformIcons.photoCamera,
+            Icons.camera_alt,
             color: Theme.of(context).colorScheme.primary,
           ),
           Text(
@@ -253,57 +231,55 @@ class AddRecipe extends StatelessWidget {
         ],
       ));
 
-  _makeIngredientsCard(BuildContext context, AddrecipeInteraction state) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            "Ingredients",
-            style: Theme.of(context).textTheme.subtitle1,
+  _makeIngredientsCard(BuildContext context, AddrecipeInteraction state) =>
+      Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                "Ingredients",
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              Divider(),
+              SearchableDropdown.multiple(
+                items: state.ingredients
+                    .map((e) =>
+                        DropdownMenuItem<String>(value: e, child: Text(e)))
+                    .toList(),
+                hint: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text("Select any"),
+                ),
+                searchHint: "Select any",
+                onChanged: (List<int> selectedItems) {
+                  BlocProvider.of<AddrecipeCubit>(context)
+                      .silentSetSelectedIngredients(selectedItems);
+                },
+                searchFn: (String keyword, items) {
+                  final results = List<int>();
+                  int i = 0;
+                  items.forEach((item) {
+                    String itemValue;
+                    if ((itemValue = item?.value.toString()) != null &&
+                        itemValue
+                            .toLowerCase()
+                            .contains(keyword.toLowerCase())) {
+                      results.add(i);
+                    }
+                    ++i;
+                  });
+                  return results;
+                },
+                closeButton: "Select",
+                doneButton: SizedBox.shrink(),
+                isExpanded: true,
+                dialogBox: true,
+                clearIcon: Icon(Icons.delete),
+              )
+            ],
           ),
-          Divider(),
-          SearchableDropdown.multiple(
-            items: state.ingredients
-                .map((e) => DropdownMenuItem<String>(
-                value: e, child: Text(e)))
-                .toList(),
-            hint: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text("Select any"),
-            ),
-            searchHint: "Select any",
-            onChanged: (List<int> selectedItems) {
-              BlocProvider.of<AddrecipeCubit>(context)
-                  .silentSetSelectedIngredients(selectedItems);
-            },
-            searchFn: (String keyword, items) {
-              final results = List<int>();
-              int i = 0;
-              items.forEach((item) {
-                String itemValue;
-                if ((itemValue = item?.value.toString()) != null &&
-                    itemValue
-                        .toLowerCase()
-                        .contains(keyword.toLowerCase())) {
-                  results.add(i);
-                }
-                ++i;
-              });
-              return results;
-            },
-            closeButton: "Select",
-            doneButton: SizedBox.shrink(),
-            isExpanded: true,
-            dialogBox: true,
-            clearIcon: Icon(context.platformIcons.delete),
-          )
-        ],
-      ),
-    ),
-  );
-
-
-
+        ),
+      );
 }

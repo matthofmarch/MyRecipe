@@ -1,14 +1,9 @@
-import 'dart:io';
-
-import 'package:auth_repository/auth_repository.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:models/model.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/cubit/meal_view_cubit.dart';
 import 'package:myrecipes_flutter/pages/meal_page/meal_view/views/vote_summary.dart';
@@ -22,11 +17,11 @@ class MealCalendar extends StatelessWidget {
   List<Meal> meals;
   DateTime viewInitialDate;
 
-  MealCalendar(List<Meal> meals, DateTime initialDate, {Key key})
-      : super(key: key) {
-    this.meals = meals;
-    viewInitialDate = initialDate;
-  }
+  Function(Meal meal) showMealOptions;
+
+  MealCalendar(this.meals, this.viewInitialDate,
+      {Key key, this.showMealOptions})
+      : super(key: key) {}
 
   @override
   Widget build(BuildContext context) {
@@ -51,25 +46,30 @@ class MealCalendar extends StatelessWidget {
               VerticalDivider(
                 indent: 20,
                 endIndent: 20,
-                width: 0, //Else one will see more of the most-left column than the one on the right
+                width:
+                    0, //Else one will see more of the most-left column than the one on the right
               ),
               Expanded(
                 child: Stack(
                   alignment: Alignment.topCenter,
                   children: [
-                    Builder(
-                      builder: (context) {
-                        final mealsForDay = meals
-                            .where((m) => mealOnCurrentDay(m, columnDate))
-                            .map((m) => _mealCard(context, m))
-                            .toList();
+                    Builder(builder: (context) {
+                      final mealsForDay = meals
+                          .where((m) => mealOnCurrentDay(m, columnDate))
+                          .map((m) => _mealCard(context, m))
+                          .toList();
 
-                        return ListView(
+                      return ListView(
                           padding: EdgeInsets.only(top: 44),
-                          children: mealsForDay.isNotEmpty ? mealsForDay : [Text("No meals", textAlign: TextAlign.center,)]
-                        );
-                      }
-                    ),
+                          children: mealsForDay.isNotEmpty
+                              ? mealsForDay
+                              : [
+                                  Text(
+                                    "No meals",
+                                    textAlign: TextAlign.center,
+                                  )
+                                ]);
+                    }),
                     _makeDateBadge(context, columnDate)
                   ],
                 ),
@@ -98,135 +98,7 @@ class MealCalendar extends StatelessWidget {
           ),
         );
       },
-      onLongPress: () async {
-        showBarModalBottomSheet(
-          context: context,
-          builder: (context) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Meal Actions",
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                ),
-                SizedBox(height: 8,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(context.platformIcons.pen), Text("Delete")],
-                ),
-                SizedBox(height: 8,),
-                if(RepositoryProvider.of<AuthRepository>(context).authState.isAdmin)
-                PlatformButton(
-                  onPressed: () {},
-                  materialFlat: (context, platform) => MaterialFlatButtonData(),
-                  color: Colors.green,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Icon(context.platformIcons.checkMark), Text("Accept")],
-                  ),
-                )
-              ],
-            );
-          },
-        );
-        return;
-        await showCupertinoModalBottomSheet(
-            context: context,
-            builder: (context) {
-              var title = Text(
-                "Meal Actions",
-                style: Theme.of(context).textTheme.subtitle1,
-              );
-              var mealActions = [
-                PlatformButton(
-                    materialFlat: (context, platform) =>
-                        MaterialFlatButtonData(),
-                    onPressed: () async {
-                      //Navigator.of(context).pop();
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(context.platformIcons.pen),
-                        Text("Vote up")
-                      ],
-                    )),
-              ];
-
-              var platformActionSheet = Platform.isIOS
-                  ? CupertinoActionSheet(
-                      title: title,
-                      actions: [...mealActions],
-                    )
-                  : Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: title,
-                        ),
-                        Divider(),
-                        ...mealActions
-                      ],
-                    );
-              return ModalBottomSheet(
-                  onClosing: () {}, child: platformActionSheet);
-
-              return BottomSheet(
-                onClosing: () {},
-                builder: (context) => platformActionSheet,
-              );
-            });
-
-        await showPlatformModalSheet(
-          context: context,
-          builder: (context) {
-            var title = Text(
-              "Meal Actions",
-              style: Theme.of(context).textTheme.subtitle1,
-            );
-            var mealActions = [
-              PlatformButton(
-                  materialFlat: (context, platform) => MaterialFlatButtonData(),
-                  onPressed: () async {
-                    //Navigator.of(context).pop();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(context.platformIcons.pen),
-                      Text("Vote up")
-                    ],
-                  )),
-            ];
-
-            var platformActionSheet = Platform.isIOS
-                ? CupertinoActionSheet(
-                    title: title,
-                    actions: [...mealActions],
-                  )
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: title,
-                      ),
-                      Divider(),
-                      ...mealActions
-                    ],
-                  );
-
-            return BottomSheet(
-              onClosing: () {},
-              builder: (context) => platformActionSheet,
-            );
-          },
-        );
-      },
+      onLongPress: showMealOptions(meal),
       child: AspectRatio(
         aspectRatio: 2 / 3,
         child: Card(

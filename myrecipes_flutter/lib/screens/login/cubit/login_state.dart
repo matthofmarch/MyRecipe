@@ -1,7 +1,7 @@
 part of 'login_cubit.dart';
 
 @immutable
-abstract class LoginState extends Equatable{
+abstract class LoginState extends Equatable {
   @override
   List<Object> get props => [];
 }

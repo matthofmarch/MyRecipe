@@ -1,9 +1,6 @@
-import 'package:auth_repository/auth_repository.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:myrecipes_flutter/screens/signup/cubit/signup_cubit.dart';
 
 class Signup extends StatelessWidget {
@@ -11,14 +8,14 @@ class Signup extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<SignupCubit>(
         create: (context) => SignupCubit(RepositoryProvider.of(context)),
-        child: BlocBuilder<SignupCubit, SignupState>(
-            builder: (context, state) {
+        child: BlocBuilder<SignupCubit, SignupState>(builder: (context, state) {
           if (state is SignupInitial) {
-            Future.delayed(Duration(milliseconds: 0), () => BlocProvider.of<SignupCubit>(context).load());
+            Future.delayed(Duration(milliseconds: 0),
+                () => BlocProvider.of<SignupCubit>(context).load());
             return Container();
           }
           if (state is SignupInteraction) {
-            return _makeInteraction(context,state);
+            return _makeInteraction(context, state);
           }
           if (state is SignupProgress)
             return Center(
@@ -27,13 +24,16 @@ class Signup extends StatelessWidget {
           if (state is SignUpSuccess) {
             Future.delayed(
                 Duration(milliseconds: 500), () => Navigator.of(context).pop());
-            return Center(child: Icon(context.platformIcons.checkMark));
+            return Center(child: Icon(Icons.check));
           }
           if (state is SignUpFailure) {
-            Future.delayed(Duration(milliseconds: 500), ()=> BlocProvider.of<SignupCubit>(context).load(previousEmail: state.previousEmail));
+            Future.delayed(
+                Duration(milliseconds: 500),
+                () => BlocProvider.of<SignupCubit>(context)
+                    .load(previousEmail: state.previousEmail));
             return Center(
                 child: Icon(
-              context.platformIcons.error,
+              Icons.error,
               color: Theme.of(context).errorColor,
             ));
           }
