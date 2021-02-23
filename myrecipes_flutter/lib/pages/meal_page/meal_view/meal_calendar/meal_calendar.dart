@@ -98,7 +98,7 @@ class MealCalendar extends StatelessWidget {
           ),
         );
       },
-      onLongPress: showMealOptions(meal),
+      onLongPress: () => showMealOptions(meal),
       child: AspectRatio(
         aspectRatio: 2 / 3,
         child: Card(
