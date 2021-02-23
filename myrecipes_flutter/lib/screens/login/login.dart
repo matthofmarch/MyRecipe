@@ -2,7 +2,6 @@ import 'package:auth_repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myrecipes_flutter/screens/login/cubit/login_cubit.dart';
 import 'package:myrecipes_flutter/screens/signup/signup.dart';
@@ -61,30 +60,18 @@ class Login extends StatelessWidget {
                               SizedBox(
                                 height: 16,
                               ),
-                              PlatformTextField(
+                              TextField(
                                 controller: _emailController,
                                 keyboardType: TextInputType.emailAddress,
-                                material: (context, platform) =>
-                                    MaterialTextFieldData(
-                                        decoration: InputDecoration(
-                                            labelText: "Email")),
-                                cupertino: (context, platform) =>
-                                    CupertinoTextFieldData(
-                                        placeholder: "Email"),
+                                decoration: InputDecoration(labelText: "Email"),
                               ),
                               SizedBox(
                                 height: 16,
                               ),
-                              PlatformTextField(
+                              TextField(
                                 obscureText: true,
                                 controller: _passwordController,
-                                material: (context, platform) =>
-                                    MaterialTextFieldData(
-                                        decoration: InputDecoration(
-                                            labelText: "Password")),
-                                cupertino: (context, platform) =>
-                                    CupertinoTextFieldData(
-                                        placeholder: "Password"),
+                                decoration: InputDecoration(labelText: "Password"),
                               ),
                             ]),
                       ),
