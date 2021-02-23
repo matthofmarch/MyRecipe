@@ -43,7 +43,10 @@ class MealList extends StatelessWidget {
                             errorWidget: (context, url, error) =>
                                 Text("Could not load image"),
                           )
-                        : Image.asset("assets/placeholder-image.png", fit: BoxFit.cover,)),
+                        : Image.asset(
+                            "assets/placeholder-image.png",
+                            fit: BoxFit.cover,
+                          )),
               ),
               SizedBox(
                 width: kDefaultSpacing,

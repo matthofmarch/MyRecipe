@@ -8,8 +8,11 @@ abstract class MembershipsState extends Equatable {
 }
 
 class MembershipsInitial extends MembershipsState {}
+
 class MembershipsProgress extends MembershipsState {}
+
 class MembershipsFailure extends MembershipsState {}
+
 class MembershipsSuccess extends MembershipsState {
   var group;
 

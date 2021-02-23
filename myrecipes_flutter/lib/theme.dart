@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 final colorScheme = ColorScheme(
   onPrimary: const Color(0xFFffffff),
@@ -38,12 +37,11 @@ final themes = [ThemeData.light(), ThemeData.dark()]
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(20)))),
           inputDecorationTheme: t.inputDecorationTheme.copyWith(
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8)),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           ),
         ))
     .toList();
 
 List<BoxShadow> shadowList = [
-  BoxShadow(color: Colors.grey[300], blurRadius: 30, offset: Offset(0,30))
+  BoxShadow(color: Colors.grey[300], blurRadius: 30, offset: Offset(0, 30))
 ];

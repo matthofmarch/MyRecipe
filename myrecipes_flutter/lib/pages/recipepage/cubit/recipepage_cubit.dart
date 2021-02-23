@@ -12,17 +12,20 @@ class RecipepageCubit extends Cubit<RecipepageState> {
 
   RecipepageCubit(this._recipeRepository) : super(RecipepageInitial());
 
-  Future loadRecipes() async{
+  Future loadRecipes() async {
     emit(RecipepageProgress());
-    try{
+    try {
       _recipes = await _recipeRepository.getGroupRecipes();
       emit(RecipepageSuccess(_recipes));
-    }catch(e){
+    } catch (e) {
       emit(RecipepageFailure());
     }
   }
 
-  Future filter(String query) async{
-    emit(RecipepageSuccess(_recipes.where((element) => element.name.toLowerCase().contains(query.toLowerCase())).toList()));
+  Future filter(String query) async {
+    emit(RecipepageSuccess(_recipes
+        .where((element) =>
+            element.name.toLowerCase().contains(query.toLowerCase()))
+        .toList()));
   }
 }

@@ -9,13 +9,13 @@ class MembershipsCubit extends Cubit<MembershipsState> {
 
   MembershipsCubit(this._groupRepository) : super(MembershipsInitial());
 
-  getOwnGroup()async{
+  getOwnGroup() async {
     emit(MembershipsInitial());
-    try{
+    try {
       emit(MembershipsProgress());
       var group = await _groupRepository.getGroup();
       emit(MembershipsSuccess(group));
-    }catch(e){
+    } catch (e) {
       emit(MembershipsFailure());
     }
   }

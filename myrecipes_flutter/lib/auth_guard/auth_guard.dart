@@ -2,7 +2,6 @@ import 'package:auth_repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myrecipes_flutter/content_root/content_root.dart';
 import 'package:myrecipes_flutter/household_guard/household_guard.dart';
 import 'package:myrecipes_flutter/screens/login/login.dart';
 
@@ -12,18 +11,18 @@ class AuthGuard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AuthGuardCubit>(
-      create: (context) => AuthGuardCubit(RepositoryProvider.of<AuthRepository>(context)),
+      create: (context) =>
+          AuthGuardCubit(RepositoryProvider.of<AuthRepository>(context)),
       child: BlocBuilder<AuthGuardCubit, AuthGuardState>(
-        builder: (context, state) {
-          if(state is AuthGuardAuthenticated){
-            return HouseholdGuard();
-          }
-          if(state is AuthGuardUnauthenticated){
-            return Login();
-          }
-          return Center(child: CircularProgressIndicator());
+          builder: (context, state) {
+        if (state is AuthGuardAuthenticated) {
+          return HouseholdGuard();
         }
-      ),
+        if (state is AuthGuardUnauthenticated) {
+          return Login();
+        }
+        return Center(child: CircularProgressIndicator());
+      }),
     );
   }
 }
