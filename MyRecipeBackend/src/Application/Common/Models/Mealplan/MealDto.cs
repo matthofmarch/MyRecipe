@@ -15,7 +15,7 @@ namespace MyRecipe.Application.Common.Models.Mealplan
             Recipe = new RecipeModel(meal.Recipe);
             Date = meal.DateTime.ToString("R");
             Accepted = meal.Accepted;
-            Votes = meal.Votes.Select(mv => new VoteDto(mv)).ToArray();
+            Votes = meal.MealVotes.Select(mv => new VoteDto(mv)).ToArray();
         }
 
         public Guid MealId { get; set; }

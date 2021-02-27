@@ -288,7 +288,7 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                         {
                             Id = "testUser1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eb1eebe5-97a2-4093-8bf1-2bb66c6aa30f",
+                            ConcurrencyStamp = "9d00c180-b9ca-4854-9408-499737222560",
                             Email = "test1@test.test",
                             EmailConfirmed = true,
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
@@ -296,7 +296,7 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "test1@test.test",
                             NormalizedUserName = "test1@test.test",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOpIc1DUJzEKcjIWKLHniXH9Pzh4Xci6c3TnI2nVQKySgj7Zc6IaOhw/qJPxHIilcw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHmioWza0uEIL0EjLSPvaC/paP28pWCZyDoBFsMrSYixFbj9rPS0OvGkvRwFw1m3Kg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -306,7 +306,7 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                         {
                             Id = "testUser2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "27efb438-7391-4665-99bf-d259af0a4b34",
+                            ConcurrencyStamp = "4a46d7a5-1ca4-4ed7-8874-95bc6be845df",
                             Email = "test2@test.test",
                             EmailConfirmed = true,
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
@@ -314,7 +314,7 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "test2@test.test",
                             NormalizedUserName = "test2@test.test",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFkeeSa5A1npS2Csd+rZqap61Hk0zVHEvmfKm2IYmdBlGZa6jkCIGXiC67sNlgMW/A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEzlOMpJUx1oLTNRNfYrEs+BDsxbGL27kA7ktnJZm0/XiQ8E3Ysg62m7XlC8zfbMXA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -495,7 +495,7 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             Accepted = true,
-                            DateTime = new DateTime(2021, 2, 24, 11, 5, 49, 535, DateTimeKind.Local).AddTicks(5693),
+                            DateTime = new DateTime(2021, 2, 28, 0, 57, 44, 296, DateTimeKind.Local).AddTicks(8098),
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
                             InitiatorId = "testUser1",
                             RecipeId = new Guid("00000000-0000-0000-0000-000000000001")
@@ -504,7 +504,7 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             Accepted = false,
-                            DateTime = new DateTime(2021, 2, 26, 11, 5, 49, 535, DateTimeKind.Local).AddTicks(6464),
+                            DateTime = new DateTime(2021, 3, 2, 0, 57, 44, 297, DateTimeKind.Local).AddTicks(829),
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
                             InitiatorId = "testUser1",
                             RecipeId = new Guid("00000000-0000-0000-0000-000000000002")
@@ -762,8 +762,9 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                         .IsRequired();
 
                     b.HasOne("MyRecipe.Domain.Entities.ApplicationUser", "Initiator")
-                        .WithMany()
-                        .HasForeignKey("InitiatorId");
+                        .WithMany("ProposedMeals")
+                        .HasForeignKey("InitiatorId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("MyRecipe.Domain.Entities.Recipe", "Recipe")
                         .WithMany("Meals")
@@ -781,13 +782,13 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
             modelBuilder.Entity("MyRecipe.Domain.Entities.MealVote", b =>
                 {
                     b.HasOne("MyRecipe.Domain.Entities.Meal", "Meal")
-                        .WithMany("Votes")
+                        .WithMany("MealVotes")
                         .HasForeignKey("MealId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MyRecipe.Domain.Entities.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("MealVotes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -810,6 +811,10 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
 
             modelBuilder.Entity("MyRecipe.Domain.Entities.ApplicationUser", b =>
                 {
+                    b.Navigation("MealVotes");
+
+                    b.Navigation("ProposedMeals");
+
                     b.Navigation("Recipes");
                 });
 
@@ -824,7 +829,7 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
 
             modelBuilder.Entity("MyRecipe.Domain.Entities.Meal", b =>
                 {
-                    b.Navigation("Votes");
+                    b.Navigation("MealVotes");
                 });
 
             modelBuilder.Entity("MyRecipe.Domain.Entities.Recipe", b =>

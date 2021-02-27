@@ -2,30 +2,32 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyRecipe.Infrastructure.Persistence;
 
-namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
+namespace MyRecipe.Infrastructure.Persistence.Migrations.SqlServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210224100550_Initial")]
-    partial class Initial
+    [Migration("20210227235619_testmigration")]
+    partial class testmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.3");
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("IngredientRecipe", b =>
                 {
                     b.Property<Guid>("IngredientsId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("RecipesId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("IngredientsId", "RecipesId");
 
@@ -74,10 +76,10 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
             modelBuilder.Entity("IngredientTag", b =>
                 {
                     b.Property<Guid>("IngredientsId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("TagsId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("IngredientsId", "TagsId");
 
@@ -89,25 +91,26 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasDatabaseName("RoleNameIndex");
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
                 });
@@ -116,17 +119,18 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -139,17 +143,18 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -161,17 +166,17 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -183,10 +188,10 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -198,16 +203,16 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
@@ -217,60 +222,60 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
             modelBuilder.Entity("MyRecipe.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("bit");
 
                     b.Property<Guid?>("GroupId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsAdmin")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("bit");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("bit");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
@@ -281,7 +286,8 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasDatabaseName("UserNameIndex");
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
 
@@ -290,7 +296,7 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                         {
                             Id = "testUser1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eb1eebe5-97a2-4093-8bf1-2bb66c6aa30f",
+                            ConcurrencyStamp = "283023b8-b3c3-46a8-87c7-1b16b60b9538",
                             Email = "test1@test.test",
                             EmailConfirmed = true,
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
@@ -298,7 +304,7 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "test1@test.test",
                             NormalizedUserName = "test1@test.test",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOpIc1DUJzEKcjIWKLHniXH9Pzh4Xci6c3TnI2nVQKySgj7Zc6IaOhw/qJPxHIilcw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMcZQ1IfImlEMkTLU0JawoUTkhZsbg60pzAS9yF+ixevNhdMu8+s43SbaFpxIWDPTQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -308,7 +314,7 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                         {
                             Id = "testUser2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "27efb438-7391-4665-99bf-d259af0a4b34",
+                            ConcurrencyStamp = "b235b07b-4a8f-4e48-a38c-b3e22311ebab",
                             Email = "test2@test.test",
                             EmailConfirmed = true,
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
@@ -316,7 +322,7 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "test2@test.test",
                             NormalizedUserName = "test2@test.test",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFkeeSa5A1npS2Csd+rZqap61Hk0zVHEvmfKm2IYmdBlGZa6jkCIGXiC67sNlgMW/A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGxbw3uSs7U+3L05opH8+B48DHdL8GY5DVM/qbGuxDDeEzk0To8vmzgnkr5RIN2F7A==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -328,17 +334,17 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("varchar(30) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(30)");
 
-                    b.Property<DateTime?>("RowVersion")
+                    b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp(6)");
+                        .HasColumnType("rowversion");
 
                     b.HasKey("Id");
 
@@ -356,16 +362,16 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("RowVersion")
+                    b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp(6)");
+                        .HasColumnType("rowversion");
 
                     b.HasKey("Id");
 
@@ -431,23 +437,23 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(6)
-                        .HasColumnType("varchar(6) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(6)");
 
                     b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid?>("GroupId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("RowVersion")
+                    b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp(6)");
+                        .HasColumnType("rowversion");
 
                     b.HasKey("Id");
 
@@ -460,27 +466,27 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Accepted")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("GroupId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("InitiatorId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid>("RecipeId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("RowVersion")
+                    b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp(6)");
+                        .HasColumnType("rowversion");
 
                     b.HasKey("Id");
 
@@ -497,7 +503,7 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             Accepted = true,
-                            DateTime = new DateTime(2021, 2, 24, 11, 5, 49, 535, DateTimeKind.Local).AddTicks(5693),
+                            DateTime = new DateTime(2021, 2, 28, 0, 56, 18, 350, DateTimeKind.Local).AddTicks(7796),
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
                             InitiatorId = "testUser1",
                             RecipeId = new Guid("00000000-0000-0000-0000-000000000001")
@@ -506,7 +512,7 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             Accepted = false,
-                            DateTime = new DateTime(2021, 2, 26, 11, 5, 49, 535, DateTimeKind.Local).AddTicks(6464),
+                            DateTime = new DateTime(2021, 3, 2, 0, 56, 18, 354, DateTimeKind.Local).AddTicks(5071),
                             GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
                             InitiatorId = "testUser1",
                             RecipeId = new Guid("00000000-0000-0000-0000-000000000002")
@@ -517,19 +523,19 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("MealId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("RowVersion")
+                    b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp(6)");
+                        .HasColumnType("rowversion");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Vote")
                         .HasColumnType("int");
@@ -563,33 +569,33 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("AddToGroupPool")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("bit");
 
                     b.Property<int>("CookingTimeInMin")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("varchar(30) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(30)");
 
-                    b.Property<DateTime?>("RowVersion")
+                    b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp(6)");
+                        .HasColumnType("rowversion");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -640,16 +646,16 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Label")
                         .IsRequired()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("RowVersion")
+                    b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp(6)");
+                        .HasColumnType("rowversion");
 
                     b.HasKey("Id");
 
@@ -764,8 +770,9 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
                         .IsRequired();
 
                     b.HasOne("MyRecipe.Domain.Entities.ApplicationUser", "Initiator")
-                        .WithMany()
-                        .HasForeignKey("InitiatorId");
+                        .WithMany("ProposedMeals")
+                        .HasForeignKey("InitiatorId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("MyRecipe.Domain.Entities.Recipe", "Recipe")
                         .WithMany("Meals")
@@ -783,13 +790,13 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
             modelBuilder.Entity("MyRecipe.Domain.Entities.MealVote", b =>
                 {
                     b.HasOne("MyRecipe.Domain.Entities.Meal", "Meal")
-                        .WithMany("Votes")
+                        .WithMany("MealVotes")
                         .HasForeignKey("MealId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MyRecipe.Domain.Entities.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("MealVotes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -812,6 +819,10 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
 
             modelBuilder.Entity("MyRecipe.Domain.Entities.ApplicationUser", b =>
                 {
+                    b.Navigation("MealVotes");
+
+                    b.Navigation("ProposedMeals");
+
                     b.Navigation("Recipes");
                 });
 
@@ -826,7 +837,7 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.MySql.Migrations
 
             modelBuilder.Entity("MyRecipe.Domain.Entities.Meal", b =>
                 {
-                    b.Navigation("Votes");
+                    b.Navigation("MealVotes");
                 });
 
             modelBuilder.Entity("MyRecipe.Domain.Entities.Recipe", b =>

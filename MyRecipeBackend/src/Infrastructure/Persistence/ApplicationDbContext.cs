@@ -36,6 +36,21 @@ namespace MyRecipe.Infrastructure.Persistence
             builder.Entity<Ingredient>()
                 .HasIndex(i => i.Name)
                 .IsUnique();
+            
+            builder.Entity<MealVote>()
+                .HasOne(mv => mv.User)
+                .WithMany(m => m.MealVotes)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<MealVote>()
+                .HasOne(mv => mv.Meal)
+                .WithMany(m => m.MealVotes)
+                .OnDelete(DeleteBehavior.NoAction);
+            
+            builder.Entity<Meal>()
+                .HasOne(m => m.Initiator)
+                .WithMany(m => m.ProposedMeals)
+                .OnDelete(DeleteBehavior.NoAction);
 
             var hostEnvironment = this.GetService<IHostEnvironment>();
             if (hostEnvironment.IsDevelopment() || hostEnvironment.IsStaging()) SeedDatabase(builder);

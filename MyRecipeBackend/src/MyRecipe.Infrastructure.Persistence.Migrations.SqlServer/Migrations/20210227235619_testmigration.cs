@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MyRecipe.Infrastructure.Persistence.Migrations.SqlServer.Migrations
 {
-    public partial class Initial : Migration
+    public partial class testmigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -311,8 +311,7 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.SqlServer.Migrations
                         name: "FK_Meals_AspNetUsers_InitiatorId",
                         column: x => x.InitiatorId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Meals_Groups_GroupId",
                         column: x => x.GroupId,
@@ -350,8 +349,7 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.SqlServer.Migrations
                         name: "FK_MealVotes_Meals_MealId",
                         column: x => x.MealId,
                         principalTable: "Meals",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
@@ -379,12 +377,12 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.SqlServer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GroupId", "IsAdmin", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "testUser1", 0, "6a01b13d-52ef-4fb4-9581-754d663c7d22", "test1@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), true, false, null, "test1@test.test", "test1@test.test", "AQAAAAEAACcQAAAAEJtmLgetDXpq4j339hFiYph07+OKQXXjfMthTMS5SWhvjWA6cBcEwkLfjUaFN2b2kQ==", null, false, "", false, "test1@test.test" });
+                values: new object[] { "testUser1", 0, "283023b8-b3c3-46a8-87c7-1b16b60b9538", "test1@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), true, false, null, "test1@test.test", "test1@test.test", "AQAAAAEAACcQAAAAEMcZQ1IfImlEMkTLU0JawoUTkhZsbg60pzAS9yF+ixevNhdMu8+s43SbaFpxIWDPTQ==", null, false, "", false, "test1@test.test" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GroupId", "IsAdmin", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "testUser2", 0, "c3f17ed9-158f-48b2-887c-8ba49504873e", "test2@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, false, null, "test2@test.test", "test2@test.test", "AQAAAAEAACcQAAAAEBlJlVN+pfnetj7KVhKVFR9M/vkLT2Wrmac4PXkMUdsyMI4buTUwG24HbTu1M6zMbQ==", null, false, "", false, "test2@test.test" });
+                values: new object[] { "testUser2", 0, "b235b07b-4a8f-4e48-a38c-b3e22311ebab", "test2@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, false, null, "test2@test.test", "test2@test.test", "AQAAAAEAACcQAAAAEGxbw3uSs7U+3L05opH8+B48DHdL8GY5DVM/qbGuxDDeEzk0To8vmzgnkr5RIN2F7A==", null, false, "", false, "test2@test.test" });
 
             migrationBuilder.InsertData(
                 table: "Recipes",
@@ -416,8 +414,8 @@ namespace MyRecipe.Infrastructure.Persistence.Migrations.SqlServer.Migrations
                 columns: new[] { "Id", "Accepted", "DateTime", "GroupId", "InitiatorId", "RecipeId" },
                 values: new object[,]
                 {
-                    { new Guid("00000000-0000-0000-0000-000000000001"), true, new DateTime(2021, 2, 24, 11, 6, 22, 422, DateTimeKind.Local).AddTicks(2360), new Guid("00000000-0000-0000-0000-000000000001"), "testUser1", new Guid("00000000-0000-0000-0000-000000000001") },
-                    { new Guid("00000000-0000-0000-0000-000000000002"), false, new DateTime(2021, 2, 26, 11, 6, 22, 425, DateTimeKind.Local).AddTicks(2464), new Guid("00000000-0000-0000-0000-000000000001"), "testUser1", new Guid("00000000-0000-0000-0000-000000000002") }
+                    { new Guid("00000000-0000-0000-0000-000000000001"), true, new DateTime(2021, 2, 28, 0, 56, 18, 350, DateTimeKind.Local).AddTicks(7796), new Guid("00000000-0000-0000-0000-000000000001"), "testUser1", new Guid("00000000-0000-0000-0000-000000000001") },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), false, new DateTime(2021, 3, 2, 0, 56, 18, 354, DateTimeKind.Local).AddTicks(5071), new Guid("00000000-0000-0000-0000-000000000001"), "testUser1", new Guid("00000000-0000-0000-0000-000000000002") }
                 });
 
             migrationBuilder.InsertData(
