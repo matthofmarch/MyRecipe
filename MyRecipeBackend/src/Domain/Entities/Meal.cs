@@ -19,7 +19,7 @@ namespace MyRecipe.Domain.Entities
         /// <summary>
         ///     This may or may not be shown on the voting screen
         /// </summary>
-        public string InitiatorId { get; set; }
+        public string? InitiatorId { get; set; }
 
         [ForeignKey(nameof(InitiatorId))] public ApplicationUser Initiator { get; set; }
 
@@ -30,6 +30,6 @@ namespace MyRecipe.Domain.Entities
         //This flag shall be set after a threshold of positive votes has been reached
         [Required] public bool Accepted { get; set; } = false;
 
-        public List<MealVote> Votes { get; set; }
+        public List<MealVote> MealVotes { get; set; }
     }
 }

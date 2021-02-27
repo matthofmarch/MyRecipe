@@ -12,5 +12,7 @@ namespace MyRecipe.Domain.Entities
         public Guid? GroupId { get; set; }
         public bool IsAdmin { get; set; }
         public List<Recipe> Recipes { get; set; }
+        public List<MealVote> MealVotes { get; set; }
+        public List<Meal> ProposedMeals { get; set; }
     }
 }
