@@ -21,7 +21,7 @@ RUN flutter channel beta
 RUN flutter upgrade
 RUN flutter config --enable-web
 
-FROM env as build-web
+FROM env as build-env
 # Copy files to container and build
 RUN mkdir /app/
 COPY . /app/
