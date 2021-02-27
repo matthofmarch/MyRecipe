@@ -7,12 +7,10 @@ using Microsoft.Extensions.Hosting;
 using MyRecipe.Application.Common.Interfaces;
 using MyRecipe.Application.Common.Interfaces.Services;
 using MyRecipe.Domain.Entities;
-using MyRecipe.Infrastructure.Configurations;
 using MyRecipe.Infrastructure.Installers;
 using MyRecipe.Infrastructure.Options;
 using MyRecipe.Infrastructure.Persistence;
 using MyRecipe.Infrastructure.Services;
-using MyRecipe.Web.Config;
 
 namespace MyRecipe.Infrastructure
 {
@@ -34,12 +32,25 @@ namespace MyRecipe.Infrastructure
                 .Bind(configuration.GetSection("StaticFiles"))
                 .ValidateDataAnnotations();
 
-            services.AddDbContext<ApplicationDbContext>(builder => builder
-                .UseSqlServer(
-                    configuration.GetConnectionString("DefaultConnection"),
-                    sqlOptions => { sqlOptions.EnableRetryOnFailure(10, TimeSpan.FromSeconds(5), null); })
-                .EnableSensitiveDataLogging(environment.IsDevelopment())
-            );
+            // Set the active provider via configuration
+            var provider = configuration.GetValue("Provider", "SqlServer");
+
+            services.AddDbContext<ApplicationDbContext>(
+                options => _ = provider switch
+                {
+                    "MySql" => options.UseMySql(
+                        configuration.GetConnectionString("MySqlConnection"),
+                        ServerVersion.AutoDetect(configuration.GetConnectionString("MySqlConnection")),
+                        x => { x.MigrationsAssembly("MyRecipe.Infrastructure.Persistence.Migrations.MySql"); }),
+
+                    "SqlServer" => options.UseSqlServer(
+                        configuration.GetConnectionString("SqlServerConnection"),
+                        x => { x.MigrationsAssembly("MyRecipe.Infrastructure.Persistence.Migrations.SqlServer"); }),
+
+                    _ => throw new Exception($"Unsupported provider: {provider}")
+                });
+
+            services.AddScoped<DbContext>(s => s.GetService<ApplicationDbContext>());
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 

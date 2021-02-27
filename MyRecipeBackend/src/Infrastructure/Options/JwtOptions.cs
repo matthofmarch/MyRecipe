@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyRecipe.Web.Config
+namespace MyRecipe.Infrastructure.Options
 {
     public class JwtOptions
     {

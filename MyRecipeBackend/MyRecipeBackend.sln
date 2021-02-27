@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infra
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B28E5341-3DC1-458A-832A-C8A83AE0E5F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyRecipe.Infrastructure.Persistence.Migrations.SqlServer", "src\MyRecipe.Infrastructure.Persistence.Migrations.SqlServer\MyRecipe.Infrastructure.Persistence.Migrations.SqlServer.csproj", "{75BACC31-B90E-4FAD-B1CA-ADB907061F78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyRecipe.Infrastructure.Persistence.Migrations.MySql", "src\MyRecipe.Infrastructure.Persistence.Migrations.MySql\MyRecipe.Infrastructure.Persistence.Migrations.MySql.csproj", "{BF720E88-5781-4F2A-97FF-213ABFBF3FA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +47,14 @@ Global
 		{513CEA38-9663-440C-82FC-041013EEC4C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{513CEA38-9663-440C-82FC-041013EEC4C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{513CEA38-9663-440C-82FC-041013EEC4C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75BACC31-B90E-4FAD-B1CA-ADB907061F78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75BACC31-B90E-4FAD-B1CA-ADB907061F78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75BACC31-B90E-4FAD-B1CA-ADB907061F78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75BACC31-B90E-4FAD-B1CA-ADB907061F78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF720E88-5781-4F2A-97FF-213ABFBF3FA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF720E88-5781-4F2A-97FF-213ABFBF3FA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF720E88-5781-4F2A-97FF-213ABFBF3FA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF720E88-5781-4F2A-97FF-213ABFBF3FA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,5 +69,7 @@ Global
 		{3C721E34-BDA2-48CE-ACB2-FCF6DE65A234} = {B28E5341-3DC1-458A-832A-C8A83AE0E5F0}
 		{513CEA38-9663-440C-82FC-041013EEC4C9} = {B28E5341-3DC1-458A-832A-C8A83AE0E5F0}
 		{5B817F37-46D8-4F1A-8076-698C00F21133} = {B28E5341-3DC1-458A-832A-C8A83AE0E5F0}
+		{75BACC31-B90E-4FAD-B1CA-ADB907061F78} = {B28E5341-3DC1-458A-832A-C8A83AE0E5F0}
+		{BF720E88-5781-4F2A-97FF-213ABFBF3FA9} = {B28E5341-3DC1-458A-832A-C8A83AE0E5F0}
 	EndGlobalSection
 EndGlobal

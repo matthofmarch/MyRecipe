@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MyRecipe.Application.Common.Interfaces.Services;
 
-namespace MyRecipe.Infrastructure.Configurations
+namespace MyRecipe.Infrastructure.Options
 {
     public class SendGridOptions : ISendGridConfiguration
     {
