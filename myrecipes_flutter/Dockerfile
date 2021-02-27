@@ -6,7 +6,6 @@ RUN apt-get update
 RUN apt-get install -y curl git wget unzip libgconf-2-4 gdb libstdc++6 libglu1-mesa fonts-droid-fallback lib32stdc++6 python3
 RUN apt-get clean
 
-
 FROM requirements AS env
 # Clone the flutter repo
 RUN git clone https://github.com/flutter/flutter.git /usr/local/flutter
@@ -23,7 +22,6 @@ RUN flutter upgrade
 RUN flutter config --enable-web
 
 FROM env as build-web
-
 # Copy files to container and build
 RUN mkdir /app/
 COPY . /app/
