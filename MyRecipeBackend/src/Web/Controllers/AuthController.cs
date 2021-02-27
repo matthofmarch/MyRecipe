@@ -19,8 +19,7 @@ using MyRecipe.Application.Common.Interfaces;
 using MyRecipe.Application.Common.Interfaces.Services;
 using MyRecipe.Application.Common.Models.Auth;
 using MyRecipe.Domain.Entities;
-using MyRecipe.Infrastructure.Configurations;
-using MyRecipe.Web.Config;
+using MyRecipe.Infrastructure.Options;
 using MyRecipe.Web.ViewModels;
 
 namespace MyRecipe.Web.Controllers
@@ -104,10 +103,7 @@ namespace MyRecipe.Web.Controllers
                 });
             }
 
-            if (result.IsNotAllowed)
-            {
-                return Unauthorized(new {Error = "Email needs to be confirmed"});
-            }
+            if (result.IsNotAllowed) return Unauthorized(new {Error = "Email needs to be confirmed"});
 
             return Unauthorized();
         }

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using MyRecipe.Application.Common.Interfaces.Services;
-using MyRecipe.Infrastructure.Configurations;
+using MyRecipe.Infrastructure.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 

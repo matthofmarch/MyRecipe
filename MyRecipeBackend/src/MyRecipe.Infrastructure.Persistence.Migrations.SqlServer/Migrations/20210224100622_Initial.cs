@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DAL.Migrations
+namespace MyRecipe.Infrastructure.Persistence.Migrations.SqlServer.Migrations
 {
-    public partial class GroupAdmin : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -332,9 +332,9 @@ namespace DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Vote = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MealId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Vote = table.Column<int>(type: "int", nullable: false),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
@@ -345,7 +345,7 @@ namespace DAL.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MealVotes_Meals_MealId",
                         column: x => x.MealId,
@@ -379,12 +379,12 @@ namespace DAL.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GroupId", "IsAdmin", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "testUser1", 0, "3633a29b-99e5-4eaa-98c0-0bce3948d032", "test1@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), true, false, null, "test1@test.test", "test1@test.test", "AQAAAAEAACcQAAAAEBV5V16YzOz1vPjjhmoybV82LOFXuIOTi3YngufzNa1bksSuYWC+hdZ6AUYJj1o1Zw==", null, false, "", false, "test1@test.test" });
+                values: new object[] { "testUser1", 0, "6a01b13d-52ef-4fb4-9581-754d663c7d22", "test1@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), true, false, null, "test1@test.test", "test1@test.test", "AQAAAAEAACcQAAAAEJtmLgetDXpq4j339hFiYph07+OKQXXjfMthTMS5SWhvjWA6cBcEwkLfjUaFN2b2kQ==", null, false, "", false, "test1@test.test" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "GroupId", "IsAdmin", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "testUser2", 0, "cf2b29b9-8d81-49ba-b1c5-0848e2076db0", "test2@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, false, null, "test2@test.test", "test2@test.test", "AQAAAAEAACcQAAAAEEz7iizl5SuQi3DTQ3SqdfrTypFPbTYJLdY/+x+f7pZHrzcN7fVX6nmhg9K+8aYXYw==", null, false, "", false, "test2@test.test" });
+                values: new object[] { "testUser2", 0, "c3f17ed9-158f-48b2-887c-8ba49504873e", "test2@test.test", true, new Guid("00000000-0000-0000-0000-000000000001"), false, false, null, "test2@test.test", "test2@test.test", "AQAAAAEAACcQAAAAEBlJlVN+pfnetj7KVhKVFR9M/vkLT2Wrmac4PXkMUdsyMI4buTUwG24HbTu1M6zMbQ==", null, false, "", false, "test2@test.test" });
 
             migrationBuilder.InsertData(
                 table: "Recipes",
@@ -414,12 +414,21 @@ namespace DAL.Migrations
             migrationBuilder.InsertData(
                 table: "Meals",
                 columns: new[] { "Id", "Accepted", "DateTime", "GroupId", "InitiatorId", "RecipeId" },
-                values: new object[] { new Guid("00000000-0000-0000-0000-000000000001"), false, new DateTime(2020, 11, 17, 12, 56, 33, 460, DateTimeKind.Local).AddTicks(4636), new Guid("00000000-0000-0000-0000-000000000001"), "testUser1", new Guid("00000000-0000-0000-0000-000000000001") });
+                values: new object[,]
+                {
+                    { new Guid("00000000-0000-0000-0000-000000000001"), true, new DateTime(2021, 2, 24, 11, 6, 22, 422, DateTimeKind.Local).AddTicks(2360), new Guid("00000000-0000-0000-0000-000000000001"), "testUser1", new Guid("00000000-0000-0000-0000-000000000001") },
+                    { new Guid("00000000-0000-0000-0000-000000000002"), false, new DateTime(2021, 2, 26, 11, 6, 22, 425, DateTimeKind.Local).AddTicks(2464), new Guid("00000000-0000-0000-0000-000000000001"), "testUser1", new Guid("00000000-0000-0000-0000-000000000002") }
+                });
 
             migrationBuilder.InsertData(
                 table: "MealVotes",
                 columns: new[] { "Id", "MealId", "UserId", "Vote" },
                 values: new object[] { new Guid("00000000-0000-0000-0000-000000000001"), new Guid("00000000-0000-0000-0000-000000000001"), "testUser2", 1 });
+
+            migrationBuilder.InsertData(
+                table: "MealVotes",
+                columns: new[] { "Id", "MealId", "UserId", "Vote" },
+                values: new object[] { new Guid("00000000-0000-0000-0000-000000000002"), new Guid("00000000-0000-0000-0000-000000000001"), "testUser2", 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

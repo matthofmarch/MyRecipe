@@ -18,6 +18,10 @@ namespace MyRecipe.Infrastructure.Persistence
         {
         }
 
+        public ApplicationDbContext()
+        {
+        }
+
         public DbSet<Meal> Meals { get; set; }
         public DbSet<MealVote> MealVotes { get; set; }
         public DbSet<Group> Groups { get; set; }

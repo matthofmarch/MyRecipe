@@ -73,7 +73,7 @@ namespace MyRecipe.Application.Logic.Repositories
                 .Include(m => m.Recipe)
                 .ThenInclude(r => r.Ingredients)
                 .Include(m => m.Votes)
-                .ThenInclude(v => v.User)
+                .ThenInclude<Meal, MealVote, ApplicationUser>(v => v.User)
                 .Where(m => m.GroupId == groupId);
 
             if (isAccepted != null) query = query.Where(m => m.Accepted == isAccepted.Value);
@@ -90,7 +90,7 @@ namespace MyRecipe.Application.Logic.Repositories
                 .Include(m => m.Recipe)
                 .ThenInclude(r => r.Ingredients)
                 .Include(m => m.Votes)
-                .ThenInclude(v => v.User)
+                .ThenInclude<Meal, MealVote, ApplicationUser>(v => v.User)
                 .Where(m => m.GroupId == groupId && m.Id == id)
                 .SingleOrDefaultAsync();
         }

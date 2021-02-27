@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using MyRecipe.Web.Config;
+using MyRecipe.Infrastructure.Options;
 
 namespace MyRecipe.Infrastructure.Installers
 {
