@@ -22,11 +22,14 @@ RUN flutter upgrade
 RUN flutter config --enable-web
 
 FROM env as build-env
+ARG API_BASE_URL=https://at-myrecipe.azurewebsites.net
+ARG ENVIRONMENT=Staging
+ARG ALLOW_BAD_CERTIFICATE=false
 # Copy files to container and build
 RUN mkdir /app/
 COPY . /app/
 WORKDIR /app/
-RUN flutter build web
+RUN flutter build web --dart-define=API_BASE_URL=${API_BASE_URL} --dart-define=ENVIRONMENT=${ENVIRONMENT} --dart-define=ALLOW_BAD_CERTIFICATE=${ALLOW_BAD_CERTIFICATE}
 
 # Stage 2 - Create the run-time image
 FROM nginx
