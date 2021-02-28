@@ -22,7 +22,7 @@ RUN flutter upgrade
 RUN flutter config --enable-web
 
 FROM env as build-env
-ARG API_BASE_URL=https://at-myrecipe.azurewebsites.net
+ARG API_BASE_URL=https://at-myrecipe-server.azurewebsites.net
 ARG ENVIRONMENT=Staging
 ARG ALLOW_BAD_CERTIFICATE=false
 # Copy files to container and build
