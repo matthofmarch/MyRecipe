@@ -31,7 +31,7 @@ class MealView extends StatelessWidget {
                     context: context,
                     initialDate: DateTime.now(),
                     firstDate: DateTime(2020),
-                    lastDate: DateTime(2021));
+                    lastDate: DateTime(9999));
 
                 if (pickedDate != null)
                   BlocProvider.of<MealViewCubit>(context).currentDate =
@@ -40,7 +40,9 @@ class MealView extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(Icons.calendar_today_outlined),
-                  SizedBox(width: 5,),
+                  SizedBox(
+                    width: 5,
+                  ),
                   Text(
                     DateFormat.yMEd().format(state.currentDate),
                   ),

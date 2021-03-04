@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:auth_repository/auth_repository.dart';
-import 'package:auth_repository/models/models.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:models/model.dart';
 
 part 'auth_guard_state.dart';
 

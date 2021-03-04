@@ -1,5 +1,6 @@
-export 'recipe.dart';
-export 'meal.dart';
-export 'vote.dart';
-export 'member.dart';
 export 'group.dart';
+export 'meal.dart';
+export 'member.dart';
+export 'recipe.dart';
+export 'user.dart';
+export 'vote.dart';

@@ -6,8 +6,8 @@ import 'dart:developer' as developer;
 
 import 'package:auth_repository/jwt_util.dart';
 import 'package:auth_repository/models/login_result.dart';
-import 'package:auth_repository/models/models.dart';
 import 'package:http/http.dart' as http;
+import 'package:models/models/user.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,14 +21,16 @@ class AuthRepository {
   bool _currentlyRefreshing = false;
 
   final _authSubject = BehaviorSubject<User>();
+
   User get authState => _authSubject.value;
+
   Stream<User> get authStateStream => _authSubject.stream;
 
   AuthRepository(this._baseUrl);
 
   Future<void> login(String email, String password) async {
     var res = await http.post(
-      "$_baseUrl/api/Auth/login",
+      Uri.parse("$_baseUrl/api/Auth/login"),
       headers: {
         'Content-type': 'application/json',
       },
@@ -47,7 +49,7 @@ class AuthRepository {
   Future<void> signup(String email, String password) async {
     var requestBody = jsonEncode({"email": email, "password": password});
     var res = await http.post(
-      "$_baseUrl/api/Auth/register",
+      Uri.parse("$_baseUrl/api/Auth/register"),
       body: requestBody,
       headers: {
         'Content-type': 'application/json',
@@ -120,7 +122,7 @@ class AuthRepository {
       }
 
       var res = await http.post(
-        "$_baseUrl/api/Auth/refresh",
+        Uri.parse("$_baseUrl/api/Auth/refresh"),
         headers: {
           'Content-type': 'application/json',
         },

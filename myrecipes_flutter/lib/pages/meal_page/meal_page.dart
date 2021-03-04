@@ -6,11 +6,9 @@ import 'package:myrecipes_flutter/pages/meal_page/meal_view/meal_view.dart';
 
 import 'cubit/meals_cubit.dart';
 
-/**
- * This page shows views that show meals
- * As one of its *children is meal_calendar- which should not be rebuild-
- *  we must add some custom building logic
- */
+/// This page shows views that show meals
+/// As one of its *children is meal_calendar- which should not be rebuild-
+///  we must add some custom building logic
 class MealPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

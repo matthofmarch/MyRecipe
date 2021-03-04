@@ -31,7 +31,7 @@ class InviteCodeCardState extends State<InviteCodeCard> {
             "InviteCode",
             style: Theme.of(context).textTheme.subtitle1,
           ),
-          FlatButton(
+          TextButton(
               onPressed: () async {
                 if (_showInviteCode) {
                   setState(() {

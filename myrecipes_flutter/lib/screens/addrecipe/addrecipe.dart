@@ -146,6 +146,7 @@ class AddRecipe extends StatelessWidget {
               TextField(
                   controller: _descriptionController,
                   minLines: 3,
+                  maxLines: 10,
                   decoration: InputDecoration(labelText: "Description")),
             ],
           ),

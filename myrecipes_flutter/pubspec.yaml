@@ -24,9 +24,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc:  6.1.2
-  equatable: ^1.2.6
+  equatable: ^2.0.0
   google_fonts: ^1.1.2
-
   http_interceptor: 0.3.3
 
   rxdart: 0.24.1
