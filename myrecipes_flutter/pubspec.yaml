@@ -42,18 +42,8 @@ dependencies:
   image_picker: 0.6.7+22
   platform_date_picker: 0.0.4+1
 
-  auth_repository:
-    path: packages/auth_repository
-  meal_repository:
-    path: packages/meal_repository
-  models:
-    path: packages/model
-  recipe_repository:
-    path: packages/recipe_repository
-  group_repository:
-    path: packages/group_repository
-  ingredient_repository:
-    path: packages/ingredient_repository
+  http: ^0.12.2
+  shared_preferences: 0.5.12+4
 
 
   # The following adds the Cupertino Icons font to your application.

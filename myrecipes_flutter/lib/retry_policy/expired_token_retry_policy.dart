@@ -1,5 +1,5 @@
-import 'package:auth_repository/auth_repository.dart';
 import 'package:http_interceptor/http_interceptor.dart';
+import 'package:myrecipes_flutter/infrastructure/repositories/auth_repository/auth_repository.dart';
 
 class ExpiredTokenRetryPolicy extends RetryPolicy {
   AuthRepository _authRepository;
