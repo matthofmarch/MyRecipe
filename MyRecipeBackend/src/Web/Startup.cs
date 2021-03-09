@@ -50,8 +50,7 @@ namespace MyRecipe.Web
             IOptions<StaticRecipeImagesOptions> staticFilesConfiguration
         )
         {
-            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
-
+            if (!env.IsProduction()) app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
 
             if (env.IsStaging() | env.IsProduction()) dbContext.Database.Migrate();
@@ -77,6 +76,7 @@ namespace MyRecipe.Web
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health");
                 endpoints.MapControllerRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");

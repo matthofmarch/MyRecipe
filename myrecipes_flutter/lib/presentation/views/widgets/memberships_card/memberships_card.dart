@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:myrecipes_flutter/domain/models/group.dart';
 import 'package:myrecipes_flutter/domain/models/member.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/auth_repository/auth_repository.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/group_repository/group_repository.dart';
 import 'package:myrecipes_flutter/presentation/view_models/widgets/memberships_card/memberships_cubit.dart';
+import 'package:myrecipes_flutter/presentation/views/widgets/inviteView/invite_view.dart';
 
 const kChipDistance = 2.0;
 
@@ -26,31 +28,43 @@ class MembershipsCard extends StatelessWidget {
           }
           if (state is MembershipsSuccess) {
             final group = state.group as Group;
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 9),
-              child: Card(
-                child: Container(
-                  margin:
-                      EdgeInsets.only(left: 8, right: 8, top: 16, bottom: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Members in " + group.name,
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Divider(),
-                      Column(
-                        children: [
-                          ...group.members
-                              .map((member) => _makeMemberTile(context, member))
-                        ],
-                      ),
-                    ],
-                  ),
+            return Card(
+              child: Container(
+                margin: EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Members in " + group.name,
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                    Divider(),
+                    Column(
+                      children: [
+                        ...group.members
+                            .map((member) => _makeMemberTile(context, member)),
+                        FlatButton(
+                          textColor: Theme.of(context).primaryColor,
+                          onPressed: () {
+                            showBarModalBottomSheet(
+                                context: context,
+                                builder: (context) => InviteView());
+                          },
+                          splashColor: Colors.transparent,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.person_add_alt_1),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Text("Invite User")
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
               ),
             );
