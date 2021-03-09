@@ -10,6 +10,7 @@ class Recipe with EquatableMixin {
   final List<String> ingredientNames;
   final String image;
   final bool addToGroupPool;
+
   Recipe({
     this.id,
     this.name,

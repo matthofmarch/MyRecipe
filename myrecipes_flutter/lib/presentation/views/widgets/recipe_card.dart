@@ -20,48 +20,43 @@ class RecipeCard extends StatelessWidget {
       child: Row(
         children: [
           AspectRatio(
-            aspectRatio: 1 / 1,
-            child: Builder(
-              builder: (context) {
-                return recipe.image != null
-                    ? Hero(
-                        tag: recipe.id,
-                        child: CachedNetworkImage(
-                          imageUrl: recipe.image,
-                          fit: BoxFit.fitWidth,
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                bottomLeft: Radius.circular(20),
-                              ),
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.cover),
+              aspectRatio: 1 / 1,
+              child: recipe?.image != null && Uri.tryParse(recipe.image) != null
+                  ? Hero(
+                      tag: recipe.id,
+                      child: CachedNetworkImage(
+                        imageUrl: recipe.image,
+                        fit: BoxFit.fitWidth,
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              bottomLeft: Radius.circular(20),
                             ),
-                          ),
-                          placeholder: (context, url) => Text("Loading"),
-                          errorWidget: (context, url, error) =>
-                              Text("Could not load image"),
-                        ),
-                      )
-                    : Container(
-                        height: 120,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            bottomLeft: Radius.circular(20),
-                          ),
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image:
-                                ExactAssetImage("assets/placeholder-image.png"),
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.cover),
                           ),
                         ),
-                      );
-              },
-            ),
-          ),
+                        placeholder: (context, url) => Text("Loading"),
+                        errorWidget: (context, url, error) =>
+                            Text("Could not load image"),
+                      ),
+                    )
+                  : Container(
+                      height: 120,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          bottomLeft: Radius.circular(20),
+                        ),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image:
+                              ExactAssetImage("assets/placeholder-image.png"),
+                        ),
+                      ),
+                    )),
           Expanded(
             child: Container(
               height: 95,

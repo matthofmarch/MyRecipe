@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
-class Member with EquatableMixin{
+class Member with EquatableMixin {
   final String email;
   final bool isAdmin;
+
   Member({
     this.email,
     this.isAdmin,
@@ -43,6 +44,4 @@ class Member with EquatableMixin{
   @override
   // TODO: implement props
   List<Object> get props => [email, isAdmin];
-
-
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -146,6 +147,7 @@ class AddRecipe extends StatelessWidget {
               TextField(
                   controller: _descriptionController,
                   minLines: 3,
+                  maxLines: 7,
                   decoration: InputDecoration(labelText: "Description")),
             ],
           ),
@@ -179,8 +181,7 @@ class AddRecipe extends StatelessWidget {
         ),
       );
 
-  _makeGalleryButton(BuildContext context) => TextButton(
-          child: IconButton(
+  _makeGalleryButton(BuildContext context) => IconButton(
         icon: Icon(Icons.collections),
         tooltip: "Gallery",
         onPressed: () async {
@@ -190,46 +191,38 @@ class AddRecipe extends StatelessWidget {
                 .reload(image: File(picked.path));
           }
         },
+      );
 
-        /*children: [
-          Icon(
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          Text(
-            " Gallery",
-            style:
-            Theme.of(context).textTheme.subtitle2,
-          ),
-        ],*/
-      ));
+  _makeCameraButton(BuildContext context) => IconButton(
+        onPressed: () async {
+          String pickedPath;
+          try {
+            pickedPath = (await picker.getImage(
+                    source: ImageSource.camera,
+                    maxWidth: 1024,
+                    maxHeight: 1024))
+                .path;
+          } on PlatformException {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Your device does not have a camera!")));
+            return;
+          }
 
-  _makeCameraButton(BuildContext context) => TextButton(
-      onPressed: () async {
-        var pickedPath = (await picker.getImage(
-                source: ImageSource.camera, maxWidth: 1024, maxHeight: 1024))
-            .path;
-
-        if (pickedPath != null && !kIsWeb) {
-          pickedPath = (await ImageCropper.cropImage(
-                  sourcePath: pickedPath,
-                  aspectRatio: CropAspectRatio(ratioX: 3, ratioY: 2)))
-              .path;
-        }
-        BlocProvider.of<AddRecipeCubit>(context)
-            .reload(image: pickedPath == null ? null : File(pickedPath));
-      },
-      child: Row(
-        children: [
-          Icon(
-            Icons.camera_alt,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          Text(
-            " Camera",
-            style: Theme.of(context).textTheme.subtitle2,
-          ),
-        ],
-      ));
+          if (pickedPath != null && !kIsWeb) {
+            pickedPath = (await ImageCropper.cropImage(
+                    sourcePath: pickedPath,
+                    aspectRatio: CropAspectRatio(ratioX: 3, ratioY: 2)))
+                .path;
+          }
+          BlocProvider.of<AddRecipeCubit>(context)
+              .reload(image: pickedPath == null ? null : File(pickedPath));
+        },
+        icon: Icon(
+          Icons.camera_alt,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        tooltip: "Cam",
+      );
 
   _makeIngredientsCard(BuildContext context, AddRecipeInteraction state) =>
       Card(

@@ -20,7 +20,7 @@ import 'views/guards/auth_guard/auth_guard.dart';
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final baseUrl = EnvironmentConfig.API_BASE_URL;
+    final String baseUrl = EnvironmentConfig.API_BASE_URL;
     final authRepository = AuthRepository(baseUrl);
 
     return RepositoryProvider<AuthRepository>(

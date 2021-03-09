@@ -6,8 +6,6 @@ class RefreshResult {
 
   factory RefreshResult.fromJson(Map<String, dynamic> json) {
     return RefreshResult(
-      token: json['token'],
-      refreshToken: json["refreshToken"]
-    );
+        token: json['token'], refreshToken: json["refreshToken"]);
   }
 }

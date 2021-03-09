@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class JwtUtil{
+class JwtUtil {
   Map<String, dynamic> parseJwt(String token) {
     final parts = token.split('.');
     if (parts.length != 3) {

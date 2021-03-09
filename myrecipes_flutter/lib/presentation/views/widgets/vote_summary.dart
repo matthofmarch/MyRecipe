@@ -23,7 +23,7 @@ class VoteSummaryState extends State<VoteSummary> {
   void initState() {
     // TODO: implement initState
     positiveVotes = widget.meal.votes.where((e) => e.voteIsPositive).length;
-    negativeVotes = widget.meal.votes.where((e) => e.voteIsPositive).length;
+    negativeVotes = widget.meal.votes.where((e) => !e.voteIsPositive).length;
     _getUserVote(context);
   }
 

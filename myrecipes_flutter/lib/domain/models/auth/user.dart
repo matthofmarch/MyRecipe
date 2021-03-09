@@ -8,10 +8,8 @@ import 'package:meta/meta.dart';
 /// {@endtemplate}
 class User extends Equatable {
   /// {@macro user}
-  const User({
-    @required this.email,
-    @required this.accessToken, this.isAdmin
-  })  : assert(email != null),
+  const User({@required this.email, @required this.accessToken, this.isAdmin})
+      : assert(email != null),
         assert(accessToken != null),
         assert(isAdmin != null);
 

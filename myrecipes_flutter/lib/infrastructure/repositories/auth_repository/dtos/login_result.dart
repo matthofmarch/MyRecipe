@@ -1,4 +1,4 @@
-class LoginResult{
+class LoginResult {
   final String token;
   final String refreshToken;
   final DateTime expiration;

@@ -37,14 +37,12 @@ class _RecipeListState extends State<RecipeList> {
               ),
             );
           },
-          child: Column(children: [
-            RecipeCard(recipe),
-            SizedBox(
-              height: 20,
-            )
-          ]),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: RecipeCard(recipe),
+          ),
         );
-      }, childCount: widget.recipes.length),
+      }, childCount: widget.recipes?.length ?? 0),
     );
   }
 

@@ -12,7 +12,7 @@ class GroupRepository {
   Future<Group> getGroup() async {
     var url = "$_baseUrl/api/Group/getGroupForUser";
 
-    final response = await _client.get(url);
+    final response = await _client.get(Uri.tryParse(url));
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
       final group = Group.fromMap(body);
@@ -24,7 +24,7 @@ class GroupRepository {
   Future<String> getInviteCode() async {
     var url = "$_baseUrl/api/InviteCode";
 
-    final response = await _client.post(url);
+    final response = await _client.post(Uri.tryParse(url));
     if (response.statusCode == 200) {
       var jsonResult = jsonDecode(response.body);
       return jsonResult["code"];
@@ -36,7 +36,8 @@ class GroupRepository {
     var url =
         "$_baseUrl/api/InviteCode/acceptInviteCode?inviteCode=${inviteCode}";
 
-    final response = await _client.get(url, headers: {"accept": "*/*"});
+    final response =
+        await _client.get(Uri.tryParse(url), headers: {"accept": "*/*"});
     if (response.statusCode == 200) {
       var jsonResult = jsonDecode(response.body);
       return jsonResult["code"];
@@ -47,7 +48,7 @@ class GroupRepository {
   Future<Group> getGroupForUser() async {
     var url = "$_baseUrl/api/Group/getGroupForUser";
 
-    final response = await _client.get(url);
+    final response = await _client.get(Uri.tryParse(url));
     if (response.statusCode == 200) {
       return Group.fromJson(response.body);
     }
@@ -57,7 +58,7 @@ class GroupRepository {
   Future<void> create(String name) async {
     var url = "$_baseUrl/api/Group";
     var requestBody = jsonEncode({"name": name});
-    final response = await _client.post(url, body: requestBody);
+    final response = await _client.post(Uri.tryParse(url), body: requestBody);
     if (response.statusCode == 201) {
       return;
     }

@@ -29,12 +29,12 @@ class MealView extends StatelessWidget {
                 DateTime pickedDate = await PlatformDatePicker.showDate(
                     context: context,
                     initialDate: DateTime.now(),
-                    firstDate: DateTime(2020),
-                    lastDate: DateTime(2021));
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(9999));
 
                 if (pickedDate != null)
-                  BlocProvider.of<MealViewCubit>(context).currentDate =
-                      pickedDate;
+                  BlocProvider.of<MealViewCubit>(context, listen: false)
+                      .currentDate = pickedDate;
               },
               child: Row(
                 children: [

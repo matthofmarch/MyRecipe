@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
-class Vote with EquatableMixin{
+class Vote with EquatableMixin {
   final String username;
   final bool voteIsPositive;
+
   Vote({
     this.username,
     this.voteIsPositive,

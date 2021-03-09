@@ -35,6 +35,7 @@ class UserRecipe extends Recipe {
 
   @override
   Map<String, dynamic> toMap() => super.toMap()..addAll({'username': username});
+
   factory UserRecipe.fromMap(Map<String, dynamic> map) =>
       UserRecipe._fromRecipe(
           username: map['username'],

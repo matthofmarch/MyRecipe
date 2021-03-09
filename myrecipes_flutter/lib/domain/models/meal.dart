@@ -13,6 +13,7 @@ class Meal with EquatableMixin {
   final DateTime date;
   final bool accepted;
   final List<Vote> votes;
+
   Meal({
     this.mealId,
     this.initiatorName,

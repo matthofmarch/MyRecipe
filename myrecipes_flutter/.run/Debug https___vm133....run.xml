@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Debug https://vm133..." type="FlutterRunConfigurationType" factoryName="Flutter">
-    <option name="additionalArgs" value="--dart-define=&quot;API_BASE_URL=https://vm133.htl-leonding.ac.at:5000&quot; --dart-define=&quot;ENVIRONMENT=Development&quot;" />
+    <option name="additionalArgs" value="--dart-define=&quot;API_BASE_URL=https://vm133.htl-leonding.ac.at:5000&quot; --dart-define=&quot;ENVIRONMENT=Staging&quot;" />
     <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
     <method v="2" />
   </configuration>

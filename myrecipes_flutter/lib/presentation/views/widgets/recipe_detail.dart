@@ -89,13 +89,9 @@ class RecipeDetail extends StatelessWidget {
                             height: 8,
                           ),
                           if (recipe.description != null)
-                            Row(
-                              children: [
-                                Text(
-                                  recipe.description,
-                                  style: Theme.of(context).textTheme.subtitle1,
-                                ),
-                              ],
+                            Text(
+                              recipe.description,
+                              style: Theme.of(context).textTheme.subtitle1,
                             )
                         ],
                       ),

@@ -5,12 +5,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:myrecipes_flutter/domain/models/meal.dart';
+import 'package:myrecipes_flutter/presentation/view_models/widgets/meal_view/meal_view_cubit.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_detail.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/util/network_or_default_image.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/util/rounded_image.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/vote_summary.dart';
-
-import 'file:///C:/Users/hofma/HTL/MyRecipes/MyRecipesReworked/myrecipes_flutter/lib/presentation/view_models/widgets/meal_view/meal_view_cubit.dart';
 
 int kPageIndentation = 1000;
 
@@ -22,7 +21,7 @@ class MealCalendar extends StatelessWidget {
 
   MealCalendar(this.meals, this.viewInitialDate,
       {Key key, this.showMealOptions})
-      : super(key: key) {}
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +31,8 @@ class MealCalendar extends StatelessWidget {
               0.94 / ((MediaQuery.of(context).size.width ~/ 320) * 2 + 1),
           initialPage: kPageIndentation),
       onPageChanged: (newPageIndex) {
-        BlocProvider.of<MealViewCubit>(context).currentDateSilent =
+        BlocProvider.of<MealViewCubit>(context, listen: false)
+                .currentDateSilent =
             viewInitialDate
                 .add(Duration(days: newPageIndex - kPageIndentation));
       },

@@ -22,14 +22,16 @@ class AuthRepository {
   bool _currentlyRefreshing = false;
 
   final _authSubject = BehaviorSubject<User>();
+
   User get authState => _authSubject.value;
+
   Stream<User> get authStateStream => _authSubject.stream;
 
   AuthRepository(this._baseUrl);
 
   Future<void> login(String email, String password) async {
     var res = await http.post(
-      "$_baseUrl/api/Auth/login",
+      Uri.tryParse("$_baseUrl/api/Auth/login"),
       headers: {
         'Content-type': 'application/json',
       },
@@ -48,7 +50,7 @@ class AuthRepository {
   Future<void> signup(String email, String password) async {
     var requestBody = jsonEncode({"email": email, "password": password});
     var res = await http.post(
-      "$_baseUrl/api/Auth/register",
+      Uri.tryParse("$_baseUrl/api/Auth/register"),
       body: requestBody,
       headers: {
         'Content-type': 'application/json',
@@ -121,7 +123,7 @@ class AuthRepository {
       }
 
       var res = await http.post(
-        "$_baseUrl/api/Auth/refresh",
+        Uri.tryParse("$_baseUrl/api/Auth/refresh"),
         headers: {
           'Content-type': 'application/json',
         },

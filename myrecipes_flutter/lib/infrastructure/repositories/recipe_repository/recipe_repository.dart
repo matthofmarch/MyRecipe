@@ -17,7 +17,7 @@ class RecipeRepository {
   Future<List<Recipe>> getOwnRecipes() async {
     var url = "$_baseUrl/api/Recipes";
 
-    final response = await _client.get(url);
+    final response = await _client.get(Uri.tryParse(url));
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
       final recipes = List<Recipe>.from(body.map((x) => Recipe.fromMap(x)));
@@ -29,7 +29,7 @@ class RecipeRepository {
   Future<List<UserRecipe>> getGroupRecipes() async {
     var url = "$_baseUrl/api/Recipes/group";
 
-    final response = await _client.get(url);
+    final response = await _client.get(Uri.tryParse(url));
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
       final recipes =
@@ -46,7 +46,7 @@ class RecipeRepository {
       recipe = recipe.copyWith(image: await uploadImage(image));
     }
 
-    final response = await _client.post(addRecipeUrl,
+    final response = await _client.post(Uri.tryParse(addRecipeUrl),
         body: json.encode({
           "name": recipe.name,
           "description": recipe.description,
@@ -81,7 +81,7 @@ class RecipeRepository {
   Future<bool> delete(String id) async {
     var url = "$_baseUrl/api/Recipes";
 
-    final response = await _client.delete("$url/$id");
+    final response = await _client.delete(Uri.tryParse("$url/$id"));
     if (response.statusCode == 204) {
       return true;
     }
@@ -90,7 +90,7 @@ class RecipeRepository {
 
   Future<Recipe> single(String recipeId) async {
     var url = "$_baseUrl/api/Recipes/$recipeId";
-    final response = await _client.get(url);
+    final response = await _client.get(Uri.tryParse(url));
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
       final recipe = Recipe.fromJson(body);
@@ -105,7 +105,8 @@ class RecipeRepository {
     }
 
     final addRecipeUrl = "$_baseUrl/api/Recipes/${recipe.id}";
-    final response = await _client.put(addRecipeUrl, body: recipe.toJson());
+    final response =
+        await _client.put(Uri.tryParse(addRecipeUrl), body: recipe.toJson());
     if (response.statusCode == 204) {
       return recipe;
     }

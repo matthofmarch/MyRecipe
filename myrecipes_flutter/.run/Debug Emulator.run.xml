@@ -1,7 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Debug Emulator" type="FlutterRunConfigurationType" factoryName="Flutter">
-    <option name="additionalArgs" value="--dart-define=API_BASE_URL=https://10.0.2.2:5001 --dart-define=ENVIRONMENT=Development --dart-define=ALLOW_BAD_CERTIFICATE=true" />
-    <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
-    <method v="2" />
-  </configuration>
+    <configuration name="Debug Emulator" default="false" factoryName="Flutter"
+        type="FlutterRunConfigurationType">
+        <option name="additionalArgs"
+            value="--dart-define=API_BASE_URL=https://10.0.2.2:5001 --dart-define=ENVIRONMENT=Development --dart-define=ALLOW_BAD_CERTIFICATE=true" />
+        <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
+        <method v="2" />
+    </configuration>
 </component>

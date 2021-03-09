@@ -1,10 +1,13 @@
 import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
+
 import 'member.dart';
 
-class Group with EquatableMixin{
+class Group with EquatableMixin {
   final String name;
   final List<Member> members;
+
   Group({
     this.name,
     this.members,
@@ -42,5 +45,4 @@ class Group with EquatableMixin{
 
   @override
   List<Object> get props => [name, members];
-
 }
