@@ -16,7 +16,7 @@ class RecipeCard extends StatelessWidget {
       decoration: MediaQuery.of(context).platformBrightness == Brightness.light
           ? BoxDecoration(boxShadow: shadowList)
           : null,
-      margin: EdgeInsets.symmetric(horizontal: 20),
+      //margin: EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
           AspectRatio(

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:myrecipes_flutter/domain/models/user_recipe.dart';
 
 import 'recipe.dart';
 import 'vote.dart';
