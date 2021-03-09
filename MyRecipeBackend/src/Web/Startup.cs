@@ -33,6 +33,7 @@ namespace MyRecipe.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHealthChecks();
             services.AddCustomSwaggerGen(_logger);
             services.AddInfrastructure(Configuration, Environment);
 
