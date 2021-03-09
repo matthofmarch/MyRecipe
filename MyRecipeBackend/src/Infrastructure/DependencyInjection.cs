@@ -38,11 +38,14 @@ namespace MyRecipe.Infrastructure
             services.AddDbContext<ApplicationDbContext>(
                 options => _ = provider switch
                 {
+                    "AppServiceMySql" => options.UseMySql(
+                        configuration.GetValue<string>(""),
+                        ServerVersion.AutoDetect(configuration.GetValue<string>("MYSQLCONNSTR_localdb")),
+                        x => { x.MigrationsAssembly("MyRecipe.Infrastructure.Persistence.Migrations.MySql"); }),
                     "MySql" => options.UseMySql(
                         configuration.GetConnectionString("MySqlConnection"),
                         ServerVersion.AutoDetect(configuration.GetConnectionString("MySqlConnection")),
                         x => { x.MigrationsAssembly("MyRecipe.Infrastructure.Persistence.Migrations.MySql"); }),
-
                     "SqlServer" => options.UseSqlServer(
                         configuration.GetConnectionString("SqlServerConnection"),
                         x => { x.MigrationsAssembly("MyRecipe.Infrastructure.Persistence.Migrations.SqlServer"); }),

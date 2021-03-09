@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Debug https://at-myrecipe-backend.azurewebsites.net" type="FlutterRunConfigurationType" factoryName="Flutter">
+    <option name="additionalArgs" value="--dart-define=&quot;API_BASE_URL=https://at-myrecipe-backend.azurewebsites.net&quot; --dart-define=&quot;ENVIRONMENT=Staging&quot;" />
+    <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
+    <method v="2" />
+  </configuration>
+</component>

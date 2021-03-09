@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace MyRecipe.Web.Installers
@@ -14,7 +15,7 @@ namespace MyRecipe.Web.Installers
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddCustomSwaggerGen(this IServiceCollection services)
+        public static IServiceCollection AddCustomSwaggerGen(this IServiceCollection services, ILogger logger)
         {
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -58,9 +59,9 @@ namespace MyRecipe.Web.Installers
                 {
                     c.IncludeXmlComments(xmlPath);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    Console.WriteLine("Cannot add xml Comments to swagger");
+                    logger.LogWarning("Cannot add xml Comments to swagger");
                 }
             });
 

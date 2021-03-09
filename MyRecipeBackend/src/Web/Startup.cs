@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MyRecipe.Application.Common.Interfaces;
 using MyRecipe.Infrastructure;
@@ -18,8 +19,11 @@ namespace MyRecipe.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostEnvironment environment)
+        private readonly ILogger<Startup> _logger;
+
+        public Startup(IConfiguration configuration, IHostEnvironment environment/*, ILogger<Startup> logger*/)
         {
+            /*_logger = logger;*/
             Configuration = configuration;
             Environment = environment;
         }
@@ -29,8 +33,7 @@ namespace MyRecipe.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLogging();
-            services.AddCustomSwaggerGen();
+            services.AddCustomSwaggerGen(_logger);
             services.AddInfrastructure(Configuration, Environment);
 
             services.AddCors(options =>

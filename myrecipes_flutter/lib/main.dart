@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myrecipes_flutter/enviroment_config.dart';
 import 'package:myrecipes_flutter/simple_bloc_observer.dart';
 
-import 'app.dart';
+import 'presentation/app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

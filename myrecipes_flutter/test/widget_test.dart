@@ -7,9 +7,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:myrecipes_flutter/app.dart';
 
-import 'package:myrecipes_flutter/main.dart';
+import 'file:///C:/Users/hofma/HTL/MyRecipes/MyRecipesReworked/myrecipes_flutter/lib/presentation/app.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

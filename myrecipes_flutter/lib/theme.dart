@@ -18,13 +18,9 @@ final colorScheme = ColorScheme(
 );
 
 get lightTheme => themes[0].copyWith(
-  primaryIconTheme: IconThemeData(
-    color: Colors.black
-  ),
-  primaryTextTheme: TextTheme(
-    headline6: TextStyle(color: Colors.black)
-  ),
-);
+      primaryIconTheme: IconThemeData(color: Colors.black),
+      primaryTextTheme: TextTheme(headline6: TextStyle(color: Colors.black)),
+    );
 
 get darkTheme => themes[1];
 
