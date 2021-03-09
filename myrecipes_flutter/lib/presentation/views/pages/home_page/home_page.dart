@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/auth_repository/auth_repository.dart';
-import 'package:myrecipes_flutter/presentation/views/widgets/invite_card.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/memberships_card/memberships_card.dart';
 
 class HomePage extends StatelessWidget {
@@ -19,10 +18,6 @@ class HomePage extends StatelessWidget {
               height: 8,
             ),
             MembershipsCard(),
-            SizedBox(
-              height: 8,
-            ),
-            InviteCodeCard(),
             SizedBox(
               height: 8,
             ),
