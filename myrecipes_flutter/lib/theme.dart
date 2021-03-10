@@ -27,6 +27,7 @@ get darkTheme => themes[1];
 final themes = [ThemeData.light(), ThemeData.dark()]
     .map((t) => t.copyWith(
           colorScheme: colorScheme,
+          appBarTheme: AppBarTheme(color: t.canvasColor),
           primaryColor: colorScheme.primary,
           accentColor: colorScheme.secondary,
           cardTheme: t.cardTheme.copyWith(
