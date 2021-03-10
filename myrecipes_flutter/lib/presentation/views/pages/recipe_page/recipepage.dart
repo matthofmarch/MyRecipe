@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,31 +47,33 @@ class RecipePage extends StatelessWidget {
                     slivers: [
                       SliverAppBar(
                         elevation: 0.0,
+                        pinned: true,
                         stretch: true,
-                        snap: true,
-                        floating: true,
                         backgroundColor: Colors.transparent,
                         flexibleSpace: Container(
-                          margin: const EdgeInsets.all(5),
-                          child: TextField(
-                            onChanged: (value) =>
-                                BlocProvider.of<RecipepageCubit>(context)
-                                    .filter(_searchController.text),
-                            controller: _searchController,
-                            decoration: InputDecoration(
-                              hintText: "Search recipes",
-                              hintStyle: TextStyle(height: 1.1),
-                              fillColor: Theme.of(context).scaffoldBackgroundColor,
-                              filled: true,
-                              border: InputBorder.none,
-                              suffixIcon: GestureDetector(
-                                  onTap: () =>
-                                      BlocProvider.of<RecipepageCubit>(context)
-                                          .filter(_searchController.text),
-                                  child: Icon(Icons.search)),
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          child: Container(
+                            margin: const EdgeInsets.all(5),
+                            child: TextField(
+                              onChanged: (value) =>
+                                  BlocProvider.of<RecipepageCubit>(context)
+                                      .filter(_searchController.text),
+                              controller: _searchController,
+                              decoration: InputDecoration(
+                                hintText: "Search recipes",
+                                hintStyle: TextStyle(height: 1.1),
+                                fillColor: Theme.of(context).scaffoldBackgroundColor,
+                                filled: true,
+                                border: InputBorder.none,
+                                suffixIcon: GestureDetector(
+                                    onTap: () =>
+                                        BlocProvider.of<RecipepageCubit>(context)
+                                            .filter(_searchController.text),
+                                    child: Icon(Icons.search)),
+                              ),
                             ),
-                          ),
 
+                          ),
                         ),
                       ),
                       _makeFilterHeader(context),
@@ -112,14 +115,10 @@ class RecipePage extends StatelessWidget {
     );
   }
   _makeFilterHeader(BuildContext context) {
-    return SliverPersistentHeader(
-      delegate: _SliverAppBarDelegate(
-        PreferredSize(
-          preferredSize: Size.fromHeight(50),
-          child: FliterOrderRecipe()
-        ),
-      ),
-      pinned: true,
+    return SliverAppBar(
+      flexibleSpace: FliterOrderRecipe(),
+      stretch: true,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     );
   }
 }

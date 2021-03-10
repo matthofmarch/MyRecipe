@@ -4,8 +4,8 @@ class FliterOrderRecipe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 50,
         color: Colors.grey.shade300,
+        height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
