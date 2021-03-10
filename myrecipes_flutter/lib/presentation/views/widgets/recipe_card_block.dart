@@ -27,7 +27,9 @@ class RecipeCardBlock extends StatelessWidget {
                 child: ClipRRect(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8)),
+                        topRight: Radius.circular(8),
+                        bottomLeft: Radius.circular(0),
+                    ),
                     child: NetworkOrDefaultImage(recipe.image)),
               ),
             ),
@@ -43,10 +45,8 @@ class RecipeCardBlock extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              //recipe.name,
-                              "hello lol lol hello halleo dffdsfff dff",
-                              maxLines: 2,
-
+                              recipe.name,
+                              maxLines: 1,
                               textAlign: TextAlign.justify,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.subtitle1,
