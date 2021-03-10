@@ -15,7 +15,7 @@ class NetworkOrDefaultImage extends StatelessWidget {
             imageUrl: imageUri,
             fit: BoxFit.fitWidth,
             imageBuilder: (context, imageProvider) =>
-                CustomAbrounding.provider(imageProvider),
+                CustomAbrounding.provider(imageProvider,radius: 0,),
             placeholder: (context, url) =>
                 Center(child: CircularProgressIndicator()),
             errorWidget: (context, url, error) => Text("Could not load image"),

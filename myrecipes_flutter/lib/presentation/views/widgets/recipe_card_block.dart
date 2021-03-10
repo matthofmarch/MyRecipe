@@ -18,6 +18,10 @@ class RecipeCardBlock extends StatelessWidget {
           ? BoxDecoration(boxShadow: shadowGrid)
           : null,
       child: Card(
+        shape: Theme.of(context).cardTheme.copyWith(shape:
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))
+          )).shape,
         child: Column(
           children: [
             AspectRatio(
@@ -25,9 +29,10 @@ class RecipeCardBlock extends StatelessWidget {
               child: Hero(
                 tag: recipe.id,
                 child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8)),
+                    borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(10),
+                        bottom: Radius.circular(0),
+                    ),
                     child: NetworkOrDefaultImage(recipe.image)),
               ),
             ),
@@ -43,10 +48,8 @@ class RecipeCardBlock extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              //recipe.name,
-                              "hello lol lol hello halleo dffdsfff dff",
-                              maxLines: 2,
-
+                              recipe.name,
+                              maxLines: 1,
                               textAlign: TextAlign.justify,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.subtitle1,

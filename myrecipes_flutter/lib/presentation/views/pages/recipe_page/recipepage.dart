@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +6,7 @@ import 'package:myrecipes_flutter/infrastructure/repositories/recipe_repository/
 import 'package:myrecipes_flutter/presentation/view_models/pages/recipe_page/recipe_page_cubit.dart';
 import 'package:myrecipes_flutter/presentation/views/screens/add_recipe/add_recipe.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_grid/recipe_grid.dart';
+import 'package:myrecipes_flutter/presentation/views/widgets/search_and_filter/filter_order_recipe.dart';
 
 class RecipePage extends StatelessWidget {
   final _searchController = TextEditingController();
@@ -45,35 +47,36 @@ class RecipePage extends StatelessWidget {
                     slivers: [
                       SliverAppBar(
                         elevation: 0.0,
-                        snap: true,
-                        floating: true,
+                        pinned: true,
+                        stretch: true,
                         backgroundColor: Colors.transparent,
                         flexibleSpace: Container(
-                          margin: const EdgeInsets.all(5),
-                          child: TextField(
-                            onChanged: (value) =>
-                                BlocProvider.of<RecipepageCubit>(context)
-                                    .filter(_searchController.text),
-                            controller: _searchController,
-                            decoration: InputDecoration(
-                              hintText: "Search recipes",
-                              hintStyle: TextStyle(height: 1.1),
-                              fillColor:
-                                  Theme.of(context).scaffoldBackgroundColor,
-                              filled: true,
-                              border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
-                              suffixIcon: GestureDetector(
-                                  onTap: () =>
-                                      BlocProvider.of<RecipepageCubit>(context)
-                                          .filter(_searchController.text),
-                                  child: Icon(Icons.search)),
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          child: Container(
+                            margin: const EdgeInsets.all(5),
+                            child: TextField(
+                              onChanged: (value) =>
+                                  BlocProvider.of<RecipepageCubit>(context)
+                                      .filter(_searchController.text),
+                              controller: _searchController,
+                              decoration: InputDecoration(
+                                hintText: "Search recipes",
+                                hintStyle: TextStyle(height: 1.1),
+                                fillColor: Theme.of(context).scaffoldBackgroundColor,
+                                filled: true,
+                                border: InputBorder.none,
+                                suffixIcon: GestureDetector(
+                                    onTap: () =>
+                                        BlocProvider.of<RecipepageCubit>(context)
+                                            .filter(_searchController.text),
+                                    child: Icon(Icons.search_outlined,color: Theme.of(context).primaryColor,)),
+                              ),
                             ),
+
                           ),
                         ),
                       ),
-                      _makeTagHeader(context),
+                      _makeFilterHeader(context),
                       RecipeGrid(recipes)
                     ],
                   ),
@@ -109,6 +112,12 @@ class RecipePage extends StatelessWidget {
         ),
       ),
       pinned: true,
+    );
+  }
+  _makeFilterHeader(BuildContext context) {
+    return SliverAppBar(
+      flexibleSpace: FliterOrderRecipe(),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     );
   }
 }
