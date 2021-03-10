@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 class FliterOrderRecipe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool darkModeOn = brightness == Brightness.dark;
+
     return Container(
-        color: Colors.grey.shade300,
+        color: darkModeOn? Theme.of(context).copyWith(scaffoldBackgroundColor: Colors.grey.shade800).scaffoldBackgroundColor : Theme.of(context).copyWith(scaffoldBackgroundColor: Colors.grey.shade300).scaffoldBackgroundColor,
         height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -15,7 +18,7 @@ class FliterOrderRecipe extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(12.0)),
                 child: MaterialButton(
                   height: 40,
-                  color: Colors.white,
+                  color: Theme.of(context).scaffoldBackgroundColor,
                   child: Row(
                     children: [
                       Expanded(
@@ -38,7 +41,7 @@ class FliterOrderRecipe extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(12.0)),
                 child: MaterialButton(
                   height: 40,
-                  color: Colors.white,
+                  color: Theme.of(context).scaffoldBackgroundColor,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

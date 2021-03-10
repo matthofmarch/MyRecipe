@@ -69,7 +69,7 @@ class RecipePage extends StatelessWidget {
                                     onTap: () =>
                                         BlocProvider.of<RecipepageCubit>(context)
                                             .filter(_searchController.text),
-                                    child: Icon(Icons.search)),
+                                    child: Icon(Icons.search_outlined,color: Theme.of(context).primaryColor,)),
                               ),
                             ),
 
