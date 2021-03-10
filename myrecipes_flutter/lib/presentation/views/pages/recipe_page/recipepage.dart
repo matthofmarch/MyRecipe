@@ -117,7 +117,6 @@ class RecipePage extends StatelessWidget {
   _makeFilterHeader(BuildContext context) {
     return SliverAppBar(
       flexibleSpace: FliterOrderRecipe(),
-      stretch: true,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     );
   }
