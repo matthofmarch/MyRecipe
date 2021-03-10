@@ -39,7 +39,7 @@ namespace MyRecipe.Infrastructure
                 options => _ = provider switch
                 {
                     "AppServiceMySql" => options.UseMySql(
-                        configuration.GetValue<string>(""),
+                        configuration.GetValue<string>("MYSQLCONNSTR_localdb"),
                         ServerVersion.AutoDetect(configuration.GetValue<string>("MYSQLCONNSTR_localdb")),
                         x => { x.MigrationsAssembly("MyRecipe.Infrastructure.Persistence.Migrations.MySql"); }),
                     "MySql" => options.UseMySql(
