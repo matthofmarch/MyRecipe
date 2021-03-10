@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/auth_repository/auth_repository.dart';
+import 'package:myrecipes_flutter/presentation/views/screens/user_settings/user_settings.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/memberships_card/memberships_card.dart';
 
 class HomePage extends StatelessWidget {
@@ -11,7 +12,18 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Household")),
+        appBar: AppBar(
+            title: Text("Household"),
+            actions: [
+              IconButton(icon: Icon(Icons.settings_outlined), onPressed: () async {
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => UserSettings(),
+                  ),
+                );
+              },)
+            ],
+        ),
         body: ListView(
           children: [
             SizedBox(
