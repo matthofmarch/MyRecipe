@@ -18,6 +18,10 @@ class RecipeCardBlock extends StatelessWidget {
           ? BoxDecoration(boxShadow: shadowGrid)
           : null,
       child: Card(
+        shape: Theme.of(context).cardTheme.copyWith(shape:
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))
+          )).shape,
         child: Column(
           children: [
             AspectRatio(
@@ -25,10 +29,9 @@ class RecipeCardBlock extends StatelessWidget {
               child: Hero(
                 tag: recipe.id,
                 child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8),
-                        bottomLeft: Radius.circular(0),
+                    borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(10),
+                        bottom: Radius.circular(0),
                     ),
                     child: NetworkOrDefaultImage(recipe.image)),
               ),
