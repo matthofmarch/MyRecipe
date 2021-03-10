@@ -45,3 +45,6 @@ List<BoxShadow> shadowList = [
 List<BoxShadow> shadowGrid = [
   BoxShadow(color: Colors.grey[300], blurRadius: 5, offset: Offset(0, 10))
 ];
+List<BoxShadow> shadowCards = [
+  BoxShadow(color: Colors.grey[300], spreadRadius: 1,blurRadius: 4, offset: Offset(3, 8))
+];
