@@ -8,7 +8,7 @@ final colorScheme = ColorScheme(
   secondary: const Color(0xFF798c1f),
   secondaryVariant: const Color(0xFF4a5f00),
   onSecondary: const Color(0xFF000000),
-  background: Colors.grey[50],
+  background: Colors.grey[300],
   surface: Color(0xFF808080),
   onBackground: Colors.white,
   error: Colors.redAccent,
