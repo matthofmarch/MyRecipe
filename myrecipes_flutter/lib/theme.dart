@@ -41,3 +41,6 @@ final themes = [ThemeData.light(), ThemeData.dark()]
 List<BoxShadow> shadowList = [
   BoxShadow(color: Colors.grey[300], blurRadius: 30, offset: Offset(0, 30))
 ];
+List<BoxShadow> shadowGrid = [
+  BoxShadow(color: Colors.grey[300], blurRadius: 5, offset: Offset(0, 10))
+];
