@@ -5,6 +5,7 @@ import 'package:myrecipes_flutter/infrastructure/repositories/recipe_repository/
 import 'package:myrecipes_flutter/presentation/view_models/pages/recipe_page/recipe_page_cubit.dart';
 import 'package:myrecipes_flutter/presentation/views/screens/add_recipe/add_recipe.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_grid/recipe_grid.dart';
+import 'package:myrecipes_flutter/presentation/views/widgets/search_and_filter/filter_order_recipe.dart';
 
 class RecipePage extends StatelessWidget {
   final _searchController = TextEditingController();
@@ -45,6 +46,7 @@ class RecipePage extends StatelessWidget {
                     slivers: [
                       SliverAppBar(
                         elevation: 0.0,
+                        stretch: true,
                         snap: true,
                         floating: true,
                         backgroundColor: Colors.transparent,
@@ -58,12 +60,9 @@ class RecipePage extends StatelessWidget {
                             decoration: InputDecoration(
                               hintText: "Search recipes",
                               hintStyle: TextStyle(height: 1.1),
-                              fillColor:
-                                  Theme.of(context).scaffoldBackgroundColor,
+                              fillColor: Theme.of(context).scaffoldBackgroundColor,
                               filled: true,
-                              border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
+                              border: InputBorder.none,
                               suffixIcon: GestureDetector(
                                   onTap: () =>
                                       BlocProvider.of<RecipepageCubit>(context)
@@ -71,9 +70,10 @@ class RecipePage extends StatelessWidget {
                                   child: Icon(Icons.search)),
                             ),
                           ),
+
                         ),
                       ),
-                      _makeTagHeader(context),
+                      _makeFilterHeader(context),
                       RecipeGrid(recipes)
                     ],
                   ),
@@ -106,6 +106,17 @@ class RecipePage extends StatelessWidget {
                         ),
                       )))
                   .toList()),
+        ),
+      ),
+      pinned: true,
+    );
+  }
+  _makeFilterHeader(BuildContext context) {
+    return SliverPersistentHeader(
+      delegate: _SliverAppBarDelegate(
+        PreferredSize(
+          preferredSize: Size.fromHeight(50),
+          child: FliterOrderRecipe()
         ),
       ),
       pinned: true,

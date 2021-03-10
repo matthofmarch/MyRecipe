@@ -49,7 +49,7 @@ class _RecipeGridState extends State<RecipeGrid> {
       }, childCount: widget.recipes.length),
     );*/
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 10),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           childAspectRatio: 5 / 6,
