@@ -7,7 +7,7 @@ class FliterOrderRecipe extends StatelessWidget {
     bool darkModeOn = brightness == Brightness.dark;
 
     return Container(
-        color: darkModeOn? Theme.of(context).copyWith(scaffoldBackgroundColor: Colors.grey.shade800).scaffoldBackgroundColor : Theme.of(context).copyWith(scaffoldBackgroundColor: Colors.grey.shade300).scaffoldBackgroundColor,
+        color: darkModeOn? Theme.of(context).cardColor : Theme.of(context).colorScheme.background,
         height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
