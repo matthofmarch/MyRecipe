@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/recipe_repository/recipe_repository.dart';
 import 'package:myrecipes_flutter/presentation/view_models/pages/recipe_page/recipe_page_cubit.dart';
 import 'package:myrecipes_flutter/presentation/views/screens/add_recipe/add_recipe.dart';
-import 'package:myrecipes_flutter/presentation/views/widgets/recipe_list/recipe_list.dart';
+import 'package:myrecipes_flutter/presentation/views/widgets/recipe_grid/recipe_grid.dart';
 
 class RecipePage extends StatelessWidget {
   final _searchController = TextEditingController();
@@ -74,7 +74,7 @@ class RecipePage extends StatelessWidget {
                         ),
                       ),
                       _makeTagHeader(context),
-                      RecipeList(recipes)
+                      RecipeGrid(recipes)
                     ],
                   ),
                 ),

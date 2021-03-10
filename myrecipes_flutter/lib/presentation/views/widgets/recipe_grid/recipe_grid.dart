@@ -7,27 +7,29 @@ import 'package:myrecipes_flutter/domain/models/recipe.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/meal_repository/meal_repository.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/recipe_repository/recipe_repository.dart';
 import 'package:myrecipes_flutter/presentation/views/screens/update_recipe/update_recipe.dart';
-import 'package:myrecipes_flutter/presentation/views/widgets/recipe_card.dart';
+import 'package:myrecipes_flutter/presentation/views/widgets/recipe_card_block.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_detail.dart';
 import 'package:platform_date_picker/platform_date_picker.dart';
 
-class RecipeList extends StatefulWidget {
+class RecipeGrid extends StatefulWidget {
   final List<Recipe> recipes;
 
-  const RecipeList(this.recipes) : super();
+  const RecipeGrid(this.recipes) : super();
 
   @override
-  _RecipeListState createState() => _RecipeListState();
+  _RecipeGridState createState() => _RecipeGridState();
 }
 
-class _RecipeListState extends State<RecipeList> {
+class _RecipeGridState extends State<RecipeGrid> {
   @override
   Widget build(BuildContext context) {
-    return SliverList(
+    /*return SliverList(
       delegate: SliverChildBuilderDelegate((context, index) {
         final recipe = widget.recipes[index];
         return GestureDetector(
-          onLongPress: () => _showRecipeOptions(context, recipe),
+          onLongPress: () async {
+            await _showRecipeOperationsBottomSheet(context, index);
+          },
           onTap: () async {
             await Navigator.of(context).push(
               MaterialPageRoute(
@@ -37,12 +39,42 @@ class _RecipeListState extends State<RecipeList> {
               ),
             );
           },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: RecipeCard(recipe),
-          ),
+          child: Column(children: [
+            RecipeCard(recipe),
+            SizedBox(
+              height: 20,
+            )
+          ]),
         );
-      }, childCount: widget.recipes?.length ?? 0),
+      }, childCount: widget.recipes.length),
+    );*/
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      sliver: SliverGrid(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          childAspectRatio: 5 / 6,
+          crossAxisSpacing: 5,
+          mainAxisSpacing: 3,
+          crossAxisCount: MediaQuery.of(context).size.width ~/ 160,
+        ),
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final recipe = widget.recipes[index];
+          return GestureDetector(
+              onLongPress: () async {
+                await _showRecipeBottomSheet(context, recipe);
+              },
+              onTap: () async {
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => RecipeDetail(
+                      recipe: recipe,
+                    ),
+                  ),
+                );
+              },
+              child: RecipeCardBlock(recipe));
+        }, childCount: widget.recipes.length),
+      ),
     );
   }
 
@@ -56,7 +88,7 @@ class _RecipeListState extends State<RecipeList> {
     Navigator.of(context).pop();
 
     if (dateTime == null) {
-      Scaffold.of(context)
+      ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("No date selected")));
       return;
     }
@@ -107,7 +139,7 @@ class _RecipeListState extends State<RecipeList> {
     Navigator.of(context).pop();
   }
 
-  Future _showRecipeOptions(BuildContext context, Recipe recipe) async {
+  Future _showRecipeBottomSheet(BuildContext context, Recipe recipe) async {
     await showBarModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
