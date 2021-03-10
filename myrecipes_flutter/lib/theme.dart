@@ -32,7 +32,7 @@ final themes = [ThemeData.light(), ThemeData.dark()]
           accentColor: colorScheme.secondary,
           cardTheme: t.cardTheme.copyWith(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20)))),
+                  borderRadius: BorderRadius.all(Radius.circular(8)))),
           inputDecorationTheme: t.inputDecorationTheme.copyWith(
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           ),
