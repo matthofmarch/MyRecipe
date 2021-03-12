@@ -7,6 +7,7 @@ import 'package:myrecipes_flutter/domain/models/recipe.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/meal_repository/meal_repository.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/recipe_repository/recipe_repository.dart';
 import 'package:myrecipes_flutter/presentation/views/screens/update_recipe/update_recipe.dart';
+import 'package:myrecipes_flutter/presentation/views/widgets/recipe_bottomsheet_card.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_card_block.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_detail.dart';
 import 'package:platform_date_picker/platform_date_picker.dart';
@@ -144,6 +145,10 @@ class _RecipeGridState extends State<RecipeGrid> {
         context: context,
         builder: (BuildContext context) {
           return Column(mainAxisSize: MainAxisSize.min, children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: RecipeBottomSheetCard(recipe),
+            ),
             TextButton(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
