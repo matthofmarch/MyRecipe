@@ -56,7 +56,7 @@ class _RecipeListState extends State<RecipeList> {
     Navigator.of(context).pop();
 
     if (dateTime == null) {
-      Scaffold.of(context)
+      ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("No date selected")));
       return;
     }
@@ -64,10 +64,10 @@ class _RecipeListState extends State<RecipeList> {
     try {
       await RepositoryProvider.of<MealRepository>(context)
           .propose(recipe.id, dateTime);
-      Scaffold.of(context)
+      ScaffoldMessenger.maybeOf(context)
           .showSnackBar(SnackBar(content: Text("Meal planned")));
     } catch (e) {
-      Scaffold.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.maybeOf(context).showSnackBar(SnackBar(
         content: Text("Could not plan meal"),
         backgroundColor: Theme.of(context).errorColor,
       ));

@@ -10,7 +10,7 @@ import 'vote.dart';
 class Meal with EquatableMixin {
   final String mealId;
   final String initiatorName;
-  final Recipe recipe;
+  final UserRecipe recipe;
   final DateTime date;
   final bool accepted;
   final List<Vote> votes;

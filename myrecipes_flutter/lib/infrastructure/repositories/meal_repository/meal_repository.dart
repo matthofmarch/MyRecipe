@@ -42,10 +42,10 @@ class MealRepository {
           "mealId": mealId,
           "voteEnum": isPositive ? "Approved" : "Rejected"
         }));
-    if (response.statusCode == 200) {
-      return;
+
+    if (response.statusCode != 200) {
+      throw Exception("$url got ${response.statusCode}");
     }
-    throw Exception("$url got ${response.statusCode}");
   }
 
   Future<void> propose(String recipeId, DateTime dateTime) async {
@@ -54,9 +54,8 @@ class MealRepository {
     final response = await _client.post(Uri.tryParse(url),
         body: jsonEncode(
             {"recipeId": recipeId, "day": dateTime.toIso8601String()}));
-    if (response.statusCode == 200) {
-      return;
+    if (response.statusCode != 200) {
+      throw Exception("$url got ${response.statusCode}");
     }
-    throw Exception("$url got ${response.statusCode}");
   }
 }

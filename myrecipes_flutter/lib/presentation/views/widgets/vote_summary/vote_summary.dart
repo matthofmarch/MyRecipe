@@ -17,7 +17,7 @@ class VoteSummary extends StatefulWidget {
 class VoteSummaryState extends State<VoteSummary> {
   int positiveVotes;
   int negativeVotes;
-  bool userVote;
+  bool userVote = null;
 
   @override
   void initState() {
@@ -38,22 +38,19 @@ class VoteSummaryState extends State<VoteSummary> {
             children: [
               GestureDetector(
                   onTap: () async {
-                    await _vote(context, false);
+                    await _vote(context, true);
                     setState(() {
-                      if (userVote == null)
+                      if (userVote == null) {
                         positiveVotes++;
-                      else if (userVote == true)
+                        userVote = false;
+                      } else if (!userVote) {
                         positiveVotes--;
-                      else if (userVote == false) {
+                        userVote = null;
+                      } else if (userVote) {
                         positiveVotes++;
-                        negativeVotes--;
+                        positiveVotes--;
+                        userVote = true;
                       }
-
-                      userVote = userVote == null
-                          ? true
-                          : userVote
-                              ? null
-                              : true;
                     });
                   },
                   child: Icon(Icons.arrow_drop_up_outlined,
@@ -68,20 +65,17 @@ class VoteSummaryState extends State<VoteSummary> {
                   onTap: () async {
                     await _vote(context, false);
                     setState(() {
-                      if (userVote == null)
+                      if (userVote == null) {
                         negativeVotes++;
-                      else if (userVote == false)
+                        userVote = true;
+                      } else if (!userVote) {
                         negativeVotes--;
-                      else if (userVote == true) {
+                        userVote = null;
+                      } else if (userVote) {
                         negativeVotes++;
                         positiveVotes--;
+                        userVote = false;
                       }
-
-                      userVote = userVote == null
-                          ? false
-                          : !userVote
-                              ? null
-                              : false;
                     });
                   },
                   child: Icon(
@@ -108,7 +102,7 @@ class VoteSummaryState extends State<VoteSummary> {
   }
 
   _vote(BuildContext context, bool isPositive) async {
-    await RepositoryProvider.of<MealRepository>(context)
+    await RepositoryProvider.of<MealRepository>(context, listen: false)
         .vote(widget.meal.mealId, isPositive);
   }
 }

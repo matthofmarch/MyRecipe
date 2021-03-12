@@ -9,7 +9,7 @@ import 'package:myrecipes_flutter/presentation/view_models/widgets/meal_view/mea
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_detail.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/util/network_or_default_image.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/util/rounded_image.dart';
-import 'package:myrecipes_flutter/presentation/views/widgets/vote_summary.dart';
+import 'file:///C:/Users/hofma/HTL/MyRecipes/MyRecipesReworked/myrecipes_flutter/lib/presentation/views/widgets/vote_summary/vote_summary.dart';
 
 int kPageIndentation = 1000;
 

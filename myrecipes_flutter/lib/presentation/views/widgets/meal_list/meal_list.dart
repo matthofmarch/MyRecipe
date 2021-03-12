@@ -6,7 +6,7 @@ import 'package:myrecipes_flutter/domain/models/meal.dart';
 import 'package:myrecipes_flutter/domain/models/recipe.dart';
 import 'package:myrecipes_flutter/domain/models/user_recipe.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_card.dart';
-import 'package:myrecipes_flutter/presentation/views/widgets/vote_summary.dart';
+import 'file:///C:/Users/hofma/HTL/MyRecipes/MyRecipesReworked/myrecipes_flutter/lib/presentation/views/widgets/vote_summary/vote_summary.dart';
 import 'package:sticky_infinite_list/sticky_infinite_list.dart';
 
 const kDefaultSpacing = 8.0;
