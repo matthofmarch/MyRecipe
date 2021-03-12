@@ -37,11 +37,12 @@ class AddRecipe extends StatelessWidget {
             children: [
               Scaffold(
                 appBar: AppBar(
-                  title: Text("MyRecipes"),
-                  toolbarHeight: 40,
+                  title: Text("New Recipe"),
                 ),
                 body: _makeForm(context, state),
                 floatingActionButton: FloatingActionButton(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Theme.of(context).scaffoldBackgroundColor,
                   child: Icon(Icons.check),
                   onPressed: () {
                     BlocProvider.of<AddRecipeCubit>(context).submit(
@@ -91,11 +92,6 @@ class AddRecipe extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 8),
-              Text(
-                "Add a recipe",
-                style: Theme.of(context).textTheme.headline5,
-              ),
               SizedBox(
                 height: 8,
               ),
@@ -112,43 +108,55 @@ class AddRecipe extends StatelessWidget {
   _makeInformationCard(BuildContext context, AddRecipeInteraction state) =>
       Card(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Text(
-                "Information",
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-              Divider(),
               Row(
                 children: [
-                  Flexible(
-                    flex: 2,
-                    child: TextField(
-                        controller: _nameController,
-                        decoration: InputDecoration(labelText: "Name")),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: TextField(
-                      controller: _cookingTimeInMinController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(labelText: "Cooking time"),
-                    ),
+                  Icon(Icons.text_fields),
+                  SizedBox(width: 8,),
+                  Text(
+                    "Recipe",
+                    style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 24),
                   ),
                 ],
+              ),
+              SizedBox(height: 16,),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  children: [
+                    Flexible(
+                      flex: 2,
+                      child: TextField(
+                          controller: _nameController,
+                          decoration: InputDecoration(labelText: "Name")),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Flexible(
+                      flex: 1,
+                      child: TextField(
+                        controller: _cookingTimeInMinController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(labelText: "Cooking time"),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(
                 height: 8,
               ),
-              TextField(
-                  controller: _descriptionController,
-                  minLines: 3,
-                  maxLines: 7,
-                  decoration: InputDecoration(labelText: "Description")),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: TextField(
+                    controller: _descriptionController,
+                    minLines: 3,
+                    maxLines: 7,
+                    decoration: InputDecoration(labelText: "Description")),
+              ),
             ],
           ),
         ),
@@ -156,12 +164,18 @@ class AddRecipe extends StatelessWidget {
 
   _makeImageCard(BuildContext context, AddRecipeInteraction state) => Card(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Text(
-                "Image",
-                style: Theme.of(context).textTheme.subtitle1,
+              Row(
+                children: [
+                  Icon(Icons.image, ),
+                  SizedBox(width: 8,),
+                  Text(
+                    "Image",
+                    style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 24),
+                  ),
+                ]
               ),
               Divider(),
               Row(
@@ -171,6 +185,7 @@ class AddRecipe extends StatelessWidget {
                   _makeGalleryButton(context)
                 ],
               ),
+              Divider(),
               state is AddRecipeInteraction && state.image != null
                   ? ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -181,9 +196,13 @@ class AddRecipe extends StatelessWidget {
         ),
       );
 
-  _makeGalleryButton(BuildContext context) => IconButton(
-        icon: Icon(Icons.collections),
-        tooltip: "Gallery",
+  _makeGalleryButton(BuildContext context) => MaterialButton(
+        child: Row(children: [
+          Icon(Icons.collections),
+          SizedBox(width: 8,),
+          Text("Open Gallery")
+        ]),
+
         onPressed: () async {
           var picked = await picker.getImage(source: ImageSource.gallery);
           if (picked != null) {
@@ -193,7 +212,7 @@ class AddRecipe extends StatelessWidget {
         },
       );
 
-  _makeCameraButton(BuildContext context) => IconButton(
+  _makeCameraButton(BuildContext context) => MaterialButton(
         onPressed: () async {
           String pickedPath;
           try {
@@ -217,23 +236,33 @@ class AddRecipe extends StatelessWidget {
           BlocProvider.of<AddRecipeCubit>(context)
               .reload(image: pickedPath == null ? null : File(pickedPath));
         },
-        icon: Icon(
-          Icons.camera_alt,
-          color: Theme.of(context).colorScheme.primary,
+        child: Row(
+          children: [
+            Icon(
+              Icons.camera_alt,
+            ),
+            SizedBox(width: 8,),
+            Text("Open Camera")
+          ]
         ),
-        tooltip: "Cam",
       );
 
   _makeIngredientsCard(BuildContext context, AddRecipeInteraction state) =>
       Card(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                "Ingredients",
-                style: Theme.of(context).textTheme.subtitle1,
+              Row(
+                children: [
+                  Icon(Icons.menu_book),
+                  SizedBox(width: 8,),
+                  Text(
+                    "Ingredients",
+                    style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 24),
+                  ),
+                ]
               ),
               Divider(),
               SearchableDropdown.multiple(
