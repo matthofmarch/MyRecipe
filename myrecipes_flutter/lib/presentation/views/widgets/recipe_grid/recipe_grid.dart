@@ -154,11 +154,10 @@ class _RecipeGridState extends State<RecipeGrid> {
               SizedBox(height: 15,),
               Text(
                 "Actions",
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.headline5,
               ),
-              SizedBox(height: 25,),
               Padding(
-                  padding: const EdgeInsets.only(left: 2),
+                  padding: const EdgeInsets.only(left: 1),
                   child: _recipeBottomSheetActions(recipe),
               )
             ]),
@@ -172,71 +171,111 @@ class _RecipeGridState extends State<RecipeGrid> {
           onTap: () async {
             await proposeMeal(context, recipe);
           },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(Icons.calendar_today, size: 18,),
-              SizedBox(
-                width: 15,
-              ),
-              Text(
-                "Plan Meal",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    .copyWith(fontSize: 18, fontWeight: FontWeight.w400),
-              ),
-            ],
+          child: Container(
+            height: 55,
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: Theme.of(context).textTheme.headline6.copyWith(color: Colors.grey.shade300).color, width: 1)
+                )
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(Icons.calendar_today, size: 18),
+                SizedBox(
+                  width: 15,
+                ),
+                Text(
+                  "Plan Meal",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(fontSize: 18, fontWeight: FontWeight.w400),
+                ),
+              ],
+            ),
           ),
         ),
-        SizedBox(height: 25,),
         GestureDetector(
           onTap: () async {
             editRecipe(recipe);
           },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(Icons.edit, size: 18),
-              SizedBox(
-                width: 15,
-              ),
-              Text(
-                "Edit Recipe",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    .copyWith(fontSize: 18, fontWeight: FontWeight.w400),
-              ),
-            ],
+          child: Container(
+            height: 55,
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: Theme.of(context).textTheme.headline6.copyWith(color: Colors.grey.shade300).color, width: 1)
+                )
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(Icons.edit, size: 18),
+                SizedBox(
+                  width: 15,
+                ),
+                Text(
+                  "Edit Recipe",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(fontSize: 18, fontWeight: FontWeight.w400),
+                ),
+              ],
+            ),
           ),
         ),
-        SizedBox(height: 25,),
         GestureDetector(
           onTap: () async {
             deleteRecipe(recipe.id);
           },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(Icons.delete, size: 18),
-              SizedBox(
-                width: 15,
-              ),
-              Text(
-                "Delete Recipe",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    .copyWith(fontSize: 18, fontWeight: FontWeight.w400),
-              ),
-            ],
+          child: Container(
+            height: 55,
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: Theme.of(context).textTheme.headline6.copyWith(color: Colors.grey.shade300).color, width: 1)
+                )
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(Icons.delete_forever, size: 18,color: Theme.of(context).colorScheme.error),
+                SizedBox(
+                  width: 15,
+                ),
+                Text(
+                  "Delete Recipe",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(fontSize: 18, fontWeight: FontWeight.w400,color: Theme.of(context).colorScheme.error),
+                ),
+              ],
+            ),
           ),
         ),
-        SizedBox(height: 25,)
+        SizedBox(height: 5,),
+        ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          child: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch ,
+              children: [
+                MaterialButton(
+                  height: 55,
+                  color: Theme.of(context).colorScheme.background,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Cancel",style: Theme.of(context).textTheme.subtitle1,),
+                ),
+              ]
+            ),
+          ),
+        ),
       ],
     );
   }
