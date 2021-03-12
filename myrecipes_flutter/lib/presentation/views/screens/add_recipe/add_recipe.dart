@@ -47,7 +47,7 @@ class AddRecipe extends StatelessWidget {
                     BlocProvider.of<AddRecipeCubit>(context).submit(
                         Recipe(
                           name: _nameController.text.toString(),
-                          description: _nameController.text.toString(),
+                          description: _descriptionController.text.toString(),
                           cookingTimeInMin:
                               int.tryParse(_cookingTimeInMinController.text) ??
                                   0,

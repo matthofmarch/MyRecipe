@@ -5,8 +5,8 @@ final colorScheme = ColorScheme(
   onPrimary: const Color(0xFFffffff),
   primary: const Color(0xFF247249),
   primaryVariant: const Color(0xFF004621),
-  secondary: const Color(0xFF798c1f),
-  secondaryVariant: const Color(0xFF4a5f00),
+  secondary: const Color(0xFF247249),
+  secondaryVariant: const Color(0xFF004621),
   onSecondary: const Color(0xFF000000),
   background: Colors.grey[300],
   surface: Color(0xFF808080),
@@ -41,6 +41,9 @@ final themes = [ThemeData.light(), ThemeData.dark()]
 
 List<BoxShadow> shadowList = [
   BoxShadow(color: Colors.grey[300], blurRadius: 30, offset: Offset(0, 30))
+];
+List<BoxShadow> shadowListDark = [
+  BoxShadow(color: Colors.grey[850], blurRadius: 30, offset: Offset(0, 30))
 ];
 List<BoxShadow> shadowGrid = [
   BoxShadow(color: Colors.grey[300], blurRadius: 5, offset: Offset(0, 10))
