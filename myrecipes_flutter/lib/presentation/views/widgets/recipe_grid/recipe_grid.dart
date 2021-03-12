@@ -50,7 +50,7 @@ class _RecipeGridState extends State<RecipeGrid> {
       }, childCount: widget.recipes.length),
     );*/
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           childAspectRatio: 5 / 6,
@@ -144,35 +144,100 @@ class _RecipeGridState extends State<RecipeGrid> {
     await showBarModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
-          return Column(mainAxisSize: MainAxisSize.min, children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: RecipeBottomSheetCard(recipe),
-            ),
-            TextButton(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.calendar_today_outlined),
-                  Text("Plan"),
-                ],
+          return Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+              GestureDetector(onTap: () async {
+                await Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => RecipeDetail(recipe: recipe)));
+              },child: RecipeBottomSheetCard(recipe)),
+              SizedBox(height: 15,),
+              Text(
+                "Actions",
+                style: Theme.of(context).textTheme.headline6,
               ),
-              onPressed: () => proposeMeal(context, recipe),
-            ),
-            TextButton(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Icon(Icons.edit), Text("Edit")],
-              ),
-              onPressed: () => editRecipe(recipe),
-            ),
-            TextButton(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(Icons.delete), Text("Delete")],
-                ),
-                onPressed: () => deleteRecipe(recipe.id))
-          ]);
+              SizedBox(height: 25,),
+              Padding(
+                  padding: const EdgeInsets.only(left: 2),
+                  child: _recipeBottomSheetActions(recipe),
+              )
+            ]),
+          );
         });
+  }
+  _recipeBottomSheetActions(Recipe recipe){
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () async {
+            await proposeMeal(context, recipe);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(Icons.calendar_today, size: 18,),
+              SizedBox(
+                width: 15,
+              ),
+              Text(
+                "Plan Meal",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(fontSize: 18, fontWeight: FontWeight.w400),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 25,),
+        GestureDetector(
+          onTap: () async {
+            editRecipe(recipe);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(Icons.edit, size: 18),
+              SizedBox(
+                width: 15,
+              ),
+              Text(
+                "Edit Recipe",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(fontSize: 18, fontWeight: FontWeight.w400),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 25,),
+        GestureDetector(
+          onTap: () async {
+            deleteRecipe(recipe.id);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(Icons.delete, size: 18),
+              SizedBox(
+                width: 15,
+              ),
+              Text(
+                "Delete Recipe",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(fontSize: 18, fontWeight: FontWeight.w400),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 25,)
+      ],
+    );
   }
 }
