@@ -11,6 +11,8 @@ class UserSettings extends StatelessWidget {
     var auth_repo = RepositoryProvider.of<AuthRepository>(context);
     var email = auth_repo.authState.email;
 
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool darkModeOn = brightness == Brightness.dark;
     return Stack(
       children: [
         Scaffold(
@@ -30,7 +32,7 @@ class UserSettings extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(Icons.account_circle,size: 50,color: Theme.of(context).primaryColorDark,),
+                    Icon(Icons.account_circle,size: 50,color: Theme.of(context).colorScheme.copyWith(primary: Colors.blue.shade400).primary,),
                     SizedBox(width: 5,),
                     Text(email,
                       style: Theme.of(context).textTheme.headline5,
@@ -40,7 +42,7 @@ class UserSettings extends StatelessWidget {
                 SizedBox(height: 15,),
                 Container(
                   decoration: BoxDecoration(
-                    boxShadow: shadowCards
+                      boxShadow: darkModeOn? noShadow : shadowCards
                   ),
                   child: Card(
                     child: Padding(
@@ -94,7 +96,7 @@ class UserSettings extends StatelessWidget {
                 SizedBox(height: 12,),
                 Container(
                   decoration: BoxDecoration(
-                    boxShadow: shadowCards,
+                    boxShadow: darkModeOn? noShadow : shadowCards,
                   ),
                   child: Card(
                     child: Padding(
