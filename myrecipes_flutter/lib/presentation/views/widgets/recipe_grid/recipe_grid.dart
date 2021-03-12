@@ -165,6 +165,9 @@ class _RecipeGridState extends State<RecipeGrid> {
         });
   }
   _recipeBottomSheetActions(Recipe recipe){
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool darkModeOn = brightness == Brightness.dark;
+
     return Column(
       children: [
         GestureDetector(
@@ -266,7 +269,7 @@ class _RecipeGridState extends State<RecipeGrid> {
               children: [
                 MaterialButton(
                   height: 55,
-                  color: Theme.of(context).colorScheme.background,
+                  color: darkModeOn? Theme.of(context).backgroundColor : Theme.of(context).colorScheme.background,
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
