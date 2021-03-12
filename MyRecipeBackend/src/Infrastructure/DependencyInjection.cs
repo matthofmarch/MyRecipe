@@ -34,13 +34,12 @@ namespace MyRecipe.Infrastructure
 
             // Set the active provider via configuration
             var provider = configuration.GetValue("Provider", "SqlServer");
-
             services.AddDbContext<ApplicationDbContext>(
                 options => _ = provider switch
                 {
                     "AppServiceMySql" => options.UseMySql(
-                        configuration.GetValue<string>("MYSQLCONNSTR_localdb"),
-                        ServerVersion.AutoDetect(configuration.GetValue<string>("MYSQLCONNSTR_localdb")),
+                        Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb")!,
+                        ServerVersion.AutoDetect(Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb")!),
                         x => { x.MigrationsAssembly("MyRecipe.Infrastructure.Persistence.Migrations.MySql"); }),
                     "MySql" => options.UseMySql(
                         configuration.GetConnectionString("MySqlConnection"),
