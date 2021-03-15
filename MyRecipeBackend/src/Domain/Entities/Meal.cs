@@ -11,7 +11,6 @@ namespace MyRecipe.Domain.Entities
     public class Meal : EntityObject
     {
         [Required] public Guid RecipeId { get; set; }
-
         [ForeignKey(nameof(RecipeId))] public Recipe Recipe { get; set; }
 
         public DateTime DateTime { get; set; }
@@ -28,7 +27,7 @@ namespace MyRecipe.Domain.Entities
         [ForeignKey(nameof(GroupId))] public Group Group { get; set; }
 
         //This flag shall be set after a threshold of positive votes has been reached
-        [Required] public bool Accepted { get; set; } = false;
+        [Required] public bool Accepted { get; set; }
 
         public List<MealVote> MealVotes { get; set; }
     }

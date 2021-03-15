@@ -21,32 +21,19 @@ namespace MyRecipe.Application.Logic.Repositories
         /// <returns></returns>
         public async Task ProposeMealAsync(Meal mealModel)
         {
-            var aloneInGroup = await _dbContext.Users
-                .Where(u => u.GroupId == mealModel.Initiator.GroupId)
-                .CountAsync() == 1;
-
-            var meal = new Meal
-            {
-                Initiator = mealModel.Initiator,
-                Group = mealModel.Group,
-                DateTime = mealModel.DateTime,
-                Recipe = await _dbContext.Recipes.FindAsync(mealModel.RecipeId)
-            };
-            await _dbContext.Meals.AddAsync(meal);
+            await _dbContext.Meals.AddAsync(mealModel);
         }
 
-        public async Task VoteMealAsync(ApplicationUser user, VoteEnum vote, Guid mealId)
+        public async Task VoteMealAsync(string userId, VoteEnum vote, Guid mealId)
         {
-            var meal = await _dbContext.Meals.FindAsync(mealId);
-
             var existing = await _dbContext.MealVotes
                 .Where(mv => mv.MealId == mealId)
-                .Where(mv => mv.UserId == user.Id)
+                .Where(mv => mv.UserId == userId)
                 .SingleOrDefaultAsync();
 
-            if (existing != null)
+            if (existing is not null)
             {
-                //withdrawl vote
+                //withdraw vote
                 if (vote == existing.Vote)
                 {
                     _dbContext.MealVotes.Remove(existing);
@@ -60,8 +47,8 @@ namespace MyRecipe.Application.Logic.Repositories
 
             await _dbContext.MealVotes.AddAsync(new MealVote
             {
-                Meal = meal,
-                User = user,
+                MealId = mealId,
+                UserId = userId,
                 Vote = vote
             });
         }

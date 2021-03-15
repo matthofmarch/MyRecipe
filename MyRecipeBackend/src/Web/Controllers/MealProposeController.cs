@@ -60,7 +60,7 @@ namespace MyRecipe.Web.Controllers
             {
                 DateTime = model.Day,
                 RecipeId = model.RecipeId,
-                Initiator = user,
+                InitiatorId = user.Id,
                 Group = group
             };
             await _uow.Meals.ProposeMealAsync(meal);
