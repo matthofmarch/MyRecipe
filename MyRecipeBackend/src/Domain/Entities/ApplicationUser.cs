@@ -11,8 +11,8 @@ namespace MyRecipe.Domain.Entities
         [ForeignKey(nameof(GroupId))] public Group Group { get; set; }
 
         public bool IsAdmin { get; set; }
-        public List<Recipe> Recipes { get; set; }
-        public List<MealVote> MealVotes { get; set; }
-        public List<Meal> ProposedMeals { get; set; }
+        public List<Recipe> Recipes { get; set; } = new();
+        public List<MealVote> MealVotes { get; set; } = new();
+        public List<Meal> ProposedMeals { get; set; } = new();
     }
 }

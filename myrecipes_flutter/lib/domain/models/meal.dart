@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:myrecipes_flutter/domain/models/user_recipe.dart';
 
-import 'recipe.dart';
 import 'vote.dart';
 
 class Meal with EquatableMixin {
@@ -27,7 +26,7 @@ class Meal with EquatableMixin {
   Meal copyWith({
     String mealId,
     String initiatorName,
-    Recipe recipe,
+    UserRecipe recipe,
     DateTime date,
     bool accepted,
     List<Vote> votes,
@@ -59,7 +58,7 @@ class Meal with EquatableMixin {
     return Meal(
       mealId: map['mealId'],
       initiatorName: map['initiatorName'],
-      recipe: Recipe.fromMap(map['recipe']),
+      recipe: UserRecipe.fromMap(map['recipe']),
       date: HttpDate.parse(map["date"]).toLocal(),
       accepted: map['accepted'],
       votes: List<Vote>.from(map['votes']?.map((x) => Vote.fromMap(x))),

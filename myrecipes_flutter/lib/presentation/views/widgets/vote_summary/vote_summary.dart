@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myrecipes_flutter/domain/models/meal.dart';
+import 'package:myrecipes_flutter/domain/models/vote.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/auth_repository/auth_repository.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/meal_repository/meal_repository.dart';
+import 'package:myrecipes_flutter/presentation/view_models/pages/meal_page/meals_cubit.dart';
 
 class VoteSummary extends StatefulWidget {
   Meal meal;
@@ -15,18 +17,6 @@ class VoteSummary extends StatefulWidget {
 }
 
 class VoteSummaryState extends State<VoteSummary> {
-  int positiveVotes;
-  int negativeVotes;
-  bool userVote = null;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    positiveVotes = widget.meal.votes.where((e) => e.voteIsPositive).length;
-    negativeVotes = widget.meal.votes.where((e) => !e.voteIsPositive).length;
-    _getUserVote(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -38,58 +28,73 @@ class VoteSummaryState extends State<VoteSummary> {
             children: [
               GestureDetector(
                   onTap: () async {
-                    await _vote(context, true);
-                    setState(() {
-                      if (userVote == null) {
-                        positiveVotes++;
-                        userVote = false;
-                      } else if (!userVote) {
-                        positiveVotes--;
-                        userVote = null;
-                      } else if (userVote) {
-                        positiveVotes++;
-                        positiveVotes--;
-                        userVote = true;
-                      }
-                    });
+                    var vote = true;
+                    await _vote(context, vote);
+                    BlocProvider.of<MealsCubit>(context).load();
                   },
                   child: Icon(Icons.arrow_drop_up_outlined,
-                      color: userVote ?? true ? Colors.green : Colors.grey,
+                      color: _getUserVote(context) ?? true
+                          ? Colors.green
+                          : Colors.grey,
                       size: 32)),
-              Text("$positiveVotes"),
+              Text(widget.meal.votes
+                  .where((e) => e.voteIsPositive)
+                  .length
+                  .toString()),
             ],
           ),
           Row(
             children: [
               GestureDetector(
                   onTap: () async {
-                    await _vote(context, false);
-                    setState(() {
-                      if (userVote == null) {
-                        negativeVotes++;
-                        userVote = true;
-                      } else if (!userVote) {
-                        negativeVotes--;
-                        userVote = null;
-                      } else if (userVote) {
-                        negativeVotes++;
-                        positiveVotes--;
-                        userVote = false;
-                      }
-                    });
+                    var vote = false;
+                    await _vote(context, vote);
+                    BlocProvider.of<MealsCubit>(context).load();
                   },
                   child: Icon(
                     Icons.arrow_drop_down_outlined,
-                    color: !(userVote ?? false) ? Colors.red : Colors.grey,
+                    color: !(_getUserVote(context) ?? false)
+                        ? Colors.red
+                        : Colors.grey,
                     size: 32,
                   )),
-              Text("$negativeVotes"),
+              Text(widget.meal.votes
+                  .where((e) => !e.voteIsPositive)
+                  .length
+                  .toString()),
             ],
           )
         ],
       ),
     );
   }
+
+  _setUserVote(BuildContext context, bool vote) {
+    if (vote == null) {
+      widget.meal.votes.add(Vote(voteIsPositive: vote, username: username));
+    } else if (vote) {
+      if (widget.meal.votes.any((element) => element.username == username)) {
+        widget.meal.votes
+            .removeWhere((element) => element.username == username);
+      } else {
+        widget.meal.votes
+            .removeWhere((element) => element.username == username);
+        widget.meal.votes.add(Vote(voteIsPositive: vote, username: username));
+      }
+    } else if (!vote) {
+      if (widget.meal.votes.any((element) => element.username == username)) {
+        widget.meal.votes
+            .removeWhere((element) => element.username == username);
+      } else {
+        widget.meal.votes
+            .removeWhere((element) => element.username == username);
+        widget.meal.votes.add(Vote(voteIsPositive: vote, username: username));
+      }
+    }
+  }
+
+  get username =>
+      RepositoryProvider.of<AuthRepository>(context).authState.email;
 
   bool _getUserVote(BuildContext context) {
     String email =
