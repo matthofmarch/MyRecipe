@@ -18,7 +18,8 @@ class MealsCubit extends Cubit<MealsState> {
   Future<void> load() async {
     emit(MealsLoading());
     try {
-      var acceptedMeals = await _mealRepository.getAccepted();
+      //TODO: Migrate to single endpoint
+      var acceptedMeals = await _mealRepository.getMeals();
       var proposedMeals = await _mealRepository.getProposed();
       _meals = acceptedMeals.followedBy(proposedMeals).toList();
       emit(MealsInteractable(_meals));

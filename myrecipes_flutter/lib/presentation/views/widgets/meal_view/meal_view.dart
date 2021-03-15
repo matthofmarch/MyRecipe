@@ -23,6 +23,8 @@ class MealView extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: BlocBuilder<MealViewCubit, MealViewState>(
+            buildWhen: (previous, current) =>
+                previous.currentDate != current.currentDate,
             builder: (context, state) => GestureDetector(
               onTap: () async {
                 print(Theme.of(context).brightness);

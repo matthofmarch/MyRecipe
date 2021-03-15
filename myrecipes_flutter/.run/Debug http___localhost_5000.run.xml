@@ -2,7 +2,7 @@
     <configuration name="Debug https://localhost:5001" default="false"
         factoryName="Flutter" type="FlutterRunConfigurationType">
         <option name="additionalArgs"
-            value="--dart-define=API_BASE_URL=http://localhost:5001 --dart-define=ENVIRONMENT=Development --dart-define=ALLOW_BAD_CERTIFICATE=true" />
+            value="--dart-define=API_BASE_URL=https://localhost:5001 --dart-define=ENVIRONMENT=Development --dart-define=ALLOW_BAD_CERTIFICATE=true" />
         <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
         <method v="2" />
     </configuration>

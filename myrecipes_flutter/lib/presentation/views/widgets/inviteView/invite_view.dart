@@ -24,22 +24,35 @@ class _InviteViewState extends State<InviteView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Invite Code",style: Theme.of(context).textTheme.headline6),
-                  IconButton(icon: Icon(Icons.refresh_outlined,size: 28,), onPressed: () {
-                    setState(() {
-
-                    });
-                  },)
+                  Text("Invite Code",
+                      style: Theme.of(context).textTheme.headline6),
+                  IconButton(
+                    icon: Icon(
+                      Icons.refresh_outlined,
+                      size: 28,
+                    ),
+                    onPressed: () {
+                      setState(() {});
+                    },
+                  )
                 ],
               ),
-              SizedBox(height: 8,),
-              Text(snapshot.data, style: Theme.of(context).textTheme.headline4,),
+              SizedBox(
+                height: 8,
+              ),
+              Text(
+                snapshot.data,
+                style: Theme.of(context).textTheme.headline4,
+              ),
               QrImage(
                 data: snapshot.data,
                 version: QrVersions.auto,
                 size: 200.0,
               ),
-              Text("Code is one time use only!", style: Theme.of(context).textTheme.subtitle2,)
+              Text(
+                "Code is one time use only!",
+                style: Theme.of(context).textTheme.subtitle2,
+              )
             ]),
           );
         });

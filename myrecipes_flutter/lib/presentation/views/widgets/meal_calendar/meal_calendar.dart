@@ -9,6 +9,7 @@ import 'package:myrecipes_flutter/presentation/view_models/widgets/meal_view/mea
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_detail.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/util/network_or_default_image.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/util/rounded_image.dart';
+
 import 'file:///C:/Users/hofma/HTL/MyRecipes/MyRecipesReworked/myrecipes_flutter/lib/presentation/views/widgets/vote_summary/vote_summary.dart';
 
 int kPageIndentation = 1000;
@@ -55,6 +56,13 @@ class MealCalendar extends StatelessWidget {
                   alignment: Alignment.topCenter,
                   children: [
                     Builder(builder: (context) {
+                      voteSum(Meal meal) => meal.votes.fold<int>(
+                          0,
+                          (previousValue, element) =>
+                              previousValue +
+                              (element.voteIsPositive ? 1 : -1));
+                      meals
+                          .sort((m1, m2) => voteSum(m1).compareTo(voteSum(m2)));
                       final mealsForDay = meals
                           .where((m) => mealOnCurrentDay(m, columnDate))
                           .map((m) => _mealCard(context, m))
