@@ -7,12 +7,12 @@ namespace MyRecipe.Domain.Entities
 {
     public class ApplicationUser : IdentityUser
     {
+        public Guid? GroupId { get; set; }
         [ForeignKey(nameof(GroupId))] public Group Group { get; set; }
 
-        public Guid? GroupId { get; set; }
         public bool IsAdmin { get; set; }
-        public List<Recipe> Recipes { get; set; }
-        public List<MealVote> MealVotes { get; set; }
-        public List<Meal> ProposedMeals { get; set; }
+        public List<Recipe> Recipes { get; set; } = new();
+        public List<MealVote> MealVotes { get; set; } = new();
+        public List<Meal> ProposedMeals { get; set; } = new();
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
 using MyRecipe.Application.Common.Interfaces;
 using MyRecipe.Application.Common.Models.Mealplan;
@@ -21,7 +22,7 @@ namespace MyRecipe.Web.Controllers
         private readonly IUnitOfWork _uow;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public MealVoteController(IUnitOfWork uow, UserManager<ApplicationUser> userManager, ILogger logger)
+        public MealVoteController(IUnitOfWork uow, UserManager<ApplicationUser> userManager, ILogger<MealVoteController> logger)
         {
             _uow = uow;
             _userManager = userManager;
@@ -41,7 +42,7 @@ namespace MyRecipe.Web.Controllers
             if (!ModelState.IsValid) return BadRequest();
 
             var user = await _userManager.GetUserAsync(User);
-            await _uow.Meals.VoteMealAsync(user, voteRequestModel.VoteEnum, voteRequestModel.MealId);
+            await _uow.Meals.VoteMealAsync(user.Id, voteRequestModel.VoteEnum, voteRequestModel.MealId);
 
             try
             {

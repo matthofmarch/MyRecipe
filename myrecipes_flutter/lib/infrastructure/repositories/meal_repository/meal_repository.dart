@@ -10,10 +10,11 @@ class MealRepository {
 
   MealRepository(this._client, this._baseUrl);
 
-  Future<List<Meal>> getAccepted() async {
-    var url = "$_baseUrl/api/Mealplan";
+  Future<List<Meal>> getMeals({bool accepted = null}) async {
+    var url = "$_baseUrl/api/Mealplan?accepted";
 
-    final response = await _client.get(Uri.tryParse(url));
+    final response = await _client.get(Uri.tryParse(url),
+        params: {if (accepted != null) "accepted": accepted.toString()});
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
       final meals = List<Meal>.from(body.map((x) => Meal.fromMap(x)));
@@ -42,10 +43,10 @@ class MealRepository {
           "mealId": mealId,
           "voteEnum": isPositive ? "Approved" : "Rejected"
         }));
-    if (response.statusCode == 200) {
-      return;
+
+    if (response.statusCode != 200) {
+      throw Exception("$url got ${response.statusCode}");
     }
-    throw Exception("$url got ${response.statusCode}");
   }
 
   Future<void> propose(String recipeId, DateTime dateTime) async {
@@ -54,9 +55,8 @@ class MealRepository {
     final response = await _client.post(Uri.tryParse(url),
         body: jsonEncode(
             {"recipeId": recipeId, "day": dateTime.toIso8601String()}));
-    if (response.statusCode == 200) {
-      return;
+    if (response.statusCode != 200) {
+      throw Exception("$url got ${response.statusCode}");
     }
-    throw Exception("$url got ${response.statusCode}");
   }
 }

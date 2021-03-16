@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/auth_repository/auth_repository.dart';
-import 'package:myrecipes_flutter/presentation/view_models/root_bottom_navigation/content_rootroot_bottom_navigation_cubit.dart';
+import 'package:myrecipes_flutter/presentation/view_models/root_bottom_navigation/root_bottom_navigation_cubit.dart';
 import 'package:myrecipes_flutter/presentation/views/pages/home_page/home_page.dart';
 import 'package:myrecipes_flutter/presentation/views/pages/meal_page/meal_page.dart';
 import 'package:myrecipes_flutter/presentation/views/pages/recipe_page/recipepage.dart';

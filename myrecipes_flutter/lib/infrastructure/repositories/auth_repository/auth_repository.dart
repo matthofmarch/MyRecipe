@@ -18,7 +18,7 @@ const kRefreshTokenName = "refresh_token";
 class AuthRepository {
   Future<SharedPreferences> get sharedPreferences =>
       SharedPreferences.getInstance();
-  var _baseUrl;
+  final String _baseUrl;
   bool _currentlyRefreshing = false;
 
   final _authSubject = BehaviorSubject<User>();
@@ -27,7 +27,7 @@ class AuthRepository {
 
   Stream<User> get authStateStream => _authSubject.stream;
 
-  AuthRepository(this._baseUrl);
+  AuthRepository(this._baseUrl) : assert(_baseUrl.isNotEmpty);
 
   Future<void> login(String email, String password) async {
     var res = await http.post(
