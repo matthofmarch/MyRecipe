@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/group_repository/group_repository.dart';
 import 'package:myrecipes_flutter/presentation/view_models/guards/household_guard/household_guard_cubit.dart';
 import 'package:myrecipes_flutter/presentation/views/root_bottom_navigation/root_bottom_navigation.dart';
 
 class HouseholdGuard extends StatelessWidget {
+
+  final householdNameController = TextEditingController();
+  final householdInviteCodeController = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<HouseholdGuardCubit>(
@@ -23,65 +29,54 @@ class HouseholdGuard extends StatelessWidget {
             return RootBottomNavigation();
           }
           if (state is HouseholdGuardCreateOrJoin) {
-            final householdNameController = TextEditingController();
-            final householdInviteCodeController = TextEditingController();
             return Scaffold(
               body: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(20.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      "Create or join household",
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    SizedBox(
-                      height: 32,
-                    ),
-                    Row(
+                    Column(
                       children: [
-                        Flexible(
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                controller: householdNameController,
-                                decoration: InputDecoration(labelText: "Name"),
-                              ),
-                              ElevatedButton(
-                                onPressed: () async {
-                                  await BlocProvider.of<HouseholdGuardCubit>(
-                                          context)
-                                      .createHousehold(
-                                          householdNameController.text);
-                                },
-                                child: Text("Create Household"),
-                              ),
-                            ],
-                          ),
+                        SvgPicture.asset(
+                          "assets/haus.svg",
+                          width: 180,
                         ),
                         SizedBox(
-                          width: 16,
+                          height: 20,
                         ),
-                        Flexible(
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                controller: householdInviteCodeController,
-                                decoration:
-                                    InputDecoration(labelText: "Invite Code"),
-                              ),
-                              ElevatedButton(
-                                onPressed: () async {
-                                  await BlocProvider.of<HouseholdGuardCubit>(
-                                          context)
-                                      .joinWithCode(
-                                          householdInviteCodeController.text);
-                                },
-                                child: Text("Join Household"),
-                              ),
-                            ],
+                        Text(
+                          "Create or join a household",
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
+                      ],
+                    ),
+                    OutlinedButton(
+                      onPressed: () {
+                        _showJoinGroupDialog(context);
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 50,
+                            child: Center(
+                                child: Text(
+                              "Join Household",
+                              style: TextStyle(fontSize: 17),
+                            )),
                           ),
-                        ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("No household to join?"),
+                        TextButton(
+                            onPressed: () {
+                              _showCreateGroupDialog(context);
+                            },
+                            child: Text("Create your own!"))
                       ],
                     ),
                   ],
@@ -94,4 +89,73 @@ class HouseholdGuard extends StatelessWidget {
       ),
     );
   }
+
+  void _showCreateGroupDialog(BuildContext context) => showDialog<void>(
+        context: context,
+        // false = user must tap button, true = tap outside dialog
+        builder: (BuildContext dialogContext) {
+          return AlertDialog(
+            title: Text("Create a new Household"),
+            content: TextFormField(
+              controller: householdNameController,
+              decoration: InputDecoration(labelText: "Household Name"),
+            ),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    "Quit",
+                    style: Theme.of(context).textTheme.bodyText1,
+                  )),
+              OutlinedButton(
+                onPressed: () async {
+                  await BlocProvider.of<HouseholdGuardCubit>(
+                      context)
+                      .createHousehold(
+                      householdNameController.text);
+                  Navigator.of(context).pop();
+                },
+                child: Text("Create Household"),
+              ),
+            ],
+          );
+        },
+      );
+
+
+  void _showJoinGroupDialog(BuildContext context) => showDialog<void>(
+    context: context,
+    // false = user must tap button, true = tap outside dialog
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        title: Text("Join a household"),
+        content: TextFormField(
+          controller: householdInviteCodeController,
+          decoration: InputDecoration(labelText: "Invite Code"),
+        ),
+        actions: <Widget>[
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "Quit",
+                style: Theme.of(context).textTheme.bodyText1,
+              )),
+          OutlinedButton(
+            onPressed: () async {
+              await BlocProvider.of<HouseholdGuardCubit>(
+                  context)
+                  .joinWithCode(
+                  householdInviteCodeController.text);
+              Navigator.of(context).pop();
+            },
+            child: Text("Join"),
+          ),
+        ],
+      );
+    },
+  );
 }
