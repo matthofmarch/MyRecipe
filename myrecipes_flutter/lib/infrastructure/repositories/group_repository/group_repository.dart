@@ -32,15 +32,14 @@ class GroupRepository {
     throw Exception("$url got ${response.statusCode}");
   }
 
-  Future<String> joinWithInviteCode(String inviteCode) async {
+  Future<void> joinWithInviteCode(String inviteCode) async {
     var url =
         "$_baseUrl/api/InviteCode/acceptInviteCode?inviteCode=${inviteCode}";
 
     final response =
         await _client.get(Uri.tryParse(url), headers: {"accept": "*/*"});
     if (response.statusCode == 200) {
-      var jsonResult = jsonDecode(response.body);
-      return jsonResult["code"];
+        return;
     }
     throw Exception("$url got ${response.statusCode}");
   }
