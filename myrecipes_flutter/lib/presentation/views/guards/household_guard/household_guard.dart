@@ -1,3 +1,4 @@
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -131,9 +132,23 @@ class HouseholdGuard extends StatelessWidget {
     builder: (BuildContext dialogContext) {
       return AlertDialog(
         title: Text("Join a household"),
-        content: TextFormField(
-          controller: householdInviteCodeController,
-          decoration: InputDecoration(labelText: "Invite Code"),
+        content: Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: householdInviteCodeController,
+                decoration: InputDecoration(labelText: "Invite Code"),
+              ),
+            ),
+            IconButton(icon: Icon(Icons.qr_code), onPressed: () async {
+              String qrCodeResult = await _scan();
+              await BlocProvider.of<HouseholdGuardCubit>(
+                  context)
+                  .joinWithCode(
+                  qrCodeResult);
+              Navigator.of(context).pop();
+            })
+          ],
         ),
         actions: <Widget>[
           TextButton(
@@ -158,4 +173,9 @@ class HouseholdGuard extends StatelessWidget {
       );
     },
   );
+
+  Future<String> _scan() async {
+    ScanResult result = await BarcodeScanner.scan();
+    return result.rawContent;
+  }
 }
