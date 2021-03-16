@@ -56,7 +56,7 @@ jobs:
           echo keyAlias=release >> android/key.properties
           echo storeFile=key.jks >> android/key.properties
       - name: Build APK
-        run: flutter build apk --release --no-tree-shake-icons --verbose --dart-define=ENVIRONMENT=Production --dart-define=API_BASE_URL=https://vm133.htl-leonding.ac.at
+        run: "flutter build apk --release --no-tree-shake-icons --verbose --dart-define=ENVIRONMENT=Production --dart-define=API_BASE_URL=https://vm133.htl-leonding.ac.at:5000"
         
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
