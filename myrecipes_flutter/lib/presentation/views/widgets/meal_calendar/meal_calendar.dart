@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:myrecipes_flutter/domain/models/meal.dart';
 import 'package:myrecipes_flutter/presentation/view_models/widgets/meal_view/meal_view_cubit.dart';
+import 'package:myrecipes_flutter/presentation/views/screens/daily_meal_planner/daily_meal_planner.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_detail.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/util/network_or_default_image.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/util/rounded_image.dart';
@@ -171,22 +172,28 @@ class MealCalendar extends StatelessWidget {
   }
 
   _makeDateBadge(BuildContext context, DateTime columnDate) {
-    return Badge(
-      child: Chip(
-        label: Text(
-          DateFormat("E, d.").format(columnDate),
-          style: Theme.of(context).textTheme.bodyText1.copyWith(
-                color: Theme.of(context).colorScheme.primary,
-              ),
+    return GestureDetector(
+      onTap: () async {
+        await Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => DailyMealPlanner(date: columnDate, meals: meals,)));
+      },
+      child: Badge(
+        child: Chip(
+          label: Text(
+            DateFormat("E, d.").format(columnDate),
+            style: Theme.of(context).textTheme.bodyText1.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+          ),
+          shape: StadiumBorder(
+            side: BorderSide(color: Theme.of(context).colorScheme.primary),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+          elevation: 5,
         ),
-        shape: StadiumBorder(
-          side: BorderSide(color: Theme.of(context).colorScheme.primary),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-        elevation: 5,
+        position: BadgePosition.topEnd(top: 5.0, end: 5.0),
+        badgeColor: Theme.of(context).colorScheme.secondary,
       ),
-      position: BadgePosition.topEnd(top: 5.0, end: 5.0),
-      badgeColor: Theme.of(context).colorScheme.secondary,
     );
   }
 }
