@@ -9,7 +9,6 @@ import 'package:myrecipes_flutter/presentation/views/widgets/recipe_card.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/vote_summary/vote_summary.dart';
 import 'package:sticky_infinite_list/sticky_infinite_list.dart';
 
-
 const kDefaultSpacing = 8.0;
 
 class MealList extends StatelessWidget {
