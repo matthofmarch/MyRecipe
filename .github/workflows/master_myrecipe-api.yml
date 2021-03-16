@@ -11,7 +11,10 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: MyRecipeBackend/src/Web
 
     steps:
     - uses: actions/checkout@master
