@@ -83,7 +83,16 @@ class RecipeCard extends StatelessWidget {
                           Text(" ${recipe.cookingTimeInMin} min"),
                         ],
                       ),
-                      Text("${(recipe as UserRecipe).username}")
+                      Row(children: [
+                        Icon(Icons.person_outline),
+                        Container(
+                          width: 60,
+                          child: Text("${(recipe as UserRecipe).username}",
+                            maxLines: 1,
+                            textAlign: TextAlign.justify,
+                            overflow: TextOverflow.ellipsis,),
+                        )
+                      ],)
                     ],
                   ),
                 ],

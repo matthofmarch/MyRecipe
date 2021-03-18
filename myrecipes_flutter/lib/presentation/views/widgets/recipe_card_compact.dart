@@ -81,7 +81,12 @@ class RecipeCardCompact extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Icon(Icons.person_outline),
-                      Text("${(recipe as UserRecipe).username}")
+                      Expanded(
+                        child: Text("${(recipe as UserRecipe).username}",
+                          maxLines: 1,
+                          textAlign: TextAlign.justify,
+                          overflow: TextOverflow.ellipsis,),
+                      )
                     ],
                   ),
                 ],

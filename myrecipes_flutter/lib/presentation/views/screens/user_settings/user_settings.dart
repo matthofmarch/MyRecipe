@@ -34,8 +34,13 @@ class UserSettings extends StatelessWidget {
                   children: [
                     Icon(Icons.account_circle,size: 50,color: Theme.of(context).colorScheme.copyWith(primary: Colors.blue.shade400).primary,),
                     SizedBox(width: 5,),
-                    Text(email,
-                      style: Theme.of(context).textTheme.headline5,
+                    Expanded(
+                      child: Text(email,
+                        maxLines: 1,
+                        textAlign: TextAlign.justify,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
                     ),
                   ]
                 ),
