@@ -6,9 +6,12 @@ import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:myrecipes_flutter/domain/models/meal.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/auth_repository/auth_repository.dart';
+import 'package:myrecipes_flutter/infrastructure/repositories/meal_repository/meal_repository.dart';
+import 'package:myrecipes_flutter/presentation/view_models/pages/meal_page/meals_cubit.dart';
 import 'package:myrecipes_flutter/presentation/view_models/widgets/meal_view/meal_view_cubit.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/meal_calendar/meal_calendar.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/meal_list/meal_list.dart';
+import 'package:myrecipes_flutter/presentation/views/widgets/vote_summary/vote_summary.dart';
 import 'package:platform_date_picker/platform_date_picker.dart';
 
 class MealView extends StatelessWidget {
@@ -67,7 +70,7 @@ class MealView extends StatelessWidget {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
         body: BlocBuilder<MealViewCubit, MealViewState>(
@@ -78,47 +81,59 @@ class MealView extends StatelessWidget {
                 ? MealCalendar(
                     meals,
                     state.currentDate,
+                    showMealOptions: _showMealOptions,
                   )
                 : MealList(meals)),
       ),
     );
   }
 
-  _showMealOptions(BuildContext context) {
+  _showMealOptions(BuildContext context, Meal meal) {
     showBarModalBottomSheet(
       context: context,
       builder: (context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Meal Actions",
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Icon(Icons.edit), Text("Delete")],
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            if (RepositoryProvider.of<AuthRepository>(context)
-                .authState
-                .isAdmin)
-              TextButton(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(Icons.check), Text("Accept")],
+        return BlocProvider<MealsCubit>(
+          create: (context) =>
+              MealsCubit(RepositoryProvider.of<MealRepository>(context)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Meal Actions",
+                  style: Theme.of(context).textTheme.subtitle1,
                 ),
-                onPressed: () {},
-              )
-          ],
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [VoteSummary(meal)],
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Icon(Icons.delete), Text("Delete")],
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              if (RepositoryProvider.of<AuthRepository>(context)
+                  .authState
+                  .isAdmin)
+                TextButton(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [Icon(Icons.check), Text("Accept")],
+                  ),
+                  onPressed: () {},
+                )
+            ],
+          ),
         );
       },
     );
