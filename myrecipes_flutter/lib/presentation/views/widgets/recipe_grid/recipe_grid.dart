@@ -24,31 +24,6 @@ class RecipeGrid extends StatefulWidget {
 class _RecipeGridState extends State<RecipeGrid> {
   @override
   Widget build(BuildContext context) {
-    /*return SliverList(
-      delegate: SliverChildBuilderDelegate((context, index) {
-        final recipe = widget.recipes[index];
-        return GestureDetector(
-          onLongPress: () async {
-            await _showRecipeOperationsBottomSheet(context, index);
-          },
-          onTap: () async {
-            await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => RecipeDetail(
-                  recipe: recipe,
-                ),
-              ),
-            );
-          },
-          child: Column(children: [
-            RecipeCard(recipe),
-            SizedBox(
-              height: 20,
-            )
-          ]),
-        );
-      }, childCount: widget.recipes.length),
-    );*/
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
       sliver: SliverGrid(

@@ -6,13 +6,19 @@ import 'package:myrecipes_flutter/infrastructure/repositories/meal_repository/me
 import 'package:myrecipes_flutter/presentation/views/widgets/daily_meal_planner_widgets/leaderboard.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/daily_meal_planner_widgets/plannedMeals.dart';
 
+import '../../widgets/daily_meal_planner_widgets/plannedMeals.dart';
+import '../../widgets/daily_meal_planner_widgets/plannedMeals.dart';
+import '../../widgets/daily_meal_planner_widgets/plannedMeals.dart';
+import '../../widgets/daily_meal_planner_widgets/plannedMeals.dart';
+
 class DailyMealPlanner extends StatelessWidget {
   final date;
-  final List<Meal> meals;
-  List<Meal> _acceptedMeals = List<Meal>();
-  List<Meal> _proposedMeals = List<Meal>();
+  List<Meal> meals;
+  List<Meal> _acceptedMeals = List<Meal>.empty(growable: true);
+  List<Meal> _proposedMeals = List<Meal>.empty(growable: true);
 
   DailyMealPlanner({@required this.date, @required this.meals}){
+    meals = meals.where((meal) => mealOnCurrentDay(meal, date),).toList();
     meals.forEach((meal) {
       if(meal.accepted){
         _acceptedMeals.add(meal);
@@ -33,21 +39,23 @@ class DailyMealPlanner extends StatelessWidget {
             title: Text("Leaderboard"),
             actions: [],
           ),
-          body: CustomScrollView(
-            shrinkWrap: false,
-            slivers: [
-              SliverPadding(
-                  padding: EdgeInsets.all(16.0),
-                  sliver: SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        PlannedMealsList(meals: _acceptedMeals.where((meal) => mealOnCurrentDay(meal, date)).toList()),
-                        MealLeaderboard(meals: _proposedMeals,)
-                      ]
+          body: Container(
+            width: MediaQuery.of(context).size.width,
+            child: CustomScrollView(
+              slivers: [
+                SliverPadding(
+                    padding: EdgeInsets.all(16.0),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        return Column(children: [
+                          PlannedMealsList(meals: _acceptedMeals, isLeaderboard: false),
+                          PlannedMealsList(meals: _proposedMeals, isLeaderboard: true)
+                        ],);
+                      }, childCount: 1),
                     ),
-                  ),
-              ),
-            ]
+                ),
+              ]
+            ),
           ))
     ]);
   }

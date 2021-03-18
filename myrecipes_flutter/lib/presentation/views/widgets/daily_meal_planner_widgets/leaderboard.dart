@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:myrecipes_flutter/domain/models/meal.dart';
-import 'package:myrecipes_flutter/presentation/views/widgets/recipe_card.dart';
+
+import '../recipe_card.dart';
 
 class MealLeaderboard extends StatelessWidget {
   final List<Meal> meals;
@@ -20,14 +21,15 @@ class MealLeaderboard extends StatelessWidget {
         ),
       ]),
       SizedBox(height: 16,),
-      /*if (meals == null || meals.isEmpty ) Text("No Suggestions for this day!",style: Theme.of(context).textTheme.headline5,) else
+      if (meals.isEmpty) Text("No Suggestions for this day!",style: Theme.of(context).textTheme.headline5,)
+      else
         ... meals.map((meal) => Column(children: [
         Row(children: [
           Icon(Icons.emoji_events),
           RecipeCard(meal.recipe)
         ]),
         SizedBox(height: 16,)
-      ]))*/
+      ]))
     ],);
   }
 }
