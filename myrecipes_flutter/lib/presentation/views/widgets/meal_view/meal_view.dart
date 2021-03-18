@@ -89,53 +89,54 @@ class MealView extends StatelessWidget {
   }
 
   _showMealOptions(BuildContext context, Meal meal) {
+    var mealsCubit = BlocProvider.of<MealsCubit>(context);
     showBarModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return BlocProvider<MealsCubit>(
-          create: (context) =>
-              MealsCubit(RepositoryProvider.of<MealRepository>(context)),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Meal Actions",
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [VoteSummary(meal)],
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Icon(Icons.delete), Text("Delete")],
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              if (RepositoryProvider.of<AuthRepository>(context)
-                  .authState
-                  .isAdmin)
-                TextButton(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Icon(Icons.check), Text("Accept")],
+        context: context,
+        builder: (_) {
+          return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Meal Actions",
+                    style: Theme.of(context).textTheme.subtitle1,
                   ),
-                  onPressed: () {},
-                )
-            ],
-          ),
-        );
-      },
-    );
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [VoteSummary(meal)],
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Icon(Icons.delete), Text("Delete")],
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                if (RepositoryProvider.of<AuthRepository>(context)
+                    .authState
+                    .isAdmin)
+                  TextButton(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [Icon(Icons.check), Text("Accept")],
+                    ),
+                    onPressed: () async {
+                      await RepositoryProvider.of<MealRepository>(context)
+                          .acceptMealProposal(meal.mealId, true);
+                      BlocProvider.of<MealsCubit>(context).load();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+              ],
+            );
+        });
   }
 }

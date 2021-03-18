@@ -47,6 +47,19 @@ class MealRepository {
     throw Exception("$url got ${response.statusCode}");
   }
 
+  Future<void> acceptMealProposal(String id, bool accept) async {
+    var url = "$_baseUrl/api/Mealplan/accept/$id?accepted=${accept.toString()}";
+    final response = await _client.put(Uri.tryParse(url));
+
+    if (response.statusCode == 200) {
+      // final body = jsonDecode(response.body);
+      // final meal = Meal.fromJson(body);
+      // return meal;
+      return;
+    }
+    throw Exception("$url got ${response.statusCode}");
+  }
+
   Future<void> vote(String mealId, bool isPositive) async {
     var url = "$_baseUrl/api/MealVote";
     final response = await _client.post(Uri.tryParse(url),
