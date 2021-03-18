@@ -6,8 +6,10 @@ import 'package:myrecipes_flutter/infrastructure/repositories/auth_repository/au
 import 'package:myrecipes_flutter/presentation/views/widgets/util/network_or_default_image.dart';
 import 'package:myrecipes_flutter/theme.dart';
 
+import '../../../domain/models/user_recipe.dart';
+
 class RecipeCardBlockCompact extends StatelessWidget {
-  final Recipe recipe;
+  final UserRecipe recipe;
 
   RecipeCardBlockCompact(this.recipe);
 
@@ -85,21 +87,20 @@ class RecipeCardBlockCompact extends StatelessWidget {
                         SizedBox(
                           height: 4,
                         ),
-                        if (recipe is UserRecipe)
-                          Row(
+                        if(recipe.username != null) Row(
                             children: [
                               Icon(
                                 Icons.person_outline,
                                 size: 18,
                               ),
                               Text(
-                                (recipe as UserRecipe).username ==
+                                recipe.username ==
                                         RepositoryProvider.of<AuthRepository>(
                                                 context)
                                             .authState
                                             .email
                                     ? "You"
-                                    : (recipe as UserRecipe).username,
+                                    : recipe.username,
                                 maxLines: 1,
                                 overflow: TextOverflow.clip,
                                 style: Theme.of(context).textTheme.caption,
