@@ -20,7 +20,7 @@ class MealCalendar extends StatelessWidget {
   List<Meal> meals;
   DateTime viewInitialDate;
 
-  Function(BuildContext context,Meal meal) showMealOptions;
+  Function(BuildContext context, Meal meal) showMealOptions;
 
   MealCalendar(this.meals, this.viewInitialDate,
       {Key key, this.showMealOptions})
@@ -109,66 +109,69 @@ class MealCalendar extends StatelessWidget {
           ),
         );
       },
-      onLongPress: () => showMealOptions(context,meal),
+      onLongPress: () => showMealOptions(context, meal),
       child: AspectRatio(
         aspectRatio: 2 / 3,
-        child: Card(
-          margin: EdgeInsets.all(4),
-          //color: meal.accepted ? Theme.of(context).cardColor : Theme.of(context).cardColor.withAlpha(0x10),
-          key: Key("meal-calendar-card_${meal.mealId}"),
-          shadowColor: meal.accepted ? Colors.green : Colors.red,
-          elevation: 4,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(2),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: CustomAbrounding.image(
-                    NetworkOrDefaultImage(meal.recipe.image),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: FittedBox(
-                    fit: BoxFit.contain,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            VoteSummary(meal),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text("Proposed by jfd",
-                                    style: Theme.of(context).textTheme.caption),
-                                Text(
-                                  "${meal.recipe.name}",
-                                  softWrap: true,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.subtitle1,
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ],
+        child: meal.accepted
+            ? Card(
+                key: Key("meal-calendar-card_${meal.mealId}"),
+                elevation: 4,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 1,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(10),
+                            bottom: Radius.circular(0),
+                          ),
+                          child: NetworkOrDefaultImage(meal.recipe.image)),
                     ),
-                  ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  VoteSummary(meal),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(meal.recipe.username,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .caption),
+                                      Text(
+                                        "${meal.recipe.name}",
+                                        softWrap: true,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1,
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               )
-            ],
-          ),
-        ),
+            : Container(),
       ),
     );
   }
@@ -176,8 +179,12 @@ class MealCalendar extends StatelessWidget {
   _makeDateBadge(BuildContext context, DateTime columnDate) {
     return GestureDetector(
       onTap: () async {
-        await Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => DailyMealPlanner(BlocProvider.of<MealsCubit>(context),date: columnDate, meals: meals,)));
+        await Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => DailyMealPlanner(
+                  BlocProvider.of<MealsCubit>(context),
+                  date: columnDate,
+                  meals: meals,
+                )));
       },
       child: Badge(
         child: Chip(
@@ -190,7 +197,8 @@ class MealCalendar extends StatelessWidget {
           shape: StadiumBorder(
             side: BorderSide(color: Theme.of(context).colorScheme.primary),
           ),
-          backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+          backgroundColor:
+              Theme.of(context).colorScheme.primary.withOpacity(0.2),
           elevation: 5,
         ),
         position: BadgePosition.topEnd(top: 5.0, end: 5.0),
