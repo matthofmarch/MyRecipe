@@ -220,6 +220,7 @@ class MealCalendar extends StatelessWidget {
                   BlocProvider.of<MealsCubit>(context),
                   date: columnDate,
                   meals: meals,
+                  mealsContext: context,
                 )));
       },
       child: Chip(

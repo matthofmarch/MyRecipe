@@ -11,19 +11,27 @@ import 'package:myrecipes_flutter/presentation/views/widgets/vote_summary/vote_s
 import '../../../view_models/pages/meal_page/meals_cubit.dart';
 import '../recipe_card.dart';
 
-class PlannedMealsList extends StatelessWidget {
+class PlannedMealsList extends StatefulWidget {
   final List<Meal> meals;
   final bool isLeaderboard;
-  var index = 1;
   final MealsCubit mealsCubit;
+  final BuildContext mealContext;
+  Function(Meal) addToAccepted;
 
   PlannedMealsList(this.mealsCubit,
-      {@required this.meals, @required this.isLeaderboard});
+      {@required this.meals, @required this.isLeaderboard, this.mealContext, this.addToAccepted});
+
+  @override
+  _PlannedMealsListState createState() => _PlannedMealsListState();
+}
+
+class _PlannedMealsListState extends State<PlannedMealsList> {
+  var index = 1;
 
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      if (isLeaderboard)
+      if (widget.isLeaderboard)
         Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Icon(
             Icons.poll_outlined,
@@ -60,21 +68,21 @@ class PlannedMealsList extends StatelessWidget {
       SizedBox(
         height: 16,
       ),
-      if (meals.isEmpty && !isLeaderboard)
+      if (widget.meals.isEmpty && !widget.isLeaderboard)
         Center(
             child: Text(
           "No Winner selected on this day!",
           style: Theme.of(context).textTheme.headline6,
         ))
-      else if (meals.isEmpty && isLeaderboard)
+      else if (widget.meals.isEmpty && widget.isLeaderboard)
         Center(
             child: Text(
           "No Suggestions for this day!",
           style: Theme.of(context).textTheme.headline6,
         ))
       else
-        ...meals.map((meal) {
-          if (isLeaderboard) {
+        ...widget.meals.map((meal) {
+          if (widget.isLeaderboard) {
             var res = Column(
               children: [
                 Row(children: [
@@ -97,7 +105,7 @@ class PlannedMealsList extends StatelessWidget {
                   SizedBox(
                     width: 10,
                   ),
-                  VoteSummaryBig(mealsCubit, meal)
+                  VoteSummaryBig(widget.mealsCubit, meal)
                 ]),
                 SizedBox(
                   height: 16,
@@ -107,12 +115,12 @@ class PlannedMealsList extends StatelessWidget {
                     .isAdmin ?
                   OutlinedButton(
                   onPressed: () async {
-                    var res = RepositoryProvider.of<AuthRepository>(context)
-                        .authState
-                        .isAdmin;
-                    print(res);
-                    await RepositoryProvider.of<MealRepository>(context).acceptMealProposal(meal.mealId, true);
-                    await RepositoryProvider.of<MealsCubit>(context).load();
+                    await RepositoryProvider.of<MealRepository>(widget.mealContext).acceptMealProposal(meal.mealId, true);
+                    await widget.mealsCubit.load();
+                    setState(() {
+                      widget.addToAccepted(meal);
+                      widget.meals.remove(meal);
+                    });
                   },
                   child: Center(
                     child: Text("Accept"),
@@ -137,7 +145,7 @@ class PlannedMealsList extends StatelessWidget {
       SizedBox(
         height: 16,
       ),
-      if (!isLeaderboard)
+      if (!widget.isLeaderboard)
         Center(
             child: Icon(
           Icons.keyboard_arrow_down,
