@@ -181,8 +181,9 @@ class UserSettings extends StatelessWidget {
           MaterialButton(
             color: Theme.of(context).colorScheme.error,
             onPressed: () async {
-              Navigator.of(context).pop();
               await RepositoryProvider.of<AuthRepository>(context).logout();
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
             },
             child: Text("Logout",
                 style: Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.white)),
