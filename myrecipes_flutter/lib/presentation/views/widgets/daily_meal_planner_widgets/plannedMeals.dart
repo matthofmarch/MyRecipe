@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:myrecipes_flutter/domain/models/meal.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_card.dart';
+import 'package:myrecipes_flutter/presentation/views/widgets/recipe_card_block_compact.dart';
+import 'package:myrecipes_flutter/presentation/views/widgets/vote_summary/vote_summary_big.dart';
 
 import '../recipe_card.dart';
-import '../recipe_card_block.dart';
-import '../recipe_card_no_Hero.dart';
-import '../recipe_card_no_Hero.dart';
 
 class PlannedMealsList extends StatelessWidget {
   final List<Meal> meals;
   final bool isLeaderboard;
+  var index = 1;
 
   PlannedMealsList({@required this.meals, @required this.isLeaderboard});
 
@@ -52,12 +52,33 @@ class PlannedMealsList extends StatelessWidget {
         ))
       else if(meals.isEmpty && isLeaderboard) Center(child: Text("No Suggestions for this day!",style: Theme.of(context).textTheme.headline6,))
       else
-      ...meals.map((meal) => Column(children: [
+      ...meals.map((meal) {
+        if(isLeaderboard){
+          var res = Column(children: [
+            Row(children: [
+              SizedBox(width: 8,),
+              Container(width: 30,child: Text(index.toString()+ ".",style: Theme.of(context).textTheme.headline4,)),
+              SizedBox(width: 10,),
+              Container(width: 180, height: 210,child: RecipeCardBlockCompact(meal.recipe)),
+              SizedBox(width: 10,),
+              VoteSummaryBig(meal)
+            ]),
+            SizedBox(
+              height: 16,
+            )
+          ]);
+          index++;
+          return res;
+        }
+        else {
+          return Column(children: [
             RecipeCard(meal.recipe),
             SizedBox(
               height: 16,
             )
-          ])),
+          ]);
+        }
+      }),
       SizedBox(
         height: 16,
       ),

@@ -41,19 +41,19 @@ class RecipeCardNoHero extends StatelessWidget {
                         Text("Could not load image"),
                   )
                   : Container(
-                      height: 120,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          bottomLeft: Radius.circular(20),
-                        ),
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image:
-                              ExactAssetImage("assets/placeholder-image.png"),
-                        ),
-                      ),
-                    )),
+                height: 120,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    bottomLeft: Radius.circular(20),
+                  ),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image:
+                    ExactAssetImage("assets/placeholder-image.png"),
+                  ),
+                ),
+              )),
           Expanded(
             child: Container(
               height: 95,

@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:myrecipes_flutter/domain/models/meal.dart';
-import 'package:myrecipes_flutter/domain/models/recipe.dart';
-import 'package:myrecipes_flutter/domain/models/user_recipe.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_card.dart';
-import 'package:myrecipes_flutter/presentation/views/widgets/vote_summary/vote_summary.dart';
 import 'package:sticky_infinite_list/sticky_infinite_list.dart';
 
 const kDefaultSpacing = 8.0;
@@ -24,6 +21,7 @@ class MealList extends StatelessWidget {
     return InfiniteList(
         negChildCount: 0,
         posChildCount: dateMealMap.length,
+
         builder: (BuildContext context, int index) {
           /// Builder requires [InfiniteList] to be returned
           return InfiniteListItem.overlay(
@@ -37,7 +35,7 @@ class MealList extends StatelessWidget {
                           .format(dateMealMap.keys.elementAt(index)),
                       style: Theme.of(context).textTheme.headline6),
                   Text(
-                      DateFormat('MM')
+                      DateFormat('d')
                           .format(dateMealMap.keys.elementAt(index)),
                       style: Theme.of(context).textTheme.headline6),
                 ]),
@@ -74,24 +72,13 @@ class MealList extends StatelessWidget {
           SizedBox(
             width: 60,
           ),
-          Expanded(child: RecipeCard(_recipeToUserRecipe(meal.recipe))),
-          VoteSummary(meal),
+          Expanded(child: RecipeCard(meal.recipe)),
+          //VoteSummary(meal),
           SizedBox(
             width: 10,
           )
         ]),
       ),
     );
-  }
-
-  UserRecipe _recipeToUserRecipe(Recipe recipe) {
-    return UserRecipe(
-        id: recipe.id,
-        addToGroupPool: recipe.addToGroupPool,
-        cookingTimeInMin: recipe.cookingTimeInMin,
-        description: recipe.description,
-        image: recipe.image,
-        ingredientNames: recipe.ingredientNames,
-        name: recipe.name);
   }
 }
