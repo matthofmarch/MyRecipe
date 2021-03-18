@@ -20,7 +20,7 @@ class MealCalendar extends StatelessWidget {
   List<Meal> meals;
   DateTime viewInitialDate;
 
-  Function(Meal meal) showMealOptions;
+  Function(BuildContext context,Meal meal) showMealOptions;
 
   MealCalendar(this.meals, this.viewInitialDate,
       {Key key, this.showMealOptions})
@@ -109,7 +109,7 @@ class MealCalendar extends StatelessWidget {
           ),
         );
       },
-      onLongPress: () => showMealOptions(meal),
+      onLongPress: () => showMealOptions(context,meal),
       child: AspectRatio(
         aspectRatio: 2 / 3,
         child: Card(
