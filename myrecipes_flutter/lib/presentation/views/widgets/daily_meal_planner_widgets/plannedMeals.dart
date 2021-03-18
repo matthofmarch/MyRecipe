@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myrecipes_flutter/domain/models/meal.dart';
+import 'package:myrecipes_flutter/infrastructure/repositories/auth_repository/auth_repository.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/meal_repository/meal_repository.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_card.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_card_block_compact.dart';
@@ -101,15 +102,22 @@ class PlannedMealsList extends StatelessWidget {
                 SizedBox(
                   height: 16,
                 ),
-                OutlinedButton(
+                RepositoryProvider.of<AuthRepository>(context)
+                    .authState
+                    .isAdmin ?
+                  OutlinedButton(
                   onPressed: () async {
+                    var res = RepositoryProvider.of<AuthRepository>(context)
+                        .authState
+                        .isAdmin;
+                    print(res);
                     await RepositoryProvider.of<MealRepository>(context).acceptMealProposal(meal.mealId, true);
                     await RepositoryProvider.of<MealsCubit>(context).load();
                   },
                   child: Center(
                     child: Text("Accept"),
                   ),
-                ),
+                ): Container(),
                 SizedBox(
                   height: 16,
                 ),
