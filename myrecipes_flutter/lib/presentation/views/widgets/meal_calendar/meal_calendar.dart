@@ -12,6 +12,8 @@ import 'package:myrecipes_flutter/presentation/views/widgets/util/network_or_def
 import 'package:myrecipes_flutter/presentation/views/widgets/util/rounded_image.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/vote_summary/vote_summary.dart';
 
+import '../../../view_models/pages/meal_page/meals_cubit.dart';
+
 int kPageIndentation = 1000;
 
 class MealCalendar extends StatelessWidget {
@@ -175,7 +177,7 @@ class MealCalendar extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         await Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => DailyMealPlanner(date: columnDate, meals: meals,)));
+            .push(MaterialPageRoute(builder: (_) => DailyMealPlanner(BlocProvider.of<MealsCubit>(context),date: columnDate, meals: meals,)));
       },
       child: Badge(
         child: Chip(

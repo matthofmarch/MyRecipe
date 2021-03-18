@@ -4,7 +4,10 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:myrecipes_flutter/domain/models/meal.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_card.dart';
+import 'package:myrecipes_flutter/presentation/views/widgets/recipe_card_compact.dart';
 import 'package:sticky_infinite_list/sticky_infinite_list.dart';
+
+import '../vote_summary/vote_summary.dart';
 
 const kDefaultSpacing = 8.0;
 
@@ -72,8 +75,8 @@ class MealList extends StatelessWidget {
           SizedBox(
             width: 60,
           ),
-          Expanded(child: RecipeCard(meal.recipe)),
-          //VoteSummary(meal),
+          Expanded(child: RecipeCardCompact(meal.recipe)),
+          VoteSummary(meal),
           SizedBox(
             width: 10,
           )

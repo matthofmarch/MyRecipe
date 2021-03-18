@@ -5,14 +5,16 @@ import 'package:myrecipes_flutter/presentation/views/widgets/recipe_card.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_card_block_compact.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/vote_summary/vote_summary_big.dart';
 
+import '../../../view_models/pages/meal_page/meals_cubit.dart';
 import '../recipe_card.dart';
 
 class PlannedMealsList extends StatelessWidget {
   final List<Meal> meals;
   final bool isLeaderboard;
   var index = 1;
+  final MealsCubit mealsCubit;
 
-  PlannedMealsList({@required this.meals, @required this.isLeaderboard});
+  PlannedMealsList(this.mealsCubit,{@required this.meals, @required this.isLeaderboard});
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +63,7 @@ class PlannedMealsList extends StatelessWidget {
               SizedBox(width: 10,),
               Container(width: 180, height: 210,child: RecipeCardBlockCompact(meal.recipe)),
               SizedBox(width: 10,),
-              VoteSummaryBig(meal)
+              VoteSummaryBig(mealsCubit,meal)
             ]),
             SizedBox(
               height: 16,

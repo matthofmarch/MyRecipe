@@ -7,10 +7,15 @@ import 'package:myrecipes_flutter/infrastructure/repositories/auth_repository/au
 import 'package:myrecipes_flutter/infrastructure/repositories/meal_repository/meal_repository.dart';
 import 'package:myrecipes_flutter/presentation/view_models/pages/meal_page/meals_cubit.dart';
 
+import '../../../view_models/pages/meal_page/meals_cubit.dart';
+import '../../../view_models/pages/meal_page/meals_cubit.dart';
+
 class VoteSummaryBig extends StatefulWidget {
   Meal meal;
 
-  VoteSummaryBig(this.meal);
+  VoteSummaryBig(this.mealsCubit,this.meal);
+
+  final MealsCubit mealsCubit;
 
   @override
   State<StatefulWidget> createState() => VoteSummaryBigState();
@@ -30,7 +35,7 @@ class VoteSummaryBigState extends State<VoteSummaryBig> {
                   onTap: () async {
                     var vote = true;
                     await _vote(context, vote);
-                    BlocProvider.of<MealsCubit>(context).load();
+                    widget.mealsCubit.load();
                   },
                   child: Icon(Icons.thumb_up_alt,
                       color: _getUserVote(context) ?? true
@@ -51,7 +56,7 @@ class VoteSummaryBigState extends State<VoteSummaryBig> {
                   onTap: () async {
                     var vote = false;
                     await _vote(context, vote);
-                    BlocProvider.of<MealsCubit>(context).load();
+                    widget.mealsCubit.load();
                   },
                   child: Icon(
                     Icons.thumb_down_alt,
@@ -73,30 +78,6 @@ class VoteSummaryBigState extends State<VoteSummaryBig> {
         ],
       ),
     );
-  }
-
-  _setUserVote(BuildContext context, bool vote) {
-    if (vote == null) {
-      widget.meal.votes.add(Vote(voteIsPositive: vote, username: username));
-    } else if (vote) {
-      if (widget.meal.votes.any((element) => element.username == username)) {
-        widget.meal.votes
-            .removeWhere((element) => element.username == username);
-      } else {
-        widget.meal.votes
-            .removeWhere((element) => element.username == username);
-        widget.meal.votes.add(Vote(voteIsPositive: vote, username: username));
-      }
-    } else if (!vote) {
-      if (widget.meal.votes.any((element) => element.username == username)) {
-        widget.meal.votes
-            .removeWhere((element) => element.username == username);
-      } else {
-        widget.meal.votes
-            .removeWhere((element) => element.username == username);
-        widget.meal.votes.add(Vote(voteIsPositive: vote, username: username));
-      }
-    }
   }
 
   get username =>

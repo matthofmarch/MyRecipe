@@ -3,12 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myrecipes_flutter/domain/models/meal.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/meal_repository/meal_repository.dart';
-import 'package:myrecipes_flutter/presentation/views/widgets/daily_meal_planner_widgets/leaderboard.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/daily_meal_planner_widgets/plannedMeals.dart';
 
-import '../../widgets/daily_meal_planner_widgets/plannedMeals.dart';
-import '../../widgets/daily_meal_planner_widgets/plannedMeals.dart';
-import '../../widgets/daily_meal_planner_widgets/plannedMeals.dart';
+import '../../../view_models/pages/meal_page/meals_cubit.dart';
+import '../../../view_models/pages/meal_page/meals_cubit.dart';
 import '../../widgets/daily_meal_planner_widgets/plannedMeals.dart';
 
 class DailyMealPlanner extends StatelessWidget {
@@ -17,7 +15,10 @@ class DailyMealPlanner extends StatelessWidget {
   List<Meal> _acceptedMeals = List<Meal>.empty(growable: true);
   List<Meal> _proposedMeals = List<Meal>.empty(growable: true);
 
-  DailyMealPlanner({@required this.date, @required this.meals}){
+  final MealsCubit mealsCubit;
+
+
+  DailyMealPlanner(this.mealsCubit,{@required this.date, @required this.meals}){
     meals = meals.where((meal) => mealOnCurrentDay(meal, date),).toList();
     meals.forEach((meal) {
       if(meal.accepted){
@@ -48,8 +49,8 @@ class DailyMealPlanner extends StatelessWidget {
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
                         return Column(children: [
-                          PlannedMealsList(meals: _acceptedMeals, isLeaderboard: false),
-                          PlannedMealsList(meals: _proposedMeals, isLeaderboard: true)
+                          PlannedMealsList(mealsCubit,meals: _acceptedMeals, isLeaderboard: false),
+                          PlannedMealsList(mealsCubit,meals: _proposedMeals, isLeaderboard: true)
                         ],);
                       }, childCount: 1),
                     ),
