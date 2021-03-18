@@ -130,7 +130,7 @@ class MealCalendar extends StatelessWidget {
                     ),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.all(2.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: FittedBox(
                           fit: BoxFit.contain,
                           child: Column(
@@ -139,17 +139,13 @@ class MealCalendar extends StatelessWidget {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  VoteSummary(meal),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(meal.recipe.username,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .caption),
+                                              .headline6),
                                       Text(
                                         "${meal.recipe.name}",
                                         softWrap: true,
@@ -157,12 +153,17 @@ class MealCalendar extends StatelessWidget {
                                         overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .subtitle1,
+                                            .headline6,
                                       ),
                                     ],
-                                  )
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  VoteSummary(meal),
                                 ],
                               ),
+
                             ],
                           ),
                         ),
