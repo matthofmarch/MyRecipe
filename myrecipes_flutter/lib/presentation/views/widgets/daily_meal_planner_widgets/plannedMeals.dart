@@ -17,9 +17,10 @@ class PlannedMealsList extends StatefulWidget {
   final MealsCubit mealsCubit;
   final BuildContext mealContext;
   Function(Meal) addToAccepted;
+  Function(Meal) deleteFromUnaccepted;
 
   PlannedMealsList(this.mealsCubit,
-      {@required this.meals, @required this.isLeaderboard, this.mealContext, this.addToAccepted});
+      {@required this.meals, @required this.isLeaderboard, this.mealContext, this.addToAccepted,this.deleteFromUnaccepted});
 
   @override
   _PlannedMealsListState createState() => _PlannedMealsListState();
@@ -113,17 +114,55 @@ class _PlannedMealsListState extends State<PlannedMealsList> {
                 RepositoryProvider.of<AuthRepository>(context)
                     .authState
                     .isAdmin ?
-                  OutlinedButton(
-                  onPressed: () async {
-                    await RepositoryProvider.of<MealRepository>(widget.mealContext).acceptMealProposal(meal.mealId, true);
-                    await widget.mealsCubit.load();
-                    setState(() {
-                      widget.addToAccepted(meal);
-                      widget.meals.remove(meal);
-                    });
-                  },
-                  child: Center(
-                    child: Text("Accept"),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: MaterialButton(
+                          height: 40,
+                          minWidth: 30,
+                          color: Colors.grey.shade100,
+                          onPressed: () async {
+                            await RepositoryProvider.of<MealRepository>(widget.mealContext).acceptMealProposal(meal.mealId, true);
+                            await widget.mealsCubit.load();
+                            setState(() {
+                              widget.addToAccepted(meal);
+                              widget.meals.remove(meal);
+                            });
+                          },
+                          child: Row(mainAxisAlignment: MainAxisAlignment.center ,children: [
+                            Icon(Icons.check_circle, color:Theme.of(context).primaryColor),
+                            SizedBox(width: 3,),
+                            Text("Accept",style: Theme.of(context).textTheme.headline6.copyWith(color: Theme.of(context).primaryColor,fontSize: 18)),
+                          ]),
+                        ),
+                      ),
+                      SizedBox(width: 20,),
+                      Expanded(
+                        child: MaterialButton(
+                          height: 40,
+                          minWidth: 30,
+                          color: Colors.grey.shade100,
+                          onPressed: () async {
+                            try{
+                              await RepositoryProvider.of<MealRepository>(context).deleteMealById(meal.mealId);
+                            }catch(Exception){
+
+                            }
+                            await widget.mealsCubit.load();
+                            setState(() {
+                              widget.deleteFromUnaccepted(meal);
+                              widget.meals.remove(meal);
+                            });                          },
+                          child: Row(mainAxisAlignment: MainAxisAlignment.center ,children: [
+                            Icon(Icons.delete_forever_outlined, color:Theme.of(context).colorScheme.error),
+                            SizedBox(width: 3,),
+                            Text("Delete",style: Theme.of(context).textTheme.headline6.copyWith(color: Theme.of(context).colorScheme.error,fontSize: 18)),
+                          ]),
+                        ),
+                      )
+                    ]
                   ),
                 ): Container(),
                 SizedBox(

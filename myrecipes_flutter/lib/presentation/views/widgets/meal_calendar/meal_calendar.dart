@@ -83,11 +83,21 @@ class MealCalendar extends StatelessWidget {
                           children: mealsForDay.isNotEmpty
                               ? unacceptedMealsForDay.length >= 1
                                   ? [
-                                      Text(
-                                        (unacceptedMealsForDay.length == 1)
-                                            ? "1 Suggestion"
-                                            : "${unacceptedMealsForDay.length} Suggestions",
-                                        textAlign: TextAlign.center,
+                                      GestureDetector(
+                                        child: Chip(
+                                          label: Text(
+                                            (unacceptedMealsForDay.length == 1)
+                                                ? "1 Suggestion"
+                                                : "${unacceptedMealsForDay.length} Suggestions",
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14,),
+                                          ),
+                                          backgroundColor: Theme.of(context).colorScheme.background.withOpacity(0.4),
+                                          shape: StadiumBorder(
+                                            side: BorderSide(color: Theme.of(context).colorScheme.background),
+                                          ),
+                                          elevation: 1,
+                                        ),
                                       ),
                                       ...acceptedMealsForDay
                                     ]
@@ -198,7 +208,7 @@ class MealCalendar extends StatelessWidget {
                                   ),*/
                                 ],
                               ),
-                              VoteSummary(meal),
+                              //VoteSummary(meal),
                             ],
                           ),
                         ],

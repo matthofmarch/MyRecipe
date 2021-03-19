@@ -29,6 +29,7 @@ class DailyMealPlanner extends StatelessWidget {
         _proposedMeals.add(meal);
       }
     });
+    _proposedMeals.sort((a,b) => getDifferenceOfVotes(b).compareTo(getDifferenceOfVotes(a)));
   }
 
   @override
@@ -53,7 +54,7 @@ class DailyMealPlanner extends StatelessWidget {
                         delegate: SliverChildBuilderDelegate((context, index) {
                           return Column(children: [
                             PlannedMealsList(mealsCubit,meals: _acceptedMeals, isLeaderboard: false, mealContext: mealsContext,),
-                            PlannedMealsList(mealsCubit,meals: _proposedMeals, isLeaderboard: true, mealContext: mealsContext, addToAccepted: addMealToAcceptedList,)
+                            PlannedMealsList(mealsCubit,meals: _proposedMeals, isLeaderboard: true, mealContext: mealsContext, addToAccepted: addMealToAcceptedList, deleteFromUnaccepted: deleteMealFromUnaccepted,)
                           ],);
                         }, childCount: 1),
                       ),
@@ -67,11 +68,27 @@ class DailyMealPlanner extends StatelessWidget {
 
   addMealToAcceptedList(Meal meal){
     _acceptedMeals.add(meal);
-    print("hurewnsßshalkjhfdsaljkasdfljkasfdlkjfsadlkjsdfljk");
+    print("added");
   }
-
+  deleteMealFromUnaccepted(Meal meal){
+    _proposedMeals.remove(meal);
+    print("deleted");
+  }
   mealOnCurrentDay(Meal meal, DateTime date) =>
       meal.date.isAfter(DateTime(date.year, date.month, date.day)) &&
           meal.date.isBefore(
               DateTime(date.year, date.month, date.day).add(Duration(days: 1)));
+
+  int getDifferenceOfVotes(Meal meal) {
+    var diff = 0;
+    meal.votes.forEach((m) {
+      if(m.voteIsPositive){
+        diff++;
+      }
+      else{
+        diff--;
+      }
+    });
+    return diff;
+  }
 }

@@ -34,6 +34,15 @@ class MealRepository {
     throw Exception("$url got ${response.statusCode}");
 
   }
+  Future<void> deleteMealById(String id) async {
+    var url = "$_baseUrl/api/Mealplan/$id";
+    final response = await _client.delete(Uri.tryParse(url));
+    if (response.statusCode == 200) {
+      return;
+    }
+    throw Exception("$url got ${response.statusCode}");
+
+  }
 
   Future<List<Meal>> getProposed() async {
     var url = "$_baseUrl/api/MealPropose";
@@ -51,7 +60,7 @@ class MealRepository {
     var url = "$_baseUrl/api/Mealplan/accept/$id?accepted=${accept.toString()}";
     final response = await _client.put(Uri.tryParse(url));
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 204 ) {
       // final body = jsonDecode(response.body);
       // final meal = Meal.fromJson(body);
       // return meal;
