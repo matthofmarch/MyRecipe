@@ -90,7 +90,7 @@ class _PlannedMealsListState extends State<PlannedMealsList> {
                   SizedBox(
                     width: 8,
                   ),
-                  Container(
+                  /*Container(
                       width: 30,
                       child: Text(
                         index.toString() + ".",
@@ -98,13 +98,13 @@ class _PlannedMealsListState extends State<PlannedMealsList> {
                       )),
                   SizedBox(
                     width: 10,
-                  ),
+                  ),*/
                   Container(
                       width: 180,
                       height: 210,
                       child: RecipeCardBlockCompact(meal.recipe)),
                   SizedBox(
-                    width: 10,
+                    width: 20,
                   ),
                   VoteSummaryBig(widget.mealsCubit, meal)
                 ]),
