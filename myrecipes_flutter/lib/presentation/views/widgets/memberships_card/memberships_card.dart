@@ -32,11 +32,21 @@ class MembershipsCard extends StatelessWidget {
               child: Container(
                 margin: EdgeInsets.all(8),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Members in " + group.name,
-                      style: Theme.of(context).textTheme.subtitle1,
+                      "Members of \n",
+                      maxLines: 1,
+                      textAlign: TextAlign.justify,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.headline4.copyWith(fontSize: 25,fontWeight: FontWeight.w100),
+                    ),
+                    Text(
+                      group.name,
+                      maxLines: 1,
+                      textAlign: TextAlign.justify,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.headline1.copyWith(fontSize: 40,fontWeight: FontWeight.bold),
                     ),
                     Divider(),
                     Column(
@@ -78,7 +88,11 @@ class MembershipsCard extends StatelessWidget {
   Widget _makeMemberTile(BuildContext context, Member member) {
     return ListTile(
         leading: Icon(Icons.person),
-        title: Text(member.email),
+        title: Text(member.email,
+          maxLines: 2,
+          textAlign: TextAlign.justify,
+          overflow: TextOverflow.ellipsis,
+        ),
         trailing: Row(mainAxisSize: MainAxisSize.min, children: [
           if (member.email ==
               RepositoryProvider.of<AuthRepository>(context).authState.email)

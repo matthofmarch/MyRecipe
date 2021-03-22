@@ -34,8 +34,13 @@ class UserSettings extends StatelessWidget {
                   children: [
                     Icon(Icons.account_circle,size: 50,color: Theme.of(context).colorScheme.copyWith(primary: Colors.blue.shade400).primary,),
                     SizedBox(width: 5,),
-                    Text(email,
-                      style: Theme.of(context).textTheme.headline5,
+                    Expanded(
+                      child: Text(email,
+                        maxLines: 1,
+                        textAlign: TextAlign.justify,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
                     ),
                   ]
                 ),
@@ -181,8 +186,9 @@ class UserSettings extends StatelessWidget {
           MaterialButton(
             color: Theme.of(context).colorScheme.error,
             onPressed: () async {
-              Navigator.of(context).pop();
               await RepositoryProvider.of<AuthRepository>(context).logout();
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
             },
             child: Text("Logout",
                 style: Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.white)),

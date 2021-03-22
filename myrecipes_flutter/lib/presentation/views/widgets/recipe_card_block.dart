@@ -7,7 +7,7 @@ import 'package:myrecipes_flutter/presentation/views/widgets/util/network_or_def
 import 'package:myrecipes_flutter/theme.dart';
 
 class RecipeCardBlock extends StatelessWidget {
-  final Recipe recipe;
+  final UserRecipe recipe;
 
   RecipeCardBlock(this.recipe);
 
@@ -87,27 +87,30 @@ class RecipeCardBlock extends StatelessWidget {
                         SizedBox(
                           height: 4,
                         ),
-                        if (recipe is UserRecipe)
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.person_outline,
-                                size: 18,
-                              ),
-                              Text(
-                                (recipe as UserRecipe).username ==
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Icon(
+                              Icons.person_outline,
+                              size: 18,
+                            ),
+                            Expanded(
+                              child: Text(
+                                recipe.username ==
                                         RepositoryProvider.of<AuthRepository>(
                                                 context)
                                             .authState
                                             .email
                                     ? "You"
-                                    : (recipe as UserRecipe).username,
+                                    : recipe.username,
                                 maxLines: 1,
-                                overflow: TextOverflow.clip,
+                                textAlign: TextAlign.justify,
+                                overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context).textTheme.caption,
-                              )
-                            ],
-                          ),
+                              ),
+                            )
+                          ],
+                        ),
                       ],
                     ),
                   ],

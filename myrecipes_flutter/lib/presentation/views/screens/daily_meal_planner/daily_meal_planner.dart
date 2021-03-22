@@ -16,9 +16,10 @@ class DailyMealPlanner extends StatelessWidget {
   List<Meal> _proposedMeals = List<Meal>.empty(growable: true);
 
   final MealsCubit mealsCubit;
+  final BuildContext mealsContext;
 
 
-  DailyMealPlanner(this.mealsCubit,{@required this.date, @required this.meals}){
+  DailyMealPlanner(this.mealsCubit,{@required this.date, @required this.meals, this.mealsContext}){
     meals = meals.where((meal) => mealOnCurrentDay(meal, date),).toList();
     meals.forEach((meal) {
       if(meal.accepted){
@@ -28,41 +29,66 @@ class DailyMealPlanner extends StatelessWidget {
         _proposedMeals.add(meal);
       }
     });
+    _proposedMeals.sort((a,b) => getDifferenceOfVotes(b).compareTo(getDifferenceOfVotes(a)));
   }
 
   @override
   Widget build(BuildContext context) {
     var mealRepository = RepositoryProvider.of<MealRepository>(context);
 
-    return Stack(children: [
-      Scaffold(
-          appBar: AppBar(
-            title: Text("Leaderboard"),
-            actions: [],
-          ),
-          body: Container(
-            width: MediaQuery.of(context).size.width,
-            child: CustomScrollView(
-              slivers: [
-                SliverPadding(
-                    padding: EdgeInsets.all(16.0),
-                    sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                        return Column(children: [
-                          PlannedMealsList(mealsCubit,meals: _acceptedMeals, isLeaderboard: false),
-                          PlannedMealsList(mealsCubit,meals: _proposedMeals, isLeaderboard: true)
-                        ],);
-                      }, childCount: 1),
-                    ),
-                ),
-              ]
+    return BlocBuilder(
+      cubit: mealsCubit,
+      builder: (context, state) => Stack(children: [
+        Scaffold(
+            appBar: AppBar(
+              title: Text("Leaderboard"),
+              actions: [],
             ),
-          ))
-    ]);
+            body: Container(
+              width: MediaQuery.of(context).size.width,
+              child: CustomScrollView(
+                slivers: [
+                  SliverPadding(
+                      padding: EdgeInsets.all(16.0),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          return Column(children: [
+                            PlannedMealsList(mealsCubit,meals: _acceptedMeals, isLeaderboard: false, mealContext: mealsContext,),
+                            PlannedMealsList(mealsCubit,meals: _proposedMeals, isLeaderboard: true, mealContext: mealsContext, addToAccepted: addMealToAcceptedList, deleteFromUnaccepted: deleteMealFromUnaccepted,)
+                          ],);
+                        }, childCount: 1),
+                      ),
+                  ),
+                ]
+              ),
+            ))
+      ]),
+    );
   }
 
+  addMealToAcceptedList(Meal meal){
+    _acceptedMeals.add(meal);
+    print("added");
+  }
+  deleteMealFromUnaccepted(Meal meal){
+    _proposedMeals.remove(meal);
+    print("deleted");
+  }
   mealOnCurrentDay(Meal meal, DateTime date) =>
       meal.date.isAfter(DateTime(date.year, date.month, date.day)) &&
           meal.date.isBefore(
               DateTime(date.year, date.month, date.day).add(Duration(days: 1)));
+
+  int getDifferenceOfVotes(Meal meal) {
+    var diff = 0;
+    meal.votes.forEach((m) {
+      if(m.voteIsPositive){
+        diff++;
+      }
+      else{
+        diff--;
+      }
+    });
+    return diff;
+  }
 }

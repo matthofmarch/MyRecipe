@@ -83,11 +83,21 @@ class MealCalendar extends StatelessWidget {
                           children: mealsForDay.isNotEmpty
                               ? unacceptedMealsForDay.length >= 1
                                   ? [
-                                      Text(
-                                        (unacceptedMealsForDay.length == 1)
-                                            ? "1 Suggestion"
-                                            : "${unacceptedMealsForDay.length} Suggestions",
-                                        textAlign: TextAlign.center,
+                                      GestureDetector(
+                                        child: Chip(
+                                          label: Text(
+                                            (unacceptedMealsForDay.length == 1)
+                                                ? "1 Suggestion"
+                                                : "${unacceptedMealsForDay.length} Suggestions",
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14,),
+                                          ),
+                                          backgroundColor: Theme.of(context).colorScheme.background.withOpacity(0.4),
+                                          shape: StadiumBorder(
+                                            side: BorderSide(color: Theme.of(context).colorScheme.background),
+                                          ),
+                                          elevation: 1,
+                                        ),
                                       ),
                                       ...acceptedMealsForDay
                                     ]
@@ -160,28 +170,45 @@ class MealCalendar extends StatelessWidget {
                         children: [
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment:  MainAxisAlignment.spaceBetween,
                             children: [
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  Text(meal.recipe.username,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6),
-                                  Text(
-                                    "${meal.recipe.name}",
-                                    softWrap: true,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style:
-                                        Theme.of(context).textTheme.headline6,
+                                  Container(
+                                    width: 180,
+                                    height: 100,
+                                    child: Text(
+                                      "${meal.recipe.name}",
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style:
+                                          Theme.of(context).textTheme.headline6.copyWith(fontSize: 25),
+                                    ),
                                   ),
+                                  /*Row(
+                                    children: [
+                                      Icon(Icons.person_outline,size: 12,),
+                                      Container(
+                                        width: 80,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(bottom: 1.0),
+                                          child: Text(meal.recipe.username,
+                                              softWrap: false,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .caption),
+                                        ),
+                                      ),
+                                    ]
+                                  ),*/
                                 ],
                               ),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              VoteSummary(meal),
+                              //VoteSummary(meal),
                             ],
                           ),
                         ],
@@ -203,6 +230,7 @@ class MealCalendar extends StatelessWidget {
                   BlocProvider.of<MealsCubit>(context),
                   date: columnDate,
                   meals: meals,
+                  mealsContext: context,
                 )));
       },
       child: Chip(
