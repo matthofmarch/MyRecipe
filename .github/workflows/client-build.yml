@@ -58,6 +58,13 @@ jobs:
       - name: Build APK
         run: "flutter build apk --release --no-tree-shake-icons --verbose --dart-define=ENVIRONMENT=Production --dart-define=API_BASE_URL=https://vm133.htl-leonding.ac.at:5000"
         
+      - uses: dev-drprasad/delete-older-releases@v0.1.0
+        if: ${{ github.event_name != 'pull_request' }}
+        with:
+          keep_latest: 3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
         with:
@@ -96,8 +103,4 @@ jobs:
           asset_name: MyRecipe.apk
           asset_content_type: application/octet-stream
           
-      - uses: dev-drprasad/delete-older-releases@v0.1.0
-        with:
-          keep_latest: 3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
