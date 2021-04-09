@@ -72,7 +72,8 @@ US07: Account Information and settings
 | 0 | User opens account information page | A page with options &quot;change email&quot;, &quot;change password&quot; and &quot;leave household&quot; appears |
 | 1 | Change email:User enters a new email and submits.User gets an email to the new email address and verifies that he controls the new email address. | The email changes. |
 | 2 | Change passwordEnter old and new passwordClick save | If old password is correct and new password is valid, the password gets saved |
-| 3 | Leave household:User clicks leave household | User no more belongs to his old household and must associate with any household |
+| 3 | Change app in darkmode | App should be shown in darkmode instead in lightmode |
+| 4 | Leave household:User clicks leave household | User no more belongs to his old household and must associate with any household |
 
 US08: Weekly planner (now called Meal calendar)
 
