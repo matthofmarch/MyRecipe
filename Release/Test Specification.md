@@ -109,5 +109,7 @@ US10: User voting
 | 0 | User presses meal | Bottom sheet that shows quick info appears |
 | 1 | Up/Downvote meal in bottom sheet | The meal will be up/downvoted and the up/downvote count will adjust accordingly |
 | 2 | Up/Downvote meal on Voting page | The meal will be up/downvoted and the up/downvote count will adjust accordingly |
+| 3 | Accept meal on Voting page | The meal will be shown as winner and on the meal calender |
+| 4 | Decline meal on Voting page | The meal will be deleted from voting page |
 
 US11: Mealplan generation //Deprecated and not desired
