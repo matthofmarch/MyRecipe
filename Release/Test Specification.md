@@ -48,7 +48,7 @@ US04: Rezept hinzufügen
 | 1 | User enters name and description | Recipe can be created |
 | 2 | Optional: User adds photo | Photo is shown in preview pane |
 | 3 | Optional: User specifies ingredients | Ingredients are shown in a preview list |
-| 4 | User clicks save (checkmark-button in bottom right corner) | Recipe is saved and can be retrieved with all its attributes (ingredients not working) |
+| 4 | User clicks save (checkmark-button in bottom right corner) | Recipe is saved and can be retrieved with all its attributes |
 
 US03: Rezept bearbeiten
 
