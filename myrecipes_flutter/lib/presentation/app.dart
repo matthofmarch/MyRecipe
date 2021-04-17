@@ -11,6 +11,7 @@ import 'package:myrecipes_flutter/infrastructure/repositories/group_repository/g
 import 'package:myrecipes_flutter/infrastructure/repositories/ingredient_repository/ingredient_repository.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/meal_repository/meal_repository.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/recipe_repository/recipe_repository.dart';
+import 'package:myrecipes_flutter/infrastructure/repositories/user_repository/user_repository.dart';
 import 'package:myrecipes_flutter/presentation/views/splash/splash.dart';
 import 'package:myrecipes_flutter/retry_policy/expired_token_retry_policy.dart';
 import 'package:myrecipes_flutter/theme.dart';
@@ -40,6 +41,8 @@ class App extends StatelessWidget {
               providers: [
                 RepositoryProvider<MealRepository>(
                     create: (context) => MealRepository(httpClient, baseUrl)),
+                RepositoryProvider<UserRepository>(
+                    create: (context) => UserRepository(httpClient, baseUrl)),
                 RepositoryProvider(
                     create: (context) => RecipeRepository(httpClient, baseUrl,
                         RepositoryProvider.of<AuthRepository>(context))),
