@@ -216,39 +216,6 @@ class UserSettings extends StatelessWidget {
                     ),
                   ),
                   Expanded(child: Container()),
-                  Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: 50,
-                        child: MaterialButton(
-                          onPressed: () {
-                            //TODO implement leave Group functionallity
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Leave Group ",
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1
-                                    .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .error),
-                              ),
-                              Icon(
-                                Icons.logout,
-                                color: Theme.of(context).colorScheme.error,
-                              )
-                            ],
-                          ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25)),
-                        ),
-                      )),
                 ],
               ),
             )),
