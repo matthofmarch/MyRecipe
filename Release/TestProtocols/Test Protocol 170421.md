@@ -57,7 +57,7 @@
 | US08-1 | PASSED | - |
 | US08-2 | PASSED | - |
 | US08-3 | PASSED | - |
-| US08-4 | BLOCKED | Not implemented yet |
+| US08-4 | PASSED | - |
 | US08-5 | FAILED | Meal isn&#39;t deleted directly, user must manually update this site |
 | US08-6 | PASSED | - |
 
