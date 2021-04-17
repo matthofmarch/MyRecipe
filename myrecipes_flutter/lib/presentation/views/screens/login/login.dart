@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/auth_repository/auth_repository.dart';
 import 'package:myrecipes_flutter/presentation/view_models/screens/login/login_cubit.dart';
+import 'package:myrecipes_flutter/presentation/views/reset_password/reset_password.dart';
 import 'package:myrecipes_flutter/presentation/views/screens/signup/signup.dart';
 
 class Login extends StatelessWidget {
@@ -25,7 +26,8 @@ class Login extends StatelessWidget {
           }
           return Scaffold(
             body: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 150),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 150),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -64,8 +66,7 @@ class Login extends StatelessWidget {
                               TextField(
                                 controller: _emailController,
                                 keyboardType: TextInputType.emailAddress,
-                                decoration:
-                                    InputDecoration(labelText: "Email"),
+                                decoration: InputDecoration(labelText: "Email"),
                               ),
                               SizedBox(
                                 height: 16,
@@ -76,6 +77,16 @@ class Login extends StatelessWidget {
                                 decoration:
                                     InputDecoration(labelText: "Password"),
                               ),
+                              TextButton(
+                                  onPressed: () async {
+                                    await Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          ResetPasswordScreen(),
+                                    ));
+                                  },
+                                  child: Text(
+                                      "Don't remember your password? - Reset it"))
                             ]),
                       ),
                     ),
@@ -102,17 +113,15 @@ class Login extends StatelessWidget {
                             borderRadius: BorderRadius.circular(25)),
                       ),
                     ),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("You don't have an account? "),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) => Signup()));
-                              },
-                              child: Text("Sign Up"))
-                        ])
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Text("You don't have an account? "),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                                MaterialPageRoute(builder: (_) => Signup()));
+                          },
+                          child: Text("Sign Up"))
+                    ])
                   ]),
             ),
           );

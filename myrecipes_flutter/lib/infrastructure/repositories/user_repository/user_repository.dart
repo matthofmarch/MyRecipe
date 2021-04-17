@@ -20,14 +20,23 @@ class UserRepository {
 
   Future<void> changeEmail(String newEmail) async {
     var url = "$_baseUrl/api/Auth/changeEmail";
-    var queryParameters = {
-      "newEmail": newEmail
-    };
+    var queryParameters = {"newEmail": newEmail};
     String queryString = Uri(queryParameters: queryParameters).query;
     var requestUrl = url + '?' + queryString;
 
-    final response =
-        await _client.get(Uri.parse(requestUrl));
+    final response = await _client.get(Uri.parse(requestUrl));
+    if (response.statusCode != 200) {
+      throw Exception("$url got ${response.statusCode}");
+    }
+  }
+
+  Future<void> resetPassword(String email) async {
+    var url = "$_baseUrl/api/Auth/resetPassword";
+    var queryParameters = {"email": email};
+    String queryString = Uri(queryParameters: queryParameters).query;
+    var requestUrl = url + '?' + queryString;
+
+    final response = await _client.get(Uri.parse(requestUrl));
     if (response.statusCode != 200) {
       throw Exception("$url got ${response.statusCode}");
     }
