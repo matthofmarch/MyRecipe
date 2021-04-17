@@ -41,4 +41,13 @@ class UserRepository {
       throw Exception("$url got ${response.statusCode}");
     }
   }
+
+  Future<void> leaveGroup() async {
+    var url = "$_baseUrl/api/User/leaveGroup";
+
+    final response = await _client.put(Uri.parse(url));
+    if (response.statusCode != 200) {
+      throw Exception("$url got ${response.statusCode}");
+    }
+  }
 }
