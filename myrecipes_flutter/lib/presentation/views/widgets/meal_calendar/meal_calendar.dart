@@ -1,4 +1,3 @@
-import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,8 +8,6 @@ import 'package:myrecipes_flutter/presentation/view_models/widgets/meal_view/mea
 import 'package:myrecipes_flutter/presentation/views/screens/daily_meal_planner/daily_meal_planner.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/recipe_detail.dart';
 import 'package:myrecipes_flutter/presentation/views/widgets/util/network_or_default_image.dart';
-import 'package:myrecipes_flutter/presentation/views/widgets/util/rounded_image.dart';
-import 'package:myrecipes_flutter/presentation/views/widgets/vote_summary/vote_summary.dart';
 
 import '../../../view_models/pages/meal_page/meals_cubit.dart';
 
@@ -54,69 +51,43 @@ class MealCalendar extends StatelessWidget {
                     0, //Else one will see more of the most-left column than the one on the right
               ),
               Expanded(
-                child: Stack(
-                  alignment: Alignment.topCenter,
-                  children: [
-                    Builder(builder: (context) {
-                      voteSum(Meal meal) => meal.votes.fold<int>(
-                          0,
-                          (previousValue, element) =>
-                              previousValue +
-                              (element.voteIsPositive ? 1 : -1));
-                      meals
-                          .sort((m1, m2) => voteSum(m1).compareTo(voteSum(m2)));
-                      final mealsForDay = meals
-                          .where((m) => mealOnCurrentDay(m, columnDate))
-                          .toList();
-                      final acceptedMealsForDay = meals
-                          .where((m) =>
-                              mealOnCurrentDay(m, columnDate) && m.accepted)
-                          .map((m) => _mealCard(context, m))
-                          .toList();
-                      final unacceptedMealsForDay = meals
-                          .where((m) =>
-                              mealOnCurrentDay(m, columnDate) && !m.accepted)
-                          .toList();
+                child: Builder(builder: (context) {
+                  voteSum(Meal meal) => meal.votes.fold<int>(
+                      0,
+                      (previousValue, element) =>
+                          previousValue + (element.voteIsPositive ? 1 : -1));
+                  meals.sort((m1, m2) => voteSum(m1).compareTo(voteSum(m2)));
+                  final mealsForDay = meals
+                      .where((m) => mealOnCurrentDay(m, columnDate))
+                      .toList();
+                  final acceptedMealsForDay = meals
+                      .where(
+                          (m) => mealOnCurrentDay(m, columnDate) && m.accepted)
+                      .toList();
+                  final unacceptedMealsForDay = meals
+                      .where(
+                          (m) => mealOnCurrentDay(m, columnDate) && !m.accepted)
+                      .toList();
 
-                      return ListView(
-                          padding: EdgeInsets.only(top: 44),
-                          children: mealsForDay.isNotEmpty
-                              ? unacceptedMealsForDay.length >= 1
-                                  ? [
-                                      GestureDetector(
-                                        child: Chip(
-                                          label: Text(
-                                            (unacceptedMealsForDay.length == 1)
-                                                ? "1 Suggestion"
-                                                : "${unacceptedMealsForDay.length} Suggestions",
-                                            textAlign: TextAlign.center,
-                                            style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14,),
-                                          ),
-                                          backgroundColor: Theme.of(context).colorScheme.background.withOpacity(0.4),
-                                          shape: StadiumBorder(
-                                            side: BorderSide(color: Theme.of(context).colorScheme.background),
-                                          ),
-                                          elevation: 1,
-                                        ),
-                                      ),
-                                      ...acceptedMealsForDay
-                                    ]
-                                  : [
-                                      SizedBox(
-                                        height: 18,
-                                      ),
-                                      ...acceptedMealsForDay
-                                    ]
-                              : [
-                                  Text(
-                                    "No meals",
-                                    textAlign: TextAlign.center,
-                                  )
-                                ]);
-                    }),
-                    _makeDateBadge(context, columnDate)
-                  ],
-                ),
+                  return Stack(alignment: Alignment.topCenter, children: [
+                    ListView(
+                        padding: EdgeInsets.only(top: 44),
+                        children: mealsForDay.isEmpty
+                            ? [
+                                Text(
+                                  "No meals",
+                                  textAlign: TextAlign.center,
+                                )
+                              ]
+                            : [
+                                ...acceptedMealsForDay
+                                    .map((m) => _mealCard(context, m))
+                                    .toList()
+                              ]),
+                    _makeDateBadge(context, columnDate, mealsForDay,
+                        acceptedMealsForDay, unacceptedMealsForDay)
+                  ]);
+                }),
               ),
             ],
           );
@@ -170,11 +141,12 @@ class MealCalendar extends StatelessWidget {
                         children: [
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment:  MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Container(
@@ -184,8 +156,10 @@ class MealCalendar extends StatelessWidget {
                                       "${meal.recipe.name}",
                                       maxLines: 3,
                                       overflow: TextOverflow.ellipsis,
-                                      style:
-                                          Theme.of(context).textTheme.headline6.copyWith(fontSize: 25),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(fontSize: 25),
                                     ),
                                   ),
                                   /*Row(
@@ -222,7 +196,12 @@ class MealCalendar extends StatelessWidget {
     );
   }
 
-  _makeDateBadge(BuildContext context, DateTime columnDate) {
+  _makeDateBadge(
+      BuildContext context,
+      DateTime columnDate,
+      List<Meal> mealsForDay,
+      List<Meal> acceptedMealsForDay,
+      List<Meal> unacceptedMealsForDay) {
     return GestureDetector(
       onTap: () async {
         await Navigator.of(context).push(MaterialPageRoute(
@@ -240,6 +219,12 @@ class MealCalendar extends StatelessWidget {
                 color: Theme.of(context).colorScheme.primary,
               ),
         ),
+        avatar: unacceptedMealsForDay.isNotEmpty
+            ? CircleAvatar(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                child: Text(unacceptedMealsForDay.length.toString()),
+              )
+            : null,
         shape: StadiumBorder(
           side: BorderSide(color: Theme.of(context).colorScheme.primary),
         ),
