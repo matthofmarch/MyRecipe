@@ -44,16 +44,6 @@ class GroupRepository {
     throw Exception("$url got ${response.statusCode}");
   }
 
-  Future<Group> getGroupForUser() async {
-    var url = "$_baseUrl/api/Group/getGroupForUser";
-
-    final response = await _client.get(Uri.tryParse(url));
-    if (response.statusCode == 204) {
-      return Group.fromJson(response.body);
-    }
-    throw Exception("$url got ${response.statusCode}");
-  }
-
   Future<void> create(String name) async {
     var url = "$_baseUrl/api/Group";
     var requestBody = jsonEncode({"name": name});

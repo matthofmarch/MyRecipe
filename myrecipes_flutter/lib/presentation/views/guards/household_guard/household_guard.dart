@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:myrecipes_flutter/infrastructure/repositories/auth_repository/auth_repository.dart';
 import 'package:myrecipes_flutter/infrastructure/repositories/group_repository/group_repository.dart';
 import 'package:myrecipes_flutter/presentation/view_models/guards/household_guard/household_guard_cubit.dart';
 import 'package:myrecipes_flutter/presentation/views/root_bottom_navigation/root_bottom_navigation.dart';
@@ -128,9 +129,17 @@ class HouseholdGuard extends StatelessWidget {
                   )),
               OutlinedButton(
                 onPressed: () async {
-                  await BlocProvider.of<HouseholdGuardCubit>(context)
-                      .createHousehold(householdNameController.text);
-                  Navigator.of(context).pop();
+                  try {
+                    Navigator.of(context).pop();
+                    await BlocProvider.of<HouseholdGuardCubit>(context)
+                        .createHousehold(householdNameController.text);
+                    await RepositoryProvider.of<AuthRepository>(context)
+                        .refreshAsync();
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Didn't work"),
+                    ));
+                  }
                 },
                 child: Text("Create Household"),
               ),
@@ -174,9 +183,9 @@ class HouseholdGuard extends StatelessWidget {
                   )),
               OutlinedButton(
                 onPressed: () async {
+                  Navigator.of(context).pop();
                   await BlocProvider.of<HouseholdGuardCubit>(context)
                       .joinWithCode(householdInviteCodeController.text);
-                  Navigator.of(context).pop();
                 },
                 child: Text("Join"),
               ),

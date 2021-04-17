@@ -12,7 +12,7 @@ class HouseholdGuardCubit extends Cubit<HouseholdGuardState> {
 
   Future<void> checkHouseholdState() async {
     try {
-      var group = await _groupRepository.getGroupForUser();
+      var group = await _groupRepository.getGroup();
       emit(HouseholdGuardInGroup());
       log("Household fetched successfully");
     } catch (e) {
